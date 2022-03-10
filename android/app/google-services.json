@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "408585678188",
+    "project_id": "hypr-307515",
+    "storage_bucket": "hypr-307515.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408585678188:android:4402ca8b9664b8ba651749",
+        "android_client_info": {
+          "package_name": "com.hypr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408585678188-5pjm3eoppulv8s1gan2j1pqdiermnr0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hypr",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "408585678188-uq09l9rv6e9ps5qv3341p0edf7g9n6in.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChMxRgbO7VYykgg9s_xHgUq8lHtnsJe00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408585678188-uq09l9rv6e9ps5qv3341p0edf7g9n6in.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "408585678188-5iluc9v8m9ks82akh64d29q8u7in9igl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.Hypr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
