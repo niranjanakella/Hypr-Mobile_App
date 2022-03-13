@@ -181,7 +181,7 @@ export const signup = (payload) => {
                             setSignUpUserIdToStorage(result.data.id)
                             NavigationService.navigate(constants.ScreensName.VerifyOtp.name, null)
                         } else {
-                            alert(JSON.stringify(result.data))
+                            
                             console.log(JSON.stringify(result.data))
                             //@failed return from server
                             store.dispatch(handleLoader(false))

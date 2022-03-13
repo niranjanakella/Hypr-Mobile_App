@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: constants.Colors.primary,
+        backgroundColor: constants.Colors.white,
         paddingHorizontal: 15
     },
     headerWithSearchInput: {

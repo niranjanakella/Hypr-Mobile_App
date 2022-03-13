@@ -21,7 +21,7 @@ export const PrimaryButton = ({
     return (
         <LinearGradient
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-            colors={[constants.Colors.primary, constants.Colors.secondry]}
+            colors={[constants.Colors.gradient.contrast_1, constants.Colors.gradient.contrast_3]}
             style={[styles.linearGradient, {
                 paddingVertical: paddingVertical ? paddingVertical : constants.vh(16),
                 paddingHorizontal: paddingHorizontal ? paddingHorizontal : 0
@@ -68,9 +68,9 @@ export const SecondryButton = ({
                     isIcon?
                     
                     <AntDesign
-                    name={isWhislisted?"heart":"hearto"}
+                    name={isWhislisted? "heart" :"hearto"}
                     size={30}
-                    color="red"
+                    color={constants.Colors.danger}
                     />
                     :
                     <Text style={[styles.text16600, { color: textColor ? textColor : constants.Colors.white }]}>{title}</Text>

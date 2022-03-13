@@ -4,8 +4,10 @@ import {
     Dimensions,
     StatusBar
 } from 'react-native';
+import { concat } from 'react-native-reanimated';
 
 import constants from '../../constants';
+import { height_dim_percent, width_dim_percent } from '../../constants/Dimension';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -40,14 +42,22 @@ export const styles = StyleSheet.create({
         backgroundColor: constants.Colors.white
     },
     dataContainer: {
-        alignItems: "center",
+        backgroundColor:constants.Colors.white,
+        borderWidth:1,
+        borderColor:constants.Colors.fade,
+        elevation:45,
+        width:width_dim_percent * 100,
+        height:height_dim_percent * 90,        
+        borderRadius:45,
         paddingHorizontal: 15,
-        marginTop: constants.vh(40)
+        marginTop: height_dim_percent * 26
     },
     loginText: {
-        fontSize: 25,
-        fontWeight: "bold",
-        marginTop: constants.vh(10)
+        fontSize: 25,        
+        marginTop: constants.vh(50),
+        left:constants.width_dim_percent * 1,
+        color:constants.Colors.secondry,
+        fontFamily:"GothamBold"
     },
     inputContainer: {
         marginTop: constants.vh(20)
@@ -60,12 +70,14 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        alignSelf:'center',
         width: "60%",
         marginTop: constants.vh(30)
     },
     signupTextContainer: {
         flexDirection: "row",
         alignItems: "center",
+        alignSelf:'center',
         marginTop: constants.vh(40)
     }
 })

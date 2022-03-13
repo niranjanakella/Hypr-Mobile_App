@@ -65,14 +65,28 @@ export function getTabBarVisibility(route) {
 
 export function BottomTabs() {
   return (
+    
     <Tab.Navigator
       initialRouteName="Home"
       activeColor={"red"}
       activeTintColor="red"
       shifting={false}
       backBehavior={'history'}
-      barStyle={{ backgroundColor: constants.Colors.white }}>
-      <Tab.Screen
+      barStyle={{ backgroundColor: constants.Colors.blue_primary, }}
+      tabBarOptions={{
+        style: {
+          backgroundColor: constants.Colors.blue_primary,
+          borderTopRightRadius:20,
+          borderTopLeftRadius:20,
+          elevation:0,
+          position: 'absolute'
+        }
+      }}
+
+    
+      
+      >
+      {/* <Tab.Screen
         name="Dashboard"
         component={DashboardStackFunc}
         options={({ route }) => ({
@@ -82,12 +96,12 @@ export function BottomTabs() {
               color: focused ? constants.Colors.primary : "grey"
             }}>Dashboard</Text>
           ),
-          tabBarColor: constants.Colors.white,
+          tabBarColor: constants.Colors.danger,
           tabBarIcon: ({ focused }) => (
             <FontAwesome name="home" color={focused ? constants.Colors.primary : "grey"} size={25} />
           ),
         })}
-      />
+      /> */}
       <Tab.Screen
         name="Market"
         component={MarketPlaceStackFunc}
@@ -95,12 +109,14 @@ export function BottomTabs() {
           tabBarVisible: getTabBarVisibility(route),
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              color: focused ? constants.Colors.primary : "grey"
+              color: focused ? constants.Colors.white : "grey",
+              fontFamily:"GothamBold"
+
             }}>Market</Text>
           ),
-          tabBarColor: constants.Colors.white,
+          tabBarColor: constants.Colors.danger,
           tabBarIcon: ({ focused }) => (
-            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.primary : "grey"} size={25} />
+            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.white : "grey"} size={25} />
           ),
         })}
       />
@@ -123,7 +139,7 @@ export function BottomTabs() {
           ),
         })}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="My Account"
         component={SettingStackFunc}
         options={({ route }) => ({
@@ -141,7 +157,7 @@ export function BottomTabs() {
               size={20} />
           ),
         })}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }
@@ -154,7 +170,7 @@ const HyprDrawer = () => {
         headerShown: false,
       }}
       drawerContentOptions={{
-        activeBackgroundColor: constants.Colors.primary,
+        activeBackgroundColor: constants.Colors.blue_primary,
         activeTintColor: "#fff",
         inactiveTintColor: "#000",
         labelStyle: {
@@ -165,9 +181,9 @@ const HyprDrawer = () => {
           paddingVertical: -5
         },
       }}
-      drawerStyle={{
-        width: "75%",
-      }}
+      // drawerStyle={{
+      //   width: "75%",
+      // }}
 
       edgeWidth={0}
       drawerPosition="left"

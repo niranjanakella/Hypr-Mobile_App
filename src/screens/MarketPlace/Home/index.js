@@ -83,7 +83,10 @@ const MarketHome = (props) => {
                         title={item.f_productname}
                         off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
                         originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_price)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
+                        onPress={() => { props.dispatch(setProductDetails(item))}}                            
+
+                            
+                            
                     />
                 </View>
             )
@@ -238,6 +241,7 @@ const MarketHome = (props) => {
                             <Components.ViewAllCard
                                 title="Flash Sale"
                                 time={45600}
+                                
                                 buttonTitle="View all"
                                 onPress={() => setProduct("Flash Sale")}
                             />

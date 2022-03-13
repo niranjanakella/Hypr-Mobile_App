@@ -12,6 +12,7 @@ import {
 import PropTypes from "prop-types";
 import constants from '../../constants';
 
+
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 const X_WIDTH = 375;
@@ -263,7 +264,8 @@ BackgroundCarousel.defaultProps = {
 const styles = StyleSheet.create({
     backgroundImage: {
         height: "100%",
-        width: Dimensions.get("window").width
+        width: Dimensions.get("window").width,
+        backgroundColor:constants.Colors.mute
     },
     container: {
         flex: 1,
@@ -294,14 +296,15 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         width: '100%',
         alignItems: 'center',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        top:constants.width_dim_percent * 70
     },
     sliderBtn: {
         height: 13,
         width: 13,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: constants.Colors.dark_text,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 10

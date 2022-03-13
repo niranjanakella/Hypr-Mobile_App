@@ -117,13 +117,13 @@ export const HeaderWithSearch = ({
                         <Entypo
                             name="menu"
                             size={constants.vw(30)}
-                            color="#fff"
+                            color= {constants.Colors.blue_primary}
                         />
                         :
                         <AntDesign
                             name="arrowleft"
                             size={constants.vw(30)}
-                            color="#fff"
+                            color= {constants.Colors.blue_primary}
                         />
                 }
 
@@ -163,7 +163,7 @@ export const HeaderWithSearch = ({
                     <FontAwesome
                         name="shopping-cart"
                         size={constants.vw(25)}
-                        color={constants.Colors.white}
+                        color= {constants.Colors.blue_primary}
                     />
                     {
                         isCartCount &&
@@ -198,7 +198,7 @@ export const HeaderWithSearch = ({
                     <FontAwesome
                         name="heart"
                         size={constants.vw(22)}
-                        color={constants.Colors.white}
+                        color={constants.Colors.blue_primary}
                     />
                     {/* <Text style={{ fontSize: 16, color: "#fff" }}>Wishlist</Text> */}
                 </TouchableOpacity>
@@ -214,7 +214,7 @@ export const HeaderWithSearch = ({
                     <FontAwesome
                         name="bell"
                         size={constants.vw(20)}
-                        color={constants.Colors.white}
+                        color={constants.Colors.blue_primary}
                     />
                     {
                         isNotificationCount &&

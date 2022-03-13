@@ -4,6 +4,7 @@ import {
     Dimensions,
     StatusBar
 } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import constants from '../../../constants';
 const WIDTH = Dimensions.get("window").width;
@@ -33,12 +34,12 @@ const iPhoneX = Dimensions.get('window').height >= 812
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: constants.Colors.white
+        backgroundColor: constants.Colors.mute
     },
     secondryContainer: {
         flex: 1,
-        backgroundColor: constants.Colors.white,
-        paddingHorizontal: 15,
+        backgroundColor: constants.Colors.muted,
+        paddingHorizontal: 0,
     },
     headerContainer: {
         backgroundColor: constants.Colors.primary,
@@ -51,15 +52,20 @@ export const styles = StyleSheet.create({
     ProductNamePriceContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
+        backgroundColor: constants.Colors.white,        
+        paddingHorizontal:constants.width_dim_percent  * 2,
+        paddingVertical:constants.height_dim_percent  * 2,
         alignItems: "center"
     },
     ProductNameContainer: {
-        width: "50%"
+        width: "50%",
+        backgroundColor: constants.Colors.white,  
     },
     text16500: {
         fontSize: 18,
         fontWeight: "bold",
-        color: constants.Colors.primary
+        fontFamily:"GothamBold",
+        color: constants.Colors.dark_text
     },
     text14500: {
         fontSize: 14,
@@ -112,6 +118,7 @@ export const styles = StyleSheet.create({
         color: "#000"
     },
     buttonContainer: {
+        backgroundColor:constants.Colors.white,
         flexDirection: "row",
         justifyContent:"space-between",
         alignItems: "center",

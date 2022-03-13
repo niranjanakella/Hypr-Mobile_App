@@ -32,7 +32,9 @@ const LogIn = (props) => {
         passwordErr: false,
         passwordErrMsg: "",
         social_id: null,
-        social_type: ""
+        social_type: "",
+        focus_email:false,
+        focus_password:false
     })
     const handlePasswordShow = () => {
         setState({
@@ -41,6 +43,7 @@ const LogIn = (props) => {
         })
     }
     const handleSignIn = () => {
+        let count_error = 0;
         Keyboard.dismiss()
         if (state.email.length === 0) {
             setState({
@@ -48,15 +51,7 @@ const LogIn = (props) => {
                 emailErr: true,
                 emailErrMsg: "Please enter email."
             })
-            return 1;
-        }
-        if (!EmailValidator.validate(state.email.toLowerCase())) {
-            setState({
-                ...state,
-                emailErr: true,
-                emailErrMsg: "Please enter valid email."
-            })
-            return 1;
+            count_error++
         }
         if (state.password.length === 0) {
             setState({
@@ -64,14 +59,26 @@ const LogIn = (props) => {
                 passwordErr: true,
                 passwordErrMsg: "Please enter password."
             })
-            return 1;
+            count_error++
         }
+
+        if (!EmailValidator.validate(state.email.toLowerCase())) {
+            setState({
+                ...state,
+                emailErr: true,
+                emailErrMsg: "Please enter valid email."
+            })
+            count_error++
+        }
+       
         const payload = {
             "email": state.email.toLowerCase(),
             "password": state.password
         }
+        if(count_error == 0){
+            props.dispatch(login(payload))
+        }
         
-        props.dispatch(login(payload))
 
     }
     const handleSignWithFacebook = (fbData) => {
@@ -123,22 +130,34 @@ const LogIn = (props) => {
             <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
             <SafeAreaView style={styles.secondryContainer}>
+                    <Image
+                            source={constants.Images.splash_screen_background}
+                            style={{
+                                width: constants.width_dim_percent * 100,
+                                height: constants.height_dim_percent * 100,
+                                position:'absolute'
+                            }}
+                            resizeMode={"cover"}
+                        /> 
                 <KeyboardAwareScrollView
-                    keyboardShouldPersistTaps="handled"
+                    keyboardShouldPersistTaps="always"
                     enableOnAndroid={true}
                     extraHeight={140}
                 >
                     <View style={styles.dataContainer}>
-                        <Image
+                        {/* <Image
                             source={constants.Images.logo}
                             style={{
                                 width: constants.vw(150),
                                 height: constants.vw(150),
                                 resizeMode: "contain"
                             }}
-                        />
-                        <Text style={styles.loginText}></Text>
-                        <Text style={styles.loginText}></Text>
+                        /> */}
+
+                     
+                        
+                        <Text style={styles.loginText}>Login</Text>
+                        
 
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
@@ -146,6 +165,9 @@ const LogIn = (props) => {
                                 keyboardType="email-address"
                                 isError={state.emailErr}
                                 error={state.emailErrMsg}
+                                onFocus={()=>setState({...state,focus_email:true})}
+                                onBlur={()=>setState({...state,focus_email:false})}                                
+                                isFocus = {state.focus_email}
                                 onChangeText={(email) => {
                                     setState({
                                         ...state,
@@ -154,6 +176,8 @@ const LogIn = (props) => {
                                         emailErrMsg: ""
                                     })
                                 }}
+
+                                value={state.email}
                             />
                         </View>
                         <View style={styles.inputContainer}>
@@ -162,6 +186,9 @@ const LogIn = (props) => {
                                 isError={state.passwordErr}
                                 error={state.passwordErrMsg}
                                 showSecure={true}
+                                onFocus={()=>setState({...state,focus_password:true})}
+                                onBlur={()=>setState({...state,focus_password:false})}                                
+                                isFocus = {state.focus_password}
                                 isSecure={state.hidePassword}
                                 onIconpress={handlePasswordShow}
                                 onChangeText={(password) => {
@@ -172,6 +199,7 @@ const LogIn = (props) => {
                                         passwordErrMsg: ""
                                     })
                                 }}
+                                value={state.password}
                             />
                         </View>
 
@@ -198,6 +226,7 @@ const LogIn = (props) => {
                             <Text style={{
                                 fontSize: 18,
                                 fontWeight: "500",
+                                alignSelf:'center',
                                 color: constants.Colors.placeholder
                             }}>or continue with</Text>
                         </View>

@@ -4,9 +4,10 @@ import { Dimensions, StyleSheet, Image, View } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import constants from '../constants';
 
+import {CardStyleInterpolators} from '@react-navigation/stack';
 //Market Place
 import MarketHome from '../screens/MarketPlace/Home';
 import Category from '../screens/MarketPlace/Category';
@@ -20,7 +21,7 @@ import SearchProduct from '../screens/MarketPlace/SearchProduct';
 
 //Products
 import Products from '../screens/Products';
-
+// const MarketPlaceStack  = createSharedElementStackNavigator(); 
 const MarketPlaceStack = createStackNavigator();
 
 export const MarketPlaceStackFunc = () => {
@@ -32,6 +33,7 @@ export const MarketPlaceStackFunc = () => {
                 component={MarketHome}
                 name={constants.ScreensName.MarketHome.name}
                 options={{ gestureEnabled: false }}
+                
             />
              <MarketPlaceStack.Screen
                 component={Category}
@@ -46,7 +48,11 @@ export const MarketPlaceStackFunc = () => {
             <MarketPlaceStack.Screen
                 component={ProductDetail}
                 name={constants.ScreensName.ProductDetail.name}
-                options={{ gestureEnabled: false }}
+                options={{ gestureEnabled: false,cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}}
+                // sharedElements={(route, otherRoute, showing) => {
+                //     const { item } = route.params;                    
+                //     return [{   id: item.product_image,}];
+                // }}
             />
             <MarketPlaceStack.Screen
                 component={Cart}

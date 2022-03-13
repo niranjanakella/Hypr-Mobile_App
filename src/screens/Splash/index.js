@@ -18,9 +18,10 @@ const SplashScreen = (props) => {
             <StatusBar backgroundColor="#fff" barStyle="dark-content" />
             <SafeAreaView style={styles.container}>
                 <Image
-                    resizeMode="contain"
+                    resizeMode="cover"
                     style={styles.splashImage}
-                    source={constants.Images.logo}
+                    source={constants.Images.splash_screen_background}
+                    blurRadius={2}
                 />
             </SafeAreaView>
         </>
@@ -35,8 +36,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     splashImage: {
-        width: constants.vw(150),
-        height: constants.vh(150),
+        width: constants.width_dim_percent * 100,
+        height: constants.height_dim_percent * 100,
     },
 })
 

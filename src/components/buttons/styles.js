@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     primaryButtonContainer: {
         justifyContent: "center",
         alignItems: "center",
+        
     },
     linearGradient: {
         //flex: 1,
@@ -32,7 +33,8 @@ export const styles = StyleSheet.create({
     text16600: {
         fontSize: 16,
         fontWeight: "600",
-        color: constants.Colors.white
+        color: constants.Colors.white,
+        fontFamily:'GothamBold'
     },
     text13normal: {
         fontSize: 13,

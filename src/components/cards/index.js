@@ -203,6 +203,7 @@ export const CategoryCard = ({
         <TouchableOpacity
             onPress={onPress}
             activeOpacity={1}
+            elevation={100}
             style={styles.categoryCardContainer}
         >
             <Image
@@ -508,6 +509,7 @@ export const ViewAllCard = ({
                 <View
                     style={[styles.timerContainer]}
                 >
+                    
                     {time &&
                         <CountDown
                             until={time}

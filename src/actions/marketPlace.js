@@ -57,26 +57,44 @@ export const clearSearchList = () => {
 }
 
 export const setProductDetails = (product) => {
+    
     return async (dispatch) => {
-        let variants = product.f_variants
-        let variantName = []
-        let variantValue = []
-        variants.map((item) => {
-            for (const key of Object.keys(item)) {
-                const name = key
-                const val = item[key];
+        
+        let variants = product.variants;
+        let variantName = [];
+        let variantValue = [];
+        console.warn(variants);
+        variants.map((item,index) => {  
+            
+            // for (const key of Object.keys(item)) {
+            //     alert(item[key])          
+            //     const name = key
+            //     const val = item[key];
+            //     variantName.push(name)
+            //     variantValue.push(val)
+
+            // }
+
+                    
+                const name = item
+                const val = item[index];
                 variantName.push(name)
                 variantValue.push(val)
 
-            }
         })
+
+        
         dispatch({
             type: types.SET_PRODUCT_DETAILS,
             product: product,
             variantName: variantName,
             variantValue: variantValue
         })
-        NavigationService.navigate(constants.ScreensName.ProductDetail.name, null)
+
+        
+        NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.f_img1})
+
+        
     }
 }
 

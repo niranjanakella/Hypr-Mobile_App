@@ -25,6 +25,7 @@ import { BackgroundCarousel } from '../../../components/Slider';
 import { styles } from './styles';
 import { unsetPinCodeData, addToCart, addToWishlist, checkIfPinExist } from '../../../actions/marketPlace';
 import { calculatePrice } from '../../../utils/CalculatePrice';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProductDetail = (props) => {
     const [state, setState] = React.useState({
@@ -46,6 +47,7 @@ const ProductDetail = (props) => {
         variantPrice: props.market.productDetails.f_product_offer_price
     })
     useEffect(() => {
+        console.warn(props.market.variantName)
         const unsubscribe = props.navigation.addListener('blur', () => {
             props.dispatch(unsetPinCodeData())
         });
@@ -72,6 +74,7 @@ const ProductDetail = (props) => {
     }
 
     const handleSelectVariant1 = (item, index) => {
+        
         state.selectedVariant1 = index,
             state.selectedVariant1Val = item.VARIANTKEY
         setState({
@@ -79,6 +82,7 @@ const ProductDetail = (props) => {
 
         })
         if (props.market.variantName.length === 1) {
+            
             let combinedVariant = state.selectedVariant1Val
             const indexOfCombinedVariant = props.market.productDetails.f_combinationVariant.findIndex(item => item.VARIANTKEY === combinedVariant)
             console.log("indexOfCombinedVariant", indexOfCombinedVariant);
@@ -87,7 +91,9 @@ const ProductDetail = (props) => {
                 ...state
             })
         }
+        console.warn(state.selectedVariant2Val);
         if (props.market.variantName.length === 2 && state.selectedVariant2Val) {
+            
             let combinedVariant = `${state.selectedVariant1Val}-${state.selectedVariant2Val}`
             const indexOfCombinedVariant = props.market.productDetails.f_combinationVariant.findIndex(item => item.VARIANTKEY === combinedVariant)
             console.log("indexOfCombinedVariant", indexOfCombinedVariant, combinedVariant);
@@ -247,15 +253,17 @@ const ProductDetail = (props) => {
     }
 
     const handleAddToCart = async (value) => {
-        if (!props.market.isPincodeAvailable || !state.isPinCodeChecked) {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Not available for delivery at your address.",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
+        // PIN CODE VALIDATION
+        // if (!props.market.isPincodeAvailable || !state.isPinCodeChecked) {
+        //     Toast.show({
+        //         text1: constants.AppConstant.Hypr,
+        //         text2: "Not available for delivery at your address.",
+        //         type: "error",
+        //         position: "top"
+        //     });
+        //     return 1;
+        // }
+        console.warn(props.market.variantName.length)
         if (props.market.variantName.length > 0 && state.selectedVariant1Val === "") {
             Toast.show({
                 text1: constants.AppConstant.Hypr,
@@ -391,31 +399,32 @@ const ProductDetail = (props) => {
                     <BackgroundCarousel
                         images={state.sliderImage}
                         containerStyle={{
-                            height: constants.vh(210)
+                            height: constants.vh(310)
                         }}
                         showButton={false}
-                        unselectedButtonBorderColor={constants.Colors.white}
-                        selectedButtonColor={constants.Colors.primary}
+                        unselectedButtonBorderColor={constants.Colors.dark_text}
+                        selectedButtonColor={constants.Colors.blue_primary}
                     />
                 </View>
                 <ScrollView style={styles.secondryContainer}>
 
                     <View style={styles.ProductNamePriceContainer}>
                         <View style={styles.ProductNameContainer}>
-                            <Text style={[styles.text16500, { fontSize: 16, textTransform: "capitalize", }]}>{props.market.productDetails.f_productname}</Text>
+                            <Text style={[styles.text16500, { fontSize: 14, textTransform: "capitalize", }]}>{props.market.productDetails.f_productname}</Text>
                         </View>
                         <View>
-                            <Text style={styles.text16500}>{props.auth.currency_symbol} {calculatePrice(state.variantPrice)}</Text>
-                            <Text style={[styles.text14500, { textDecorationLine: "line-through" }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text>
+                            <Text style={[styles.text16500,{color:constants.Colors.danger,fontSize:30}]}>{props.auth.currency_symbol} {calculatePrice(state.variantPrice)}</Text>
+                            <Text style={[styles.text14500, { textDecorationLine: "line-through",color:constants.Colors.fade,left: constants.width_dim_percent * 15 }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text>
                         </View>
                     </View>
 
-                    <View style={{
+
+                    {/* PIN CODE COMMENT */}
+                    {/* <View style={{
                         marginTop: constants.vh(20)
                     }}>
                         <Text>Use pin code to check availablity</Text>
-                    </View>
-
+                    </View> 
                     <View style={styles.pincodeContainer}>
                         <View style={{
                             width: "60%"
@@ -452,6 +461,7 @@ const ProductDetail = (props) => {
                         props.market.pincodeAddress !== null &&
                         <Text>{props.market.pincodeAddress.districtName}</Text>
                     }
+                    */}
 
 
                     <View style={styles.titleContainer}>
@@ -530,9 +540,9 @@ const ProductDetail = (props) => {
                                 handleAddToWishlist()
                             }}
                             isIcon={true}
-                            isWhislisted={props.market.productDetails.onWishlist}
-                            backgroundColor={constants.Colors.secondry}
-                            borderRadius={10}
+                            isWhislisted={props.market.productDetails.onWishList}
+                            backgroundColor={constants.Colors.white}
+                            borderRadius={40}
                             paddingVertical={constants.vh(10)}
                         />
                     </View>
@@ -542,23 +552,31 @@ const ProductDetail = (props) => {
                                 handleAddToCart(false)
                             }}
 
-                            title="Add To Cart"
-                            backgroundColor={constants.Colors.cart_color}
+                            title="Add to Cart"
+                            backgroundColor={constants.Colors.blue_primary}
                             paddingVertical={constants.vh(15)}
-                            borderRadius={10}
+                            
+                            borderRadius={40}
                         />
                     </View>
-                    <View style={{ width: "32%" }}>
+
+               <View style={{ width: "32%" }}>
+                        <LinearGradient
+                        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                        colors={[constants.Colors.gradient.contrast_1, constants.Colors.gradient.contrast_3]}
+                        style={[styles.linearGradient,{borderRadius:40}]}>
+                                    
                         <Components.SecondryButton
                             onPress={() => {
                                 handleAddToCart(true)
                             }}
                             title={`Buy Now`}
                             //title={`Buy Now (${props.auth.currency_symbol} ${calculatePrice(props.market.productDetails.f_product_offer_price)})`}
-                            backgroundColor="green"
+                            backgroundColor="transparent"
                             paddingVertical={constants.vh(15)}
-                            borderRadius={10}
+                            borderRadius={40}
                         />
+                        </LinearGradient>
                     </View>
                 </View>
             </SafeAreaView>

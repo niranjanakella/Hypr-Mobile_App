@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     },
     headerContainer: {
         backgroundColor: constants.Colors.primary,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         //paddingVertical: 10
     },
     text16bold: {

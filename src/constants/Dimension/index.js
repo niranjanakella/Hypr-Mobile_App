@@ -10,6 +10,9 @@ const scale = SCREEN_WIDTH / 375;
 export const width = Dimensions.get('window').width;
 export const height = Dimensions.get('window').height;
 
+export const width_dim_percent = (Dimensions.get('window').width / 100);
+export const height_dim_percent = (Dimensions.get('window').height / 100);
+
 export function normalize(size: number) {
     return PixelRatio.roundToNearestPixel(size * scale);
 }

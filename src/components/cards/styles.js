@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         textAlign: "center",
+        
     },
     text14normal: {
         fontSize: 14,
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 10,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -122,6 +123,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         backgroundColor: "#fff",
+        borderWidth:0,
         marginTop: constants.vh(10),
         paddingHorizontal: constants.vw(10),
         paddingVertical: constants.vh(10),

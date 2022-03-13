@@ -11,7 +11,7 @@ import store from './src/store';
 import { navigationRef } from './src/navigation/NavigationService';
 import { switchRoute } from './src/actions/auth';
 
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 export function App(props) {
   useEffect(() => {
     setTimeout(() => {

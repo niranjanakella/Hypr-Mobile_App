@@ -1,4 +1,4 @@
-const API_DEV_HOST = `http://10.0.3.2:9002/`;
+const API_DEV_HOST = `http://192.168.1.10:9002/`;
 const API_PRO_HOST = ``;
 const Config = {
     // 0 => Devlopment env, 1 => Production env

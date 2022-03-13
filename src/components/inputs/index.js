@@ -20,6 +20,8 @@ export const PrimaryInput = ({
     maxLength,
     multiline,
     value,
+    onBlur,
+    onFocus,
     onSubmitEditing,
     placeholder,
     placeholderTextColor,
@@ -30,6 +32,7 @@ export const PrimaryInput = ({
     onIconpress,
     height,
     textAlignVertical,
+    isFocus,
     title,
     inputTextColor,
     blurOnSubmit,
@@ -57,8 +60,12 @@ export const PrimaryInput = ({
                         height: height,
                         textAlignVertical: textAlignVertical ? textAlignVertical : "center",
                         paddingVertical: paddingVertical ? paddingVertical : constants.vh(16),
+                        borderColor: isFocus || value != '' ? constants.Colors.secondry : isError ? constants.Colors.color_47_44_44 : constants.Colors.fade
                     }]}
+
                     value={value}
+                    onFocus={onFocus} 
+                    onBlur={onBlur}                    
                     placeholder={placeholder}
                     placeholderTextColor={placeholderTextColor}
                     keyboardType={keyboardType}

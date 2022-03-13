@@ -5,7 +5,7 @@ import { getUserAccessTokenFromStorage } from "../../utils/asyncstorage"
 import store from '../../store';
 import { logOut } from '../../actions/auth';
 const axiosInstance = axios.create({
-    baseURL: 'http://10.0.3.2:9002/',
+    baseURL: 'http://192.168.1.10:9002/',
     timeout: 1000,
     headers: { 'Content-Type': 'application/json' },
 });

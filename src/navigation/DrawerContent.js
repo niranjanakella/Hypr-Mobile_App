@@ -51,8 +51,8 @@ const DrawerContent = (props) => {
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        backgroundColor: constants.Colors.primary,
-                        position: "absolute",
+                        backgroundColor: constants.Colors.blue_primary,
+                        position: "absolute",                    
                         top: 0,
                         paddingVertical: constants.vw(10),
                         width: "100%",

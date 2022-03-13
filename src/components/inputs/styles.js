@@ -25,6 +25,8 @@ export const styles = StyleSheet.create({
         width: "100%",
         borderRadius: 8,
         backgroundColor: constants.Colors.inputBackground,
+        borderWidth:1,
+        fontFamily:'Gotham_light',
         fontSize: 16,
     },
     secureIconContainer: {

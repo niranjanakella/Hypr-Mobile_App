@@ -7,7 +7,7 @@ import ConstStrings from './ConstStrings';
 import AppConstant from './AppConstants';
 import ScreensName from './ScreensName';
 
-import { vw, vh } from './Dimension';
+import { vw, vh,width_dim_percent,height_dim_percent } from './Dimension';
 import { GET, POST, DELETE, PUT } from './ServiceAxios';
 
 
@@ -23,6 +23,8 @@ export default {
 
     vw,
     vh,
+    width_dim_percent,
+    height_dim_percent,
     GET,
     POST,
     DELETE,
