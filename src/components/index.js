@@ -7,6 +7,11 @@ import {
     DropdownButton
 } from './buttons';
 import {
+    Placeholder,
+  
+} from './placeholder';
+
+import {
     HeaderWithDrawer,
     HeaderWithSearch,
     PrimaryHeader
@@ -93,4 +98,6 @@ export default {
     FriendSuggestionCard,
 
     ProgressView,
+
+    Placeholder
 }

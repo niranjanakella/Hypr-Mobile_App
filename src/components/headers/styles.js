@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: constants.Colors.white,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
     },
     headerWithSearchInput: {
         width: "55%",

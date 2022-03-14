@@ -44,7 +44,7 @@ const LogIn = (props) => {
     }
     const handleSignIn = () => {
         let count_error = 0;
-        Keyboard.dismiss()
+        Keyboard.dismiss();
         if (state.email.length === 0) {
             setState({
                 ...state,
@@ -139,11 +139,11 @@ const LogIn = (props) => {
                             }}
                             resizeMode={"cover"}
                         /> 
-                <KeyboardAwareScrollView
-                    keyboardShouldPersistTaps="always"
-                    enableOnAndroid={true}
-                    extraHeight={140}
-                >
+                    {/* <KeyboardAwareScrollView
+                        keyboardShouldPersistTaps='handled'
+                        enableOnAndroid={true}                        
+                        
+                    > */}
                     <View style={styles.dataContainer}>
                         {/* <Image
                             source={constants.Images.logo}
@@ -159,8 +159,9 @@ const LogIn = (props) => {
                         <Text style={styles.loginText}>Login</Text>
                         
 
-                        <View style={styles.inputContainer}>
+                        <View style={styles.inputContainer} >
                             <Components.PrimaryInput
+                                autoFocus={true}
                                 placeholder="Email"
                                 keyboardType="email-address"
                                 isError={state.emailErr}
@@ -268,7 +269,7 @@ const LogIn = (props) => {
 
                     </View>
 
-                </KeyboardAwareScrollView>
+                {/* </KeyboardAwareScrollView> */}
                 <Components.ProgressView
                     isProgress={props.auth.isLoading}
                     title="Hypr"

@@ -231,7 +231,7 @@ export const signup = (payload) => {
 };
 
 export const login = (payload) => {
-    alert(`${getConfig().accesspoint}${constants.EndPoint.SIGNUP}`)
+    
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected) {

@@ -9,6 +9,7 @@ const initialstate = {
     isPincodeAvailable: true,
     productList: [],
     flashSale: [],
+    allProducts: [],
     bestSelling: [],
     seasonTopPick: [],
     topPickOnProduct: [],
@@ -31,6 +32,7 @@ const initialstate = {
 }
 
 const marketReducer = (prevState = initialstate, action) => {
+    
     switch (action.type) {
         case types.SET_PRODUCT_DATA:
             return {
@@ -57,6 +59,12 @@ const marketReducer = (prevState = initialstate, action) => {
             return {
                 ...prevState,
                 flashSale: action.data
+            }
+
+        case types.GET_ALL_PRODUCTS_SUCCESS:
+            return {
+                ...prevState,
+                allProducts: action.data
             }
 
         case types.GET_BEST_SELLING_PRODUCT_SUCCESS:

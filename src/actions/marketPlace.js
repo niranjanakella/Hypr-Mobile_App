@@ -98,6 +98,104 @@ export const setProductDetails = (product) => {
     }
 }
 
+
+
+export const getAllProducts = (currentPage,previousProductPage) => {
+    return async (dispatch) => {
+        console.warn('gumana')
+        NetInfo.fetch().then(state => {
+            console.warn(`${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}`)
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.GET_FLASH_PRODUCT_LOADING,
+                    isLoading: true,
+                });
+                // store.dispatch(handleLoader(true))
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {
+                        let data = {
+                            "userId": id
+                        }
+                        GET(
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}/?page=${currentPage}`,
+                           
+                        )
+                            .then((result) => {
+                                
+                                if (result.data.result) {
+                                    
+                                    console.warn(currentPage);
+                                    if(currentPage >= 2){
+
+                                        dispatch({
+                                            type: types.GET_ALL_PRODUCTS_SUCCESS,
+                                            data: [...new Set(previousProductPage),...result.data.data.list ]  ,
+                                        });
+                                    }else{
+                                        dispatch({
+                                            type: types.GET_ALL_PRODUCTS_SUCCESS,
+                                            data: result.data.data.list,
+                                        });
+                                    }
+                                    
+
+
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.GET_FLASH_PRODUCT_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                }
+                            })
+                            .catch((error) => {
+                                console.warn(error)
+                                dispatch({
+                                    type: types.GET_FLASH_PRODUCT_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                console.log("error", error);
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                            });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.GET_FLASH_PRODUCT_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                })
+
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+    };
+};
+
 export const getFlashProduct = () => {
     return async (dispatch) => {
         NetInfo.fetch().then(state => {

@@ -27,19 +27,23 @@ import {
     getTopPickOnProduct,
     getCartList,
     getProductByCategoryId,
-    getProductByKeyword
+    getProductByKeyword,
+    getAllProducts
 } from '../../../actions/marketPlace';
 import { setTabType } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const testImage = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
 const MarketHome = (props) => {
     const [state, setState] = React.useState({
         image: testImage,
-        searchValue: ""
+        searchValue: "",
+        currentPage:1
     })
     useLayoutEffect(() => {
 
+        props.dispatch(getAllProducts(state.currentPage))
         props.dispatch(getCartList())
         props.dispatch(getFlashProduct())
         props.dispatch(getBestSellingProduct())
@@ -74,98 +78,28 @@ const MarketHome = (props) => {
             )
         }
     }
-    const renderFlashSale = ({ item, index }) => {
-        if (index < 4) {
+    const renderAllProducts = ({ item, index }) => {
+        
+        
             return (
                 <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
                     <Components.CategoryCard
-                        image={{ uri: item.f_img1 }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
-                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_price)}`}
-                        onPress={() => { props.dispatch(setProductDetails(item))}}                            
+                        image={{ uri: item.productImage }}
+                        title={item.productNameEn}
+                        off={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
+                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
+                        onPress={() => { props.dispatch(setProductDetails(item))}}                                                                                    
+                    />
+                </View>
+            )       
+    }
+    
+    const loadMore = async (allProducts) => {        
+        await props.dispatch(getAllProducts(state.currentPage,allProducts))            
+    }
 
-                            
-                            
-                    />
-                </View>
-            )
-        }
-    }
-    const renderTopPick = ({ item, index }) => {
-        if (index < 4) {
-            return (
-                <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
-                    <Components.CategoryCard
-                        image={{ uri: item.f_img1 }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
-                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_price)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
-                    />
-                </View>
-            )
-        }
-    }
-    const renderBestSelling = ({ item, index }) => {
-        if (index < 4) {
-            return (
-                <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
-                    <Components.CategoryCard
-                        image={{ uri: item.f_img1 }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
-                        originalPrice={`${calculatePrice(item.f_product_price)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
-                    />
-                </View>
-            )
-        }
-    }
-    const renderSeasonTopPick = ({ item, index }) => {
-        if (index < 4) {
-            return (
-                <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
-                    <Components.CategoryCard
-                        image={{ uri: item.f_img1 }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
-                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_price)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
-                    />
-                </View>
-            )
-        }
-    }
-    const renderTrendingOffers = ({ item, index }) => {
-        if (index < 4) {
-            return (
-                <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
-                    <Components.CategoryCard
-                        image={{ uri: item.f_img1 }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_offer_price)}`}
-                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.f_product_price)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
-                    />
-                </View>
-            )
-        }
-    }
-    const renderRecentlyViewed = ({ item, index }) => {
-        if (index < 4) {
-            return (
-                <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
-                    <Components.CategoryCard
-                        image={{ uri: item.image }}
-                        title={item.f_productname}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.discount)}`}
-                        onPress={() => props.dispatch(setProductDetails(item))}
-                    />
-                </View>
-            )
-        }
-    }
+   
+    
 
     const setProduct = (type) => {
         const payload = {
@@ -195,12 +129,18 @@ const MarketHome = (props) => {
                         paddingVertical: constants.vh(10),
                         borderWidth: 0.5,
                         borderColor: "grey",
-                        borderRadius: 5,
+                        borderRadius: 20,
                         paddingHorizontal: 15,
                         marginHorizontal: 15,
+                        flexDirection:'row'
                     }}
-                >
-                    <Text style={{ color: "grey" }}>Search Products</Text>
+                >   
+                    <FontAwesome
+                        name={'search'}
+                        size={20}
+                        color={constants.Colors.blue_primary}
+                    />
+                    <Text style={{ color: "grey" }}>  Search Products</Text>
                 </TouchableOpacity>
                 <ScrollView
                     style={{
@@ -238,111 +178,32 @@ const MarketHome = (props) => {
                     {
                         props.market.flashSale.length > 0 &&
                         <>
-                            <Components.ViewAllCard
-                                title="Flash Sale"
-                                time={45600}
-                                
-                                buttonTitle="View all"
-                                onPress={() => setProduct("Flash Sale")}
-                            />
-                            <View style={{ marginTop: constants.vh(10) }}>
+                            
+                            <View style={{ marginTop: constants.vh(15),flex:1 }}>
                                 <FlatList
-                                    horizontal={true}
-                                    data={props.market.flashSale}
-                                    renderItem={renderFlashSale}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsHorizontalScrollIndicator={false}
+                                    numColumns={2}
+                                    data={props.market.allProducts}
+                                    renderItem={renderAllProducts}
+                                    keyExtractor={(item, index) => index.toString()}                                           
+                                    extraData={props.market.allProducts}
+                                    style={{height:constants.height_dim_percent * 80,flexGrow:0}}
+                                    contentContainerStyle={{paddingBottom:constants.height_dim_percent * 20,flexGrow:0}}
+                                    onEndReachedThreshold={0.1} // so when you are at 5 pixel from the bottom react run onEndReached function
+                                    onEndReached={async ({distanceFromEnd}) => {                                                             
+                                        
+                                        if (distanceFromEnd > 0 ) 
+                                        {   
+                                            
+                                            await setState((prevState) => ({currentPage:prevState.currentPage + 1}));
+                                            await loadMore(props.market.allProducts);
+                                        }
+                                    }}                             
                                 />
                             </View>
                         </>
                     }
 
 
-                    {
-                        props.market.topPickOnProduct.length > 0 &&
-                        <>
-                            <Components.ViewAllCard
-                                title="Top Picks on"
-                                time={3600}
-                                buttonTitle="View all"
-                                onPress={() => setProduct("Top Picks on")}
-                            />
-
-                            <View style={{ marginTop: constants.vh(10) }}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={props.market.topPickOnProduct}
-                                    renderItem={renderTopPick}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </View>
-                        </>
-                    }
-
-
-                    {
-                        props.market.bestSelling.length > 0 &&
-                        <>
-                            <Components.ViewAllCard
-                                title="Best selling Products"
-                                buttonTitle="View all"
-                                onPress={() => setProduct("Best selling Products")}
-                            />
-
-                            <View style={{ marginTop: constants.vh(10) }}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={props.market.bestSelling}
-                                    renderItem={renderBestSelling}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </View>
-                        </>
-                    }
-
-                    {
-                        props.market.seasonTopPick.length > 0 &&
-                        <>
-                            <Components.ViewAllCard
-                                title="Season's top picks"
-                                buttonTitle="View all"
-                                onPress={() => setProduct("Season's top picks")}
-                            />
-
-                            <View style={{ marginTop: constants.vh(10) }}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={props.market.seasonTopPick}
-                                    renderItem={renderSeasonTopPick}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </View>
-                        </>
-                    }
-
-                    {
-                        props.market.trendingProducts.length > 0 &&
-                        <>
-                            <Components.ViewAllCard
-                                title="Trending offers"
-                                buttonTitle="View all"
-                                onPress={() => setProduct("Trending offers")}
-                            />
-
-                            <View style={{ marginTop: constants.vh(10) }}>
-                                <FlatList
-                                    horizontal={true}
-                                    data={props.market.trendingProducts}
-                                    renderItem={renderTrendingOffers}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </View>
-                        </>
-                    }
 
 
                     {/* <Components.ViewAllCard

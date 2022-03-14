@@ -21,6 +21,7 @@ import Components from '../../components';
 import { styles } from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { BackgroundCarousel } from "../../components/PostSlider";
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 export const ProductSelectCard = ({
@@ -225,11 +226,11 @@ export const CategoryCard = ({
                 <Text style={{
                     fontSize: 16,
                     fontWeight: "bold",
-                    color: constants.Colors.primary
+                    color: constants.Colors.danger
                 }}>{off}</Text>
                 <Text style={{
                     textDecorationLine: "line-through",
-                    color: "#339FFF"
+                    color: constants.Colors.fade
                 }}> {originalPrice}</Text>
             </View>
         </TouchableOpacity>
