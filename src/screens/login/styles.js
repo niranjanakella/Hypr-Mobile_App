@@ -35,13 +35,17 @@ const iPhoneX = Dimensions.get('window').height >= 812
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: constants.Colors.white
     },
     secondryContainer: {
-        flex: 1,
-        backgroundColor: constants.Colors.white
+        marginTop: height_dim_percent * 20,
+        backgroundColor: 'transparent'
     },
     dataContainer: {
+        
+        
         backgroundColor:constants.Colors.white,
         borderWidth:1,
         borderColor:constants.Colors.fade,
@@ -50,7 +54,7 @@ export const styles = StyleSheet.create({
         height:height_dim_percent * 90,        
         borderRadius:45,
         paddingHorizontal: 15,
-        marginTop: height_dim_percent * 26
+        marginTop: constants.vh(1),
     },
     loginText: {
         fontSize: 25,        

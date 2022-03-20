@@ -34,7 +34,7 @@ const iPhoneX = Dimensions.get('window').height >= 812
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: constants.Colors.mute
+        backgroundColor: constants.Colors.white
     },
     secondryContainer: {
         flex: 1,
@@ -57,27 +57,11 @@ export const styles = StyleSheet.create({
         paddingVertical:constants.height_dim_percent  * 2,
         alignItems: "center"
     },
-    DeliveryContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        top:12,
-        backgroundColor: constants.Colors.white,        
-        paddingHorizontal:constants.width_dim_percent  * 2,
-        paddingVertical:constants.height_dim_percent  * 5,
-        alignItems: "center"
-    },
     ProductNameContainer: {
         width: "50%",
         backgroundColor: constants.Colors.white,  
     },
     text16500: {
-        fontSize: 18,
-        fontWeight: "bold",
-        fontFamily:"GothamBold",
-        color: constants.Colors.dark_text
-    },
-    DeliveryText: {
-        bottom:constants.height_dim_percent * 3,
         fontSize: 18,
         fontWeight: "bold",
         fontFamily:"GothamBold",

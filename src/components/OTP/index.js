@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 22,
         fontWeight: "500",
+        fontFamily:"GothamBold",
         color: "#000000",
     },
 });
@@ -64,7 +65,7 @@ class OTPTextView extends Component {
 
     onTextChange = (text, i) => {
         const { inputCellLength, inputCount, handleTextChange } = this.props;
-
+       
         if (text && !this.basicValidation(text)) {
             return;
         }
@@ -106,6 +107,7 @@ class OTPTextView extends Component {
     onKeyPress = (e, i) => {
         const { inputCellLength, inputCount, handleTextChange } = this.props;
         const val = this.state.otpText[i] || "";
+        console.warn('key:'+e.nativeEvent.key )
         if (e.nativeEvent.key === "Backspace" && i !== 0 && !(val.length - 1)) {
             this.inputs[i - 1].focus();
         }

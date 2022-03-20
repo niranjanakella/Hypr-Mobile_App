@@ -654,7 +654,7 @@ const AddAddressMyAccount = (props) => {
                                     alignSelf: "center"
                                 }}
                             >
-                                <Components.PrimaryButton
+                                <Components.ThirdButton
                                     title="Add Address"
                                     onPress={() => {
                                         setState({

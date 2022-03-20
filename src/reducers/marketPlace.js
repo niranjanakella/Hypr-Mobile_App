@@ -9,6 +9,7 @@ const initialstate = {
     isPincodeAvailable: true,
     productList: [],
     flashSale: [],
+    variants: [],
     allProducts: [],
     bestSelling: [],
     seasonTopPick: [],
@@ -65,6 +66,11 @@ const marketReducer = (prevState = initialstate, action) => {
             return {
                 ...prevState,
                 allProducts: action.data
+            }
+        case types.GET_ALL_VARIANTS_SUCCESS:
+            return {
+                ...prevState,
+                variants: action.data
             }
 
         case types.GET_BEST_SELLING_PRODUCT_SUCCESS:

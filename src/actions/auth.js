@@ -31,6 +31,7 @@ export const switchRoute = () => {
             isLoading: true,
             isAppLoading: false
         })
+        
         getUserAccessTokenFromStorage().then(token => {
             if (token !== null) {
                 dispatch({
@@ -98,7 +99,7 @@ export const setUserType = (value) => {
 }
 
 export const logout = () => {
-    console.log("inside logout");
+    
     return async (dispatch) => {
         dispatch({
             type: types.LOGOUT,
@@ -178,6 +179,7 @@ export const signup = (payload) => {
                                 errorMessage: null
                             });
                             store.dispatch(handleLoader(false))
+                            
                             setSignUpUserIdToStorage(result.data.id)
                             NavigationService.navigate(constants.ScreensName.VerifyOtp.name, null)
                         } else {
@@ -234,12 +236,14 @@ export const login = (payload) => {
     
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
-            if (state.isConnected) {
+            
+            if (state.isConnected && state.isInternetReachable) {
                 dispatch({
                     type: types.LOGIN_LOADING,
                     isLoading: true,
                 });
                 store.dispatch(handleLoader(true))
+                
                 const data = {
                     "email": payload.email ? payload.email : "",
                     "password": payload.password ? payload.password : "",
@@ -252,19 +256,26 @@ export const login = (payload) => {
                     {},
                 )
                     .then((result) => {
-                        console.log('result', result);
+                        console.warn('result', result.data);
+                        
                         if (result.data.status) {
                             dispatch({
                                 type: types.LOGIN_SUCCESS,
                                 isLoading: false,
                                 data: result.data.data,
-                                errorMessage: null
-                            });
+                                // userData:
+                                errorMessage: null   
+                            });  
+                            
+                            let user_id = result.data.data._id;
+                            // setUserIdToStorage(result.data.data._id)
+                            // setUserAccessTokenToStorage(result.data.data._id)                            
+                            // store.dispatch(switchRoute())
+                            
+                            setUserIdToStorage(user_id)                            
+                            NavigationService.navigate(constants.ScreensName.VerifyOtp.name, null)
                             store.dispatch(handleLoader(false))
-                            setUserIdToStorage(result.data.data._id)
-                            setUserAccessTokenToStorage(result.data.data._id)
-
-                            store.dispatch(switchRoute())
+                            
                         } else {
                             //@failed return from server
                             store.dispatch(handleLoader(false))
@@ -286,6 +297,7 @@ export const login = (payload) => {
                         }
                     })
                     .catch((error) => {
+                    
                         store.dispatch(handleLoader(false))
                         dispatch({
                             type: types.LOGIN_FAIL,
@@ -473,6 +485,7 @@ export const updateUser = (value) => {
         getUserIdFromStorage().then(id => {
             if (id !== null) {
                 const storeData = store.getState().auth
+                
                 value = {
                     ...value,
                     "_id": id,
@@ -707,17 +720,16 @@ export const forgotPassword = (value) => {
 };
 
 export const verifyOtp = (value) => {
-    console.log('value of log in', value);
-
+    
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
-            if (state.isConnected) {
+            if (state.isConnected && state.isInternetReachable) {
                 dispatch({
                     type: types.VERIFY_OTP_LOADING,
-                    isLoading: true,
+                    isLoading: false,
                 });
                 store.dispatch(handleLoader(true))
-                getSignUpUserIdFromStorage().then(id => {
+                getUserIdFromStorage().then(id => {
                     if (id !== null) {
                         value = {
                             ...value,
@@ -729,7 +741,7 @@ export const verifyOtp = (value) => {
                             {},
                         )
                             .then((result) => {
-                                console.log('result', result);
+                                console.warn('result', result);
                                 if (result.data.status) {
                                     dispatch({
                                         type: types.VERIFY_OTP_SUCCESS,
@@ -743,8 +755,12 @@ export const verifyOtp = (value) => {
                                         type: "success",
                                         position: "top"
                                     });
-                                    NavigationService.navigate(constants.ScreensName.LogIn.name, null)
                                     store.dispatch(handleLoader(false))
+                                    setUserIdToStorage(id)
+                                    setUserAccessTokenToStorage(id)                            
+                                    store.dispatch(switchRoute())
+                            
+                             
                                 } else {
                                     //@failed return from server
                                     dispatch({
@@ -802,6 +818,110 @@ export const verifyOtp = (value) => {
 
     };
 };
+
+
+export const resendOTP = (value) => {
+
+    return async (dispatch) => {
+        NetInfo.fetch().then(state => {
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.VERIFY_OTP_LOADING,
+                    isLoading: false,
+                });
+                store.dispatch(handleLoader(false))
+                getUserIdFromStorage().then(id => {
+                   
+                    if (id !== null) {
+
+                    
+                        value = {
+                            ...value,
+                            "_id": id
+                        }
+                        console.warn(value)
+                        POST(
+                            `${getConfig().accesspoint}${constants.EndPoint.RESEND_OTP}`,
+                            value,
+                            {},
+                        )
+                            .then((result) => {
+                                console.warn('result', result);
+                                if (result.data.status) {
+                                    dispatch({
+                                        type: types.VERIFY_OTP_SUCCESS,
+                                        isLoading: false,
+                                        data: result,
+                                        errorMessage: null
+                                    });
+                                    Toast.show({
+                                        text1: "Hypr",
+                                        text2: "A new OTP has been sent to your email! Please check your inbox.",
+                                        type: "success",
+                                        position: "top"
+                                    });                                    
+                                    store.dispatch(handleLoader(false))
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.VERIFY_OTP_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    store.dispatch(handleLoader(false))
+                                }
+                            })
+                            .catch((error) => {
+                                    
+                                console.warn(error)
+                                dispatch({
+                                    type: types.VERIFY_OTP_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                store.dispatch(handleLoader(false))
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                                console.log("error", error);
+                            });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.VERIFY_OTP_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    store.dispatch(handleLoader(false))
+                    console.log("error", error);
+                })
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+
+    };
+};
+
+
 
 export const socialLogin = ({ value, onSuccess }) => {
     console.log("store data", store.getState());

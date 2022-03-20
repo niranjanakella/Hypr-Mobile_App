@@ -8,8 +8,12 @@ const Endpoints = {
     CHANGE_PASSWORD: `user/changePassword`,
     FORGOT_PASSWORD: `user/forgotPassword`,
     VERIFY_OTP: `user/verifyMobileOtp`,
+    RESEND_OTP: `user/resendMobileOtp`,
 
     GET_ALL_PRODUCTS: `get-products`,
+    GET_ALL_VARIANTS: `get-variants`,
+
+
     GET_FLASH_PRODUCT: `getFlashSaleProduct`,
     GET_BEST_SELLING_PRODUCT: `getBestSellingProduct`,
     GET_SEASON_TOP_PRODUCT: `getSeasonTopProduct`,

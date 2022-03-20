@@ -18,6 +18,7 @@ import Components from '../../../components';
 import { styles } from './styles';
 import {
     setProductType,
+    setVariant,
     getFlashProduct,
     getBestSellingProduct,
     getSeasonTopProduct,
@@ -33,24 +34,21 @@ import {
 import { setTabType } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Placeholder } from '../../../components/placeholder';
 
 const testImage = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
 const MarketHome = (props) => {
     const [state, setState] = React.useState({
         image: testImage,
         searchValue: "",
-        currentPage:1
+        currentPage:1,
+        refreshing:false
     })
     useLayoutEffect(() => {
 
         props.dispatch(getAllProducts(state.currentPage))
-        props.dispatch(getCartList())
-        props.dispatch(getFlashProduct())
-        props.dispatch(getBestSellingProduct())
-        props.dispatch(getSeasonTopProduct())
-        props.dispatch(getTrendingProduct())
-        props.dispatch(getTopPickOnProduct())
-        props.dispatch(getCategory())
+        
+        
         const subscribe = props.navigation.addListener('focus', () => {
             props.dispatch(setTabType("market"))
         })
@@ -88,17 +86,34 @@ const MarketHome = (props) => {
                         title={item.productNameEn}
                         off={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
                         originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
-                        onPress={() => { props.dispatch(setProductDetails(item))}}                                                                                    
+                        onPress={() => { props.dispatch(setVariant(item))}}                                                                                    
                     />
-                </View>
+                </View>                 
+
             )       
     }
     
-    const loadMore = async (allProducts) => {        
-        await props.dispatch(getAllProducts(state.currentPage,allProducts))            
+    const loadMore = async (allProducts) => { 
+        
+        await props.dispatch(getAllProducts(state.currentPage + 1,allProducts)).then(async()=>{
+
+            return new Promise(function (resolve) {
+                
+                resolve(setState( (prevState) => ({...prevState,refreshing:false})))
+            });
+            
+       })            
     }
 
-   
+    const renderEmptyComponent = ()=>(
+        <Placeholder/>
+    )
+
+    const renderFooter = ()=>(
+        state.refreshing ?
+        <Placeholder/>
+        : null
+    )
     
 
     const setProduct = (type) => {
@@ -148,7 +163,7 @@ const MarketHome = (props) => {
                         backgroundColor: constants.Colors.white
                     }}
                 >
-                    {
+                    {/* {
                         props.market.categoryList.length > 0 &&
                         <>
                             <View
@@ -172,20 +187,29 @@ const MarketHome = (props) => {
                                 />
                             </View>
                         </>
-                    }
+                    } */}
 
 
-                    {
-                        props.market.flashSale.length > 0 &&
+                
                         <>
                             
                             <View style={{ marginTop: constants.vh(15),flex:1 }}>
                                 <FlatList
                                     numColumns={2}
                                     data={props.market.allProducts}
-                                    renderItem={renderAllProducts}
-                                    keyExtractor={(item, index) => index.toString()}                                           
-                                    extraData={props.market.allProducts}
+                                    ListEmptyComponent={renderEmptyComponent}
+                                    refreshing={state.refreshing}
+                                    onRefresh={()=>{
+                                        props.dispatch(getAllProducts(1)).then( async()=>{
+                                            await setState( (prevState) => ({...prevState,currentPage:1}));
+                                        })
+                                    
+                                    }}
+                                    renderItem={renderAllProducts}                                    
+                                    keyExtractor={(item, index) => index}                                           
+                                    // extraData={props.market.allProducts}
+
+
                                     style={{height:constants.height_dim_percent * 80,flexGrow:0}}
                                     contentContainerStyle={{paddingBottom:constants.height_dim_percent * 20,flexGrow:0}}
                                     onEndReachedThreshold={0.1} // so when you are at 5 pixel from the bottom react run onEndReached function
@@ -194,15 +218,16 @@ const MarketHome = (props) => {
                                         if (distanceFromEnd > 0 ) 
                                         {   
                                             
-                                            await setState((prevState) => ({currentPage:prevState.currentPage + 1}));
+                                            await setState( (prevState) => ({...prevState,currentPage:prevState.currentPage + 1}));
+                                            await setState( (prevState) => ({...prevState,refreshing:true}));
                                             await loadMore(props.market.allProducts);
                                         }
                                     }}                             
+                                    ListFooterComponent={renderFooter}
                                 />
                             </View>
                         </>
-                    }
-
+               
 
 
 
@@ -226,7 +251,7 @@ const MarketHome = (props) => {
                 </ScrollView>
                 <Components.ProgressView
                     isProgress={props.auth.isLoading}
-                    title="Hypr"
+                    title="Loading..."
                 />
             </SafeAreaView>
         </>

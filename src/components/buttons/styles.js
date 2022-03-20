@@ -11,6 +11,19 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         
     },
+
+    ThirdButtonContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth:1,
+    
+        
+    },    
+    primaryOutlineButtonContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        
+    },
     linearGradient: {
         //flex: 1,
         width: "100%",
@@ -35,6 +48,19 @@ export const styles = StyleSheet.create({
         fontWeight: "600",
         color: constants.Colors.white,
         fontFamily:'GothamBold'
+    },
+    textOutlineButton: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: constants.Colors.blue_primary,
+        fontFamily:'GothamBold',
+        borderColor:constants.Colors.blue_primary,
+        borderWidth:1,
+        textAlign:'center',
+        width: "100%",
+        borderRadius:10,
+        paddingHorizontal:constants.vw(16),
+        paddingVertical:constants.vh(16),
     },
     text13normal: {
         fontSize: 13,

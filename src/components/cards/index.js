@@ -4,6 +4,7 @@ import {
     Image,
     TouchableOpacity,
     Text,
+    Pressable
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -22,6 +23,7 @@ import { styles } from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { BackgroundCarousel } from "../../components/PostSlider";
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { List } from 'react-native-paper';
 
 
 export const ProductSelectCard = ({
@@ -55,6 +57,44 @@ export const ProductSelectCard = ({
         </TouchableOpacity>
     )
 }
+
+
+export const VariantList = ({
+    currencySymbol,
+    variantPrice,
+    itemName,
+    imageID,
+    onPress
+    
+}) => {
+
+    
+    return (
+        <>            
+            <List.Item 
+                title={itemName}
+                titleStyle={{fontFamily:'GothamBold',fontSize:14}}
+                descriptionStyle={{color:constants.Colors.danger,fontFamily:'GothamBold'}}
+                description={currencySymbol+variantPrice}
+                left={()=>                
+                    <FastImage source={{uri:imageID}}
+                        resizeMode={"contain"}
+                        style={{width:constants.width_dim_percent * 10,height:constants.height_dim_percent * 10,borderRadius:30}}           
+                    />}
+
+                style={{borderBottomWidth:1,borderColor:constants.Colors.fade}}
+                right = {()=>
+                <Pressable
+                    onPress={onPress}
+                    style={{alignItems:'center',width:constants.width_dim_percent *10}}>
+                    <Icon name='shoppingcart' color={constants.Colors.blue_primary} size={25} style={{alignSelf:'center',top:constants.height_dim_percent* 3}}/>
+                </Pressable>}
+            />            
+        </>
+    )
+}
+
+
 
 export const DashboardCard = ({
     backgroundColor,

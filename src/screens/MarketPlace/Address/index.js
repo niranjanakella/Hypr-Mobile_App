@@ -675,11 +675,20 @@ const Address = (props) => {
                                 <View
                                     style={{
 
-                                        width: "45%",
+                                        width: "100%",
                                     }}
                                 >
-                                    <Components.PrimaryButton
+                                    <Components.ThirdButton
                                         title="Add Address"
+                                        borderColor={constants.Colors.blue_primary}
+                                        borderRadius = {5}
+                                        isIcon = {true}
+                                        iconName = {'plus'}
+                                        iconColor = {constants.Colors.blue_primary}
+                                        iconSize = {16}
+                                        paddingVertical={constants.height_dim_percent * 2}
+                                        paddingHorizontal={constants.width_dim_percent * 20}
+                                        textColor={constants.Colors.blue_primary}
                                         onPress={() => {
                                             setState({
                                                 ...state,
@@ -688,7 +697,7 @@ const Address = (props) => {
                                         }}
                                     />
                                 </View>
-                                <View
+                                {/* <View
                                     style={{
                                         width: "45%",
                                     }}
@@ -699,7 +708,7 @@ const Address = (props) => {
                                             handleNext()
                                         }}
                                     />
-                                </View>
+                                </View> */}
                             </View>
                         </>
                 }

@@ -67,5 +67,21 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginTop: constants.vh(40)
-    }
+    },
+    title_container:{               
+        alignContent:'center',
+        alignSelf:'center'
+    },
+    otp: { 
+        textAlign: "center", 
+        fontSize: 20,
+        color:constants.Colors.dark_text ,        
+        fontFamily:'GothamBold'
+    },
+    otp_desc: { 
+      textAlign: "center", 
+      fontSize: 18,      
+      fontFamily:'Btha',
+      color:constants.Colors.dark_text,      
+    },
 })

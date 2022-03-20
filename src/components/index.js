@@ -4,7 +4,9 @@ import {
     PrimaryButton,
     ButtonWithIcon,
     SecondryButton,
-    DropdownButton
+    ThirdButton,
+    DropdownButton,
+    PrimaryOutlineButton
 } from './buttons';
 import {
     Placeholder,
@@ -49,6 +51,7 @@ import {
     UserNameByTag,
     CommentCard,
     FriendSuggestionCard,
+    VariantList
 } from './cards';
 
 import OTPTextView from './OTP';
@@ -59,7 +62,9 @@ export default {
     PrimaryButton,
     ButtonWithIcon,
     SecondryButton,
+    ThirdButton,
     DropdownButton,
+    PrimaryOutlineButton,
 
     HeaderWithDrawer,
     HeaderWithSearch,
@@ -96,6 +101,8 @@ export default {
     UserNameByTag,
     CommentCard,
     FriendSuggestionCard,
+
+    VariantList,
 
     ProgressView,
 

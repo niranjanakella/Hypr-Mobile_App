@@ -13,6 +13,7 @@ import MarketHome from '../screens/MarketPlace/Home';
 import Category from '../screens/MarketPlace/Category';
 import ProductList from '../screens/MarketPlace/ProductList';
 import ProductDetail from '../screens/MarketPlace/ProductDetail';
+import Variant from '../screens/MarketPlace/Variant';
 import Cart from '../screens/MarketPlace/Cart';
 import WishList from '../screens/MarketPlace/Wishlist';
 import AddAddress from '../screens/MarketPlace/Address';
@@ -53,6 +54,12 @@ export const MarketPlaceStackFunc = () => {
                 //     const { item } = route.params;                    
                 //     return [{   id: item.product_image,}];
                 // }}
+            />
+             <MarketPlaceStack.Screen
+                component={Variant}
+                name={constants.ScreensName.Variant.name}
+                options={{ gestureEnabled: false,cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}}
+               
             />
             <MarketPlaceStack.Screen
                 component={Cart}

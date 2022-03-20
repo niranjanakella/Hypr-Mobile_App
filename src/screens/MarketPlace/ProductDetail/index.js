@@ -29,7 +29,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const ProductDetail = (props) => {
     const [state, setState] = React.useState({
-        sliderImage: [props.market.productDetails.f_defaultImg, props.market.productDetails.f_img1, props.market.productDetails.f_img2, props.market.productDetails.f_img3],
+        sliderImage: [props.market.productDetails.variantImage, props.market.productDetails.variantImage, props.market.productDetails.variantImage, props.market.productDetails.variantImage],
         country: "",
         pincode: "",
         pincodeErr: false,
@@ -44,10 +44,10 @@ const ProductDetail = (props) => {
         selectedVariant4: "",
         selectedVariant4Val: "",
         combinedVariant: "",
-        variantPrice: props.market.productDetails.f_product_offer_price
+        variantPrice: props.market.productDetails.variantSellPrice
     })
     useEffect(() => {
-        console.warn(props.market.variantName)
+        
         const unsubscribe = props.navigation.addListener('blur', () => {
             props.dispatch(unsetPinCodeData())
         });
@@ -262,86 +262,16 @@ const ProductDetail = (props) => {
         //         position: "top"
         //     });
         //     return 1;
-        // }
-        console.warn(props.market.variantName.length)
-        if (props.market.variantName.length > 0 && state.selectedVariant1Val === "") {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Please select variants.",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
-        if (props.market.variantName.length > 1 && state.selectedVariant2Val === "") {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Please select variants.",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
-        if (props.market.variantName.length > 2 && state.selectedVariant3Val === "") {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Please select variants.",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
-        if (props.market.variantName.length > 3 && state.selectedVariant4Val === "") {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Please select variants.",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
-        if (state.selectedVariant1Val) {
-            state.combinedVariant = state.selectedVariant1Val
-            setState({
-                ...state,
-            })
-        }
-        if (state.selectedVariant2Val) {
-            state.combinedVariant = `${state.combinedVariant}-${state.selectedVariant2Val}`
-            setState({
-                ...state,
+        // }     
 
-            })
-        }
-        if (state.selectedVariant3Val) {
-            state.combinedVariant = `${state.combinedVariant}-${state.selectedVariant3Val}`
-            setState({
-                ...state,
-            })
-        }
-        if (state.selectedVariant4Val) {
-            state.combinedVariant = `${state.combinedVariant}-${state.selectedVariant4Val}`
-            setState({
-                ...state,
-            })
-        }
-
-        const indexOfCombinedVariant = props.market.productDetails.f_combinationVariant.findIndex(item => item.VARIANTKEY === state.combinedVariant)
-
-        if (indexOfCombinedVariant < 0) {
-            Toast.show({
-                text1: constants.AppConstant.Hypr,
-                text2: "Variants not available",
-                type: "error",
-                position: "top"
-            });
-            return 1;
-        }
+   
         const payload = {
-            id: props.market.productDetails._id,
-            buyNow: value,
-            variant: state.combinedVariant,
-            price: state.variantPrice
+            id: props.market.productDetails.vid,
+            buyNow: value,       
+            variantName:props.market.productDetails.variantNameEn ?  props.market.productDetails.variantNameEn : props.market.productDetails.variantKey,
+            price: state.variantPrice,
+            product_code : props.market.productDetails.variantSku,
+            product_image : props.market.productDetails.variantImage
         }
         props.dispatch(addToCart(payload))
     }
@@ -410,14 +340,18 @@ const ProductDetail = (props) => {
 
                     <View style={styles.ProductNamePriceContainer}>
                         <View style={styles.ProductNameContainer}>
-                            <Text style={[styles.text16500, { fontSize: 14, textTransform: "capitalize", }]}>{props.market.productDetails.f_productname}</Text>
+                            <Text style={[styles.text16500, { fontSize: 14, textTransform: "capitalize", }]}>{props.market.productDetails.variantNameEn ? props.market.productDetails.variantNameEn : props.market.productDetails.variantKey}</Text>
                         </View>
                         <View>
                             <Text style={[styles.text16500,{color:constants.Colors.danger,fontSize:30}]}>{props.auth.currency_symbol} {calculatePrice(state.variantPrice)}</Text>
                             <Text style={[styles.text14500, { textDecorationLine: "line-through",color:constants.Colors.fade,left: constants.width_dim_percent * 15 }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text>
                         </View>
                     </View>
-
+                    <View style={styles.DeliveryContainer}>
+                        <View  >
+                            <Text style={[styles.DeliveryText, { fontSize: 20, textTransform: "capitalize", }]}>Delivery</Text>
+                        </View>
+                    </View>
 
                     {/* PIN CODE COMMENT */}
                     {/* <View style={{
@@ -464,73 +398,8 @@ const ProductDetail = (props) => {
                     */}
 
 
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.text30bold}>Variant</Text>
-                    </View>
 
-                    {props.market.variantName.length > 0 &&
-                        <View style={styles.variantContainer}>
-                            <Text style={[styles.text14500, { color: "grey" }]}>{props.market.variantName[0]}</Text>
-                            <FlatList
-                                data={props.market.variantValue[0]}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={renderVariant1}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        </View>
-                    }
-
-                    {props.market.variantName.length > 1 &&
-                        <View style={styles.variantContainer}>
-                            <Text style={[styles.text14500, { color: "grey" }]}>{props.market.variantName[1]}</Text>
-                            <FlatList
-                                data={props.market.variantValue[1]}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={renderVariant2}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        </View>
-                    }
-                    {props.market.variantName.length > 2 &&
-                        <View style={styles.variantContainer}>
-                            <Text style={[styles.text14500, { color: "grey" }]}>{props.market.variantName[2]}</Text>
-                            <FlatList
-                                data={props.market.variantValue[2]}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={renderVariant3}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        </View>
-                    }
-
-                    {props.market.variantName.length > 3 &&
-                        <View style={styles.variantContainer}>
-                            <Text style={[styles.text14500, { color: "grey" }]}>{props.market.variantName[3]}</Text>
-                            <FlatList
-                                data={props.market.variantValue[3]}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={renderVariant4}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        </View>
-                    }
-
-                    <View>
-                        <RenderHtml source={{ html: props.market.productDetails.f_productdescription }} contentWidth={width} />
-                    </View>
-
-                    <View>
-                        <RenderHtml source={{ html: props.market.productDetails.f_specification }} contentWidth={width} />
-                    </View>
-
-                    <View>
-                        <RenderHtml source={{ html: props.market.productDetails.f_refundPolicy }} contentWidth={width} />
-                    </View>
-
+        
                 </ScrollView>
 
                 <View style={styles.buttonContainer}>

@@ -4,8 +4,7 @@ import Toast from 'react-native-toast-message';
 import { getUserAccessTokenFromStorage } from "../../utils/asyncstorage"
 import store from '../../store';
 import { logOut } from '../../actions/auth';
-const axiosInstance = axios.create({
-    baseURL: 'http://192.168.1.10:9002/',
+const axiosInstance = axios.create({    
     timeout: 1000,
     headers: { 'Content-Type': 'application/json' },
 });
@@ -50,6 +49,7 @@ export const GET = async (url, params) => {
             params: params
         }
     );
+    console.warn(getRes);
     if (getRes.status === 200) {
         return { data: getRes.data, status: true };
     } else {

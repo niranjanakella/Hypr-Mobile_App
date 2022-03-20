@@ -44,7 +44,7 @@ const Cart = (props) => {
                     count={item.f_itemQuantity}
                     originalPrice={`${item.f_itemQuantity} × ${props.auth.currency_symbol} ${calculatePrice(item.f_ProductPrice)}`}
                     price={`${props.auth.currency_symbol} ${calculatePrice(item.f_totalAmount)}`}
-                    title={item.f_ServiceName}
+                    title={item.f_variantName}
                     onPressDecrease={() => { handleDecreaseItemCart(item) }}
                     onPressDelete={() => { handleRemoveItemCart(item) }}
                     onPressIncrease={() => { handleIncreaseItemCart(item) }}
@@ -123,6 +123,7 @@ const Cart = (props) => {
                     props.market.cartList.length > 0 &&
                     <View style={{ paddingHorizontal: 15 }}>
                         <Components.PrimaryButton
+                            
                             title={`Buy ${props.auth.currency_symbol} ${calculatePrice(props.market.totalPayingAmount)}`}
                             onPress={() => {
                                 NavigationService.navigate(constants.ScreensName.Address.name, null)

@@ -59,40 +59,39 @@ export const clearSearchList = () => {
 export const setProductDetails = (product) => {
     
     return async (dispatch) => {
-        
-        let variants = product.variants;
-        let variantName = [];
-        let variantValue = [];
-        console.warn(variants);
-        variants.map((item,index) => {  
-            
-            // for (const key of Object.keys(item)) {
-            //     alert(item[key])          
-            //     const name = key
-            //     const val = item[key];
-            //     variantName.push(name)
-            //     variantValue.push(val)
 
-            // }
+        console.warn(product);
+        // let variants = product.variants;
+        // let variantName = [];
+        // let variantValue = [];
+        // console.warn(variants);
+        // variants.map((item,index) => {  
+            
+        //     // for (const key of Object.keys(item)) {
+        //     //     alert(item[key])          
+        //     //     const name = key
+        //     //     const val = item[key];
+        //     //     variantName.push(name)
+        //     //     variantValue.push(val)
+
+        //     // }
 
                     
-                const name = item
-                const val = item[index];
-                variantName.push(name)
-                variantValue.push(val)
+        //         const name = item
+        //         const val = item[index];
+        //         variantName.push(name)
+        //         variantValue.push(val)
 
-        })
+        // })
 
         
         dispatch({
             type: types.SET_PRODUCT_DETAILS,
-            product: product,
-            variantName: variantName,
-            variantValue: variantValue
+            product: product            
         })
 
         
-        NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.f_img1})
+        NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.variantImage})
 
         
     }
@@ -100,31 +99,37 @@ export const setProductDetails = (product) => {
 
 
 
+
 export const getAllProducts = (currentPage,previousProductPage) => {
     return async (dispatch) => {
-        console.warn('gumana')
+        
         NetInfo.fetch().then(state => {
-            console.warn(`${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}`)
+            
             if (state.isConnected && state.isInternetReachable) {
                 dispatch({
                     type: types.GET_FLASH_PRODUCT_LOADING,
                     isLoading: true,
+             
                 });
+                
                 // store.dispatch(handleLoader(true))
                 getUserIdFromStorage().then(id => {
+                    
                     if (id !== null) {
+
+                        console.warn(`${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}?page=${currentPage}`);    
                         let data = {
                             "userId": id
                         }
                         GET(
-                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}/?page=${currentPage}`,
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}?page=${currentPage}`,
                            
                         )
                             .then((result) => {
-                                
+                                console.warn(result.code);
                                 if (result.data.result) {
                                     
-                                    console.warn(currentPage);
+                                    
                                     if(currentPage >= 2){
 
                                         dispatch({
@@ -143,7 +148,98 @@ export const getAllProducts = (currentPage,previousProductPage) => {
                                 } else {
                                     //@failed return from server
                                     dispatch({
-                                        type: types.GET_FLASH_PRODUCT_FAIL,
+                                        type: types.GET_ALL_PRODUCT_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                }
+                            })
+                            .catch((error) => {
+                                console.warn('error'+error)
+                                dispatch({
+                                    type: types.GET_ALL_PRODUCT_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                console.log("error", error);
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                            });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.GET_FLASH_PRODUCT_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                })
+
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+    };
+};
+
+
+export const setVariant = (product) => {
+    return async (dispatch) => {
+            
+        NetInfo.fetch().then(state => {
+            
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.GET_FLASH_PRODUCT_LOADING,
+                    isLoading: true,
+                });
+                store.dispatch(handleLoader(true))
+                getUserIdFromStorage().then(id => {
+                    
+                    if (id !== null) {
+                        let data = {
+                            "userId": id
+                        }
+                        GET(
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_VARIANTS}?pid=${product.pid}`,
+                           
+                        )
+                            .then((result) => {                                    
+                                console.warn(result.data.data)      
+                                if (result.data.data) {
+                                      
+                                    
+                                   dispatch({
+                                        type: types.GET_ALL_VARIANTS_SUCCESS,
+                                        data: result.data.data,                                        
+                                    })
+
+                                    store.dispatch(handleLoader(false))
+                                    NavigationService.navigate(constants.ScreensName.Variant.name, null)
+
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.GET_ALL_VARIANTS_FAIL,
                                         isLoading: false,
                                         errorMessage: result.data.msg
                                     });
@@ -158,7 +254,7 @@ export const getAllProducts = (currentPage,previousProductPage) => {
                             .catch((error) => {
                                 console.warn(error)
                                 dispatch({
-                                    type: types.GET_FLASH_PRODUCT_FAIL,
+                                    type: types.GET_ALL_VARIANTS_FAIL,
                                     isLoading: false,
                                     errorMessage: JSON.stringify(error)
                                 });
@@ -881,20 +977,23 @@ export const getProductByKeyword = (keyword) => {
 
 export const addToCart = (payload) => {
     return async (dispatch) => {
+        console.warn(payload);
         NetInfo.fetch().then(state => {
             if (state.isConnected) {
                 dispatch({
                     type: types.ADD_CART_LOADING,
                     isLoading: true,
                 });
-                store.dispatch(handleLoader(true))
+                store.dispatch(handleLoader(false))
                 getUserIdFromStorage().then(id => {
                     if (id !== null) {
                         let value = {
                             "userId": id,
                             "ProductId": payload.id,
-                            "variantName": payload.variant,
-                            "product_price": payload.price
+                            "variantName": payload.variantName,
+                            "product_price": payload.price,
+                            "product_code" : payload.product_code,
+                            "product_image" : payload.product_image
                         }
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.ADD_TO_CART}`,
@@ -902,7 +1001,7 @@ export const addToCart = (payload) => {
                             {},
                         )
                             .then((result) => {
-                                console.log('result', result);
+                                console.warn('result', result);
                                 if (result.data.status) {
                                     dispatch({
                                         type: types.ADD_CART_SUCCESS,
@@ -937,6 +1036,7 @@ export const addToCart = (payload) => {
                                 }
                             })
                             .catch((error) => {
+                                console.warn(error)
                                 dispatch({
                                     type: types.ADD_CART_FAIL,
                                     isLoading: false,
@@ -956,6 +1056,7 @@ export const addToCart = (payload) => {
                         store.dispatch(handleLoader(false))
                     }
                 }).catch((error) => {
+                    console.warn(error)
                     dispatch({
                         type: types.ADD_CART_FAIL,
                         isLoading: false,
@@ -999,7 +1100,7 @@ export const getCartList = (payload) => {
                             {},
                         )
                             .then((result) => {
-                                console.log('result', result);
+                                console.warn('result', result.data);
                                 if (result.data.status) {
                                     let totalAmount = 0;
                                     result.data.id.map(item => {
@@ -1097,7 +1198,7 @@ export const increaseCartItem = (payload) => {
                                         data: result.data.id,
                                     });
                                     store.dispatch(getCartList())
-                                    //store.dispatch(handleLoader(false))
+                                    store.dispatch(handleLoader(false))
 
                                 } else {
                                     //@failed return from server

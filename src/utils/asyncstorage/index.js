@@ -47,6 +47,18 @@ export const setUserIdToStorage = async (value) => {
 
 
 /*
+ * [setUserAccessToken functions set value of Token]
+ * @param {value  string}   
+ *    
+*/
+export const setUserDataToStorage = async (value) => {
+    return new Promise(function (resolve) {
+        resolve(writeStorage('USER_DATA', value));
+    });
+}
+
+
+/*
  * [getUserAccessToken functions get user value from Token]  
  * @return {value}   
 */

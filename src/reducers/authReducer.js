@@ -81,7 +81,7 @@ const authReducer = (prevState = initialstate, action) => {
                 ...prevState,
                 isLoading: action.isLoading,
                 userData: action.data,
-                accessToken: action.data.accessToken,
+                // accessToken: action.data.accessToken,
                 userId: action.data._id,
                 usertype: action.data.signupType
             }

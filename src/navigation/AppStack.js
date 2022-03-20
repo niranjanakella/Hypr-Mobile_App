@@ -191,6 +191,7 @@ const HyprDrawer = () => {
       drawerContent={(drawerProps) => <DrawerContent {...drawerProps} />}
     >
       {/* Dashboard */}
+      
       <Drawer.Screen name="Dashboard" component={BottomTabs} />
       <Drawer.Screen name="FundTransfer" component={FundTransfer} />
       <Drawer.Screen name="TopUpWallet" component={TopUpWalletFunc} />

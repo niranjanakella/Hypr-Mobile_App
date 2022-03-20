@@ -36,7 +36,7 @@ export const ProgressView = (props) => {
             <SafeAreaView style={[styles.overlay, { alignItems: 'center', justifyContent: 'center' }]}>
                 <View style={{ borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 25, paddingVertical: 15 }}>
                     <Text style={{ fontSize: 20, fontWeight: '200' }}>{props.title !== undefined ? props.title : 'Loading'}</Text>
-                    <ActivityIndicator color={constants.Colors.primary} size="large" />
+                    <ActivityIndicator color={constants.Colors.blue_primary} size="large" />
                 </View>
             </SafeAreaView>
         );

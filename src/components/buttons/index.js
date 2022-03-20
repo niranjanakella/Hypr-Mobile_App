@@ -13,6 +13,7 @@ import { styles } from './styles';
 export const PrimaryButton = ({
     borderColor,
     backgroundColor,
+    
     title,
     onPress,
     paddingVertical,
@@ -24,7 +25,8 @@ export const PrimaryButton = ({
             colors={[constants.Colors.gradient.contrast_1, constants.Colors.gradient.contrast_3]}
             style={[styles.linearGradient, {
                 paddingVertical: paddingVertical ? paddingVertical : constants.vh(16),
-                paddingHorizontal: paddingHorizontal ? paddingHorizontal : 0
+                paddingHorizontal: paddingHorizontal ? paddingHorizontal : 0,
+                bottom:20
             }]}>
             <TouchableOpacity
                 activeOpacity={1}
@@ -35,6 +37,28 @@ export const PrimaryButton = ({
                 <Text style={styles.text16600}>{title}</Text>
             </TouchableOpacity>
         </LinearGradient>
+    )
+}
+
+export const PrimaryOutlineButton = ({
+    borderColor,
+    backgroundColor,
+    title,
+    onPress,
+    paddingVertical,
+    paddingHorizontal
+}) => {
+    return (
+       
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={onPress}
+                style={[
+                    styles.primaryOutlineButtonContainer,
+                ]}>
+                <Text style={styles.textOutlineButton}>{title}</Text>
+            </TouchableOpacity>
+      
     )
 }
 
@@ -72,6 +96,55 @@ export const SecondryButton = ({
                     size={30}
                     color={constants.Colors.danger}
                     />
+                    :
+                    <Text style={[styles.text16600, { color: textColor ? textColor : constants.Colors.white }]}>{title}</Text>
+                }
+        </TouchableOpacity>
+    )
+}
+
+
+export const ThirdButton = ({
+    borderColor,
+    backgroundColor,
+    title,
+    onPress,
+    paddingVertical,
+    paddingHorizontal,
+    borderRadius,
+    textColor,
+    isIcon,
+    iconName,
+    iconColor,
+    iconSize,
+    isWhislisted
+}) => {
+    return (
+        <TouchableOpacity
+            activeOpacity={1}
+            onPress={onPress}
+            style={[
+                styles.ThirdButtonContainer,
+                {
+                    backgroundColor: backgroundColor,
+                    paddingVertical: paddingVertical,
+                    paddingHorizontal: paddingHorizontal,
+                    borderColor: borderColor,
+                    borderRadius: borderRadius,
+                    bottom:20,
+                    flexDirection:'row'
+                }
+            ]}>
+                {
+                    isIcon?
+                    <>
+                    <AntDesign
+                    name={iconName}
+                    size={iconSize}
+                    color={iconColor}
+                    />
+                    <Text style={[styles.text16600, { color: textColor ? textColor : constants.Colors.white }]}>{title}</Text>
+                    </>
                     :
                     <Text style={[styles.text16600, { color: textColor ? textColor : constants.Colors.white }]}>{title}</Text>
                 }

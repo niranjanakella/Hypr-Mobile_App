@@ -253,9 +253,9 @@ export const PrimaryHeader = ({
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center",
-            paddingVertical: 5,
+            paddingVertical: 10,
             paddingStart: 15,
-            backgroundColor: constants.Colors.primary
+            backgroundColor: constants.Colors.white
         }}>
             <TouchableOpacity
                 onPress={onPress}
@@ -273,7 +273,7 @@ export const PrimaryHeader = ({
                 <AntDesign
                     name="arrowleft"
                     size={30}
-                    color={"#fff"}
+                    color={constants.Colors.blue_primary}
                 />
 
             </TouchableOpacity>
@@ -287,8 +287,8 @@ export const PrimaryHeader = ({
             >
                 <Text style={{
                     fontSize: 16,
-                    fontWeight: "700",
-                    color: constants.Colors.white
+                    fontFamily:'GothamBold',                    
+                    color: constants.Colors.dark_text
                 }}>{title}</Text>
             </View>
         </View>

@@ -17,39 +17,33 @@ export const Placeholder = ({
         <SkeletonPlaceholder highlightColor={constants.Colors.blue_primary} >
         <View style={{ flexDirection: "row",marginTop:20}}>                
             <View style={{ marginLeft: 20 }}>
-              <View style={{ flexDirection: "row"}}>
-                <View style={{ width: 60, height: 60, borderRadius: 50 }} />  
-                <View style={{  width: constants.width_dim_percent * 40, height: 20, borderRadius: 4,top:20 ,left:5}}/>
-              </View>            
-              
-              <View style={{marginTop: 6, width: constants.width_dim_percent * 90, height:  constants.height_dim_percent * 10, borderRadius: 4 }} />
-              <View style={{ marginTop: 6, width: constants.width_dim_percent * 30, height: 20, borderRadius: 4 }}/>
+              <View style={{ flexDirection: "row"}}>                
+                <View style={{marginTop: 6, width: constants.width_dim_percent * 45, height:  constants.height_dim_percent * 30, borderRadius: 10,right:5}} />
+                <View style={{ marginTop: 6, width: constants.width_dim_percent * 45, height: constants.height_dim_percent * 30, borderRadius: 10 }}/>
+              </View>                                        
             </View>
         </View>
-  
+
         <View style={{ flexDirection: "row",marginTop:20}}>                
             <View style={{ marginLeft: 20 }}>
-              <View style={{ flexDirection: "row"}}>
-                <View style={{ width: 60, height: 60, borderRadius: 50 }} />  
-                <View style={{  width: constants.width_dim_percent * 40, height: 20, borderRadius: 4,top:20 ,left:5}}/>
-              </View>            
-              
-              <View style={{marginTop: 6, width: constants.width_dim_percent * 90, height:  constants.height_dim_percent * 10, borderRadius: 4 }} />
-              <View style={{ marginTop: 6, width: constants.width_dim_percent * 30, height: 20, borderRadius: 4 }}/>
+              <View style={{ flexDirection: "row"}}>                
+                <View style={{marginTop: 6, width: constants.width_dim_percent * 45, height:  constants.height_dim_percent * 30, borderRadius: 10,right:5}} />
+                <View style={{ marginTop: 6, width: constants.width_dim_percent * 45, height: constants.height_dim_percent * 30, borderRadius: 10 }}/>
+              </View>                                        
             </View>
         </View>
-  
+
         <View style={{ flexDirection: "row",marginTop:20}}>                
             <View style={{ marginLeft: 20 }}>
-              <View style={{ flexDirection: "row"}}>
-                <View style={{ width: 60, height: 60, borderRadius: 50 }} />  
-                <View style={{  width: constants.width_dim_percent * 40, height: 20, borderRadius: 4,top:20 ,left:5}}/>
-              </View>            
-              
-              <View style={{marginTop: 6, width: constants.width_dim_percent * 90, height:  constants.height_dim_percent * 10, borderRadius: 4 }} />
-              <View style={{ marginTop: 6, width: constants.width_dim_percent * 30, height: 20, borderRadius: 4 }}/>
+              <View style={{ flexDirection: "row"}}>                
+                <View style={{marginTop: 6, width: constants.width_dim_percent * 45, height:  constants.height_dim_percent * 30, borderRadius: 10,right:5}} />
+                <View style={{ marginTop: 6, width: constants.width_dim_percent * 45, height: constants.height_dim_percent * 30, borderRadius: 10 }}/>
+              </View>                                        
             </View>
         </View>
+
+  
+   
         </SkeletonPlaceholder>
     )
 }

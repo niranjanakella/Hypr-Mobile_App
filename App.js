@@ -16,6 +16,7 @@ export function App(props) {
   useEffect(() => {
     setTimeout(() => {
       props.dispatch(switchRoute())
+      
     }, 2000);
   }, [])
   return (
@@ -27,7 +28,7 @@ export function App(props) {
           :
           // <AuthStack />
           (
-            props.auth.accessToken ?
+            props.auth.accessToken !=null ?
               <AppStack />
               :
               <AuthStack />

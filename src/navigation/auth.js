@@ -21,6 +21,7 @@ const AuthStackFunc = () => {
     return (
         <AuthStack.Navigator
             headerMode={"none"}
+            initialRouteName={constants.ScreensName.LogIn.name}
         >
             <AuthStack.Screen
                 component={LogIn}

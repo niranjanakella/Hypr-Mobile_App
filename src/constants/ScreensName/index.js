@@ -32,6 +32,9 @@ const Screens = {
     ProductDetail: {
         name: "ProductDetail"
     },
+    Variant: {
+        name: "Variant"
+    },
     Cart: {
         name: "Cart"
     },

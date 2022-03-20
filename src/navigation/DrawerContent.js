@@ -36,6 +36,7 @@ export const isIPhoneX = () => Platform.OS === 'ios' && !Platform.isPad && !Plat
 
 
 const DrawerContent = (props) => {
+    
     return (
         <SafeAreaView
             style={{
@@ -51,7 +52,7 @@ const DrawerContent = (props) => {
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        backgroundColor: constants.Colors.blue_primary,
+                        backgroundColor: constants.Colors.fade,
                         position: "absolute",                    
                         top: 0,
                         paddingVertical: constants.vw(10),
@@ -167,7 +168,7 @@ const DrawerContent = (props) => {
                                 <FontAwesome5
                                     name="shopping-cart"
                                     size={25}
-                                    color={constants.Colors.primary}
+                                    color={constants.Colors.blue_primary}
                                 />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.textStyle}>Product</Text>
@@ -177,7 +178,7 @@ const DrawerContent = (props) => {
                             <AntDesign
                                 name="right"
                                 size={20}
-                                color={constants.Colors.primary}
+                                color={constants.Colors.blue_primary}
                             />
                         </TouchableOpacity>
 
@@ -188,7 +189,7 @@ const DrawerContent = (props) => {
                                 <MaterialIcons
                                     name="miscellaneous-services"
                                     size={30}
-                                    color={constants.Colors.primary}
+                                    color={constants.Colors.blue_primary}
                                 />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.textStyle}>Services</Text>
@@ -198,18 +199,18 @@ const DrawerContent = (props) => {
                             <AntDesign
                                 name="right"
                                 size={20}
-                                color={constants.Colors.primary}
+                                color={constants.Colors.blue_primary}
                             />
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             activeOpacity={1}
                             style={styles.itemContainer}>
                             <View style={styles.itemSecondryContainer}>
                                 <MaterialIcons
                                     name="flight"
                                     size={30}
-                                    color={constants.Colors.primary}
+                                    color={constants.Colors.blue_primary}
                                 />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.textStyle}>Travel</Text>
@@ -219,11 +220,11 @@ const DrawerContent = (props) => {
                             <AntDesign
                                 name="right"
                                 size={20}
-                                color={constants.Colors.primary}
+                                color={constants.Colors.blue_primary}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => props.navigation.navigate("DigitalProducts")}
                             activeOpacity={1}
                             style={styles.itemContainer}>
@@ -243,7 +244,7 @@ const DrawerContent = (props) => {
                                 size={20}
                                 color={constants.Colors.primary}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </>
                 }
 
@@ -471,14 +472,14 @@ const DrawerContent = (props) => {
                 }]}>
                 <View style={styles.itemSecondryContainer}>
                     <View style={styles.textContainer}>
-                        <Text style={styles.textStyle}>LOG OUT</Text>
+                        <Text style={[{fontFamily:'GothamBold'}]}>LOG OUT</Text>
                     </View>
                 </View>
 
                 <MaterialIcons
                     name="logout"
                     size={30}
-                    color={constants.Colors.primary}
+                    color={constants.Colors.blue_primary}
                 />
             </TouchableOpacity>
 
@@ -500,8 +501,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     textStyle: {
-        fontSize: 16,
-        fontWeight: "600"
+        fontSize: 16,        
+        fontFamily:'Gotham_light'
     },
     textContainer: {
         marginStart: constants.vw(20)
