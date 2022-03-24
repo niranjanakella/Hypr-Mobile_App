@@ -20,7 +20,8 @@ import {
 
 const SearchProduct = (props) => {
     const [state, setState] = useState({
-        searchValue: ""
+        searchValue: "",
+        isFocus:false
     })
     const handleGetProduct = () => {
         props.dispatch(getProductByKeyword(state.searchValue))
@@ -52,6 +53,9 @@ const SearchProduct = (props) => {
                     showinput={true}
                     isCartCount={true}
                     autoFocus={true}
+                    onFocus={()=>setState({...state,isFocus:true})}
+                    onBlur={()=>setState({...state,isFocus:false})}
+                    isFocus={state.isFocus}
                     cartCount={props.market.cartList.length}
                     onPressCart={() => { NavigationService.navigate(constants.ScreensName.Cart.name, null) }}
                     onPressDrawer={() => { handleBackutton() }}

@@ -155,7 +155,7 @@ const LogIn = (props) => {
 
                         
                             
-                            <Text style={styles.loginText}>Login</Text>
+                            <Text style={styles.loginText}>Welcome To Hypr</Text>
                             
 
                             <View style={styles.inputContainer} >

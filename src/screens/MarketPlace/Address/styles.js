@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from 'react-native-paper';
 
 import constants from '../../../constants';
 
@@ -34,14 +35,22 @@ export const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0,
+        
     },
     modalDataContainer: {
-        backgroundColor: constants.Colors.secondry,
+        backgroundColor: constants.Colors.white,
+        borderWidth:1,
+        borderColor:constants.Colors.fade,
         width: "100%",
         maxHeight: constants.vh(550),
         paddingHorizontal: 15,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingVertical: 10
+    },
+    label:{
+        fontFamily:'GothamBold',
+        fontSize:18,
+        paddingBottom:10
     }
 })

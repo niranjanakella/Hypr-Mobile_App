@@ -17,6 +17,11 @@ import Toast from 'react-native-toast-message';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RenderHtml from 'react-native-render-html';
+import {
+    getWishList,
+
+  
+} from '../../../actions/marketPlace';
 
 import * as NavigationService from '../../../navigation/NavigationService';
 import constants from '../../../constants';
@@ -47,7 +52,7 @@ const ProductDetail = (props) => {
         variantPrice: props.market.productDetails.variantSellPrice
     })
     useEffect(() => {
-        
+        props.dispatch(getWishList())
         const unsubscribe = props.navigation.addListener('blur', () => {
             props.dispatch(unsetPinCodeData())
         });
@@ -278,10 +283,14 @@ const ProductDetail = (props) => {
 
     const handleAddToWishlist = () => {
         const payload = {
-            id: props.market.productDetails._id
+            pid: props.market.productDetails.pid,            
+            product:props.market.productDetails
         }
+        console.warn(props.market.wishList)
         props.dispatch(addToWishlist(payload))
     }
+  
+    
 
     const handleCheckPinCode = () => {
         if (state.pincode === "") {
@@ -331,7 +340,7 @@ const ProductDetail = (props) => {
                         containerStyle={{
                             height: constants.vh(310)
                         }}
-                        showButton={false}
+                showButton={false}
                         unselectedButtonBorderColor={constants.Colors.dark_text}
                         selectedButtonColor={constants.Colors.blue_primary}
                     />
@@ -344,7 +353,7 @@ const ProductDetail = (props) => {
                         </View>
                         <View>
                             <Text style={[styles.text16500,{color:constants.Colors.danger,fontSize:30}]}>{props.auth.currency_symbol} {calculatePrice(state.variantPrice)}</Text>
-                            <Text style={[styles.text14500, { textDecorationLine: "line-through",color:constants.Colors.fade,left: constants.width_dim_percent * 15 }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text>
+                            {/* <Text style={[styles.text14500, { textDecorationLine: "line-through",color:constants.Colors.fade,left: constants.width_dim_percent * 15 }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text> */}
                         </View>
                     </View>
                     <View style={styles.DeliveryContainer}>
@@ -405,11 +414,15 @@ const ProductDetail = (props) => {
                 <View style={styles.buttonContainer}>
                     <View style={{ width: "32%" }}>
                         <Components.SecondryButton
-                            onPress={() => {
+                            onPress={() => {                                
                                 handleAddToWishlist()
                             }}
                             isIcon={true}
-                            isWhislisted={props.market.productDetails.onWishList}
+                            isWhislisted={(props.market.wishList.id ? 
+                               ( props.market.wishList.id.some((item)=>item.f_VariantId === props.market.productDetails.vid) ? 
+                                true : false)
+                                : false
+                            )}
                             backgroundColor={constants.Colors.white}
                             borderRadius={40}
                             paddingVertical={constants.vh(10)}

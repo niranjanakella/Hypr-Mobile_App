@@ -28,13 +28,15 @@ import {
     filterCity,
     addNewAddress
 } from '../../../actions/marketPlace';
-import { saveAddress } from '../../../actions/auth';
+import { saveAddress,getUser } from '../../../actions/auth';
 import * as NavigationService from '../../../navigation/NavigationService';
 
 const Address = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     useEffect(() => {
         props.dispatch(getCountryList())
+        props.dispatch(getUser())
+        
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -163,6 +165,7 @@ const Address = (props) => {
             >
                 <Components.CountryCard
                     title={item.Name}
+                    // image={item.image}
                     onPress={() => handleSelectCountry(item)}
                 />
             </View>
@@ -331,7 +334,7 @@ const Address = (props) => {
             setState({
                 ...state,
                 pinCodeErr: true,
-                pinCodeErrMsg: "Please enter a valid pincode."
+                pinCodeErrMsg: "Please enter a valid pincode. Maximum length of pincode is 6."
             })
             return 1;
         }
@@ -408,21 +411,26 @@ const Address = (props) => {
             ...state,
             address: "",
             addressErr: false,
+            addressFocus: false,
             addressErrMsg: "",
             city: "",
             cityCode: null,
             cityErr: false,
+            cityFocus: false,
             cityErrMsg: "",
             state: "",
             stateCode: null,
             stateErr: false,
+            stateFocus: false,
             stateErrMsg: "",
             country: "",
             countryCode: null,
             countryErr: false,
+            countryFocus: false,
             countryErrMsg: "",
             pinCode: "",
             pinCodeErr: false,
+            pinCodeFocus: false,
             pinCodeErrMsg: "",
             showCountryModal: false,
             showStateModal: false,
@@ -432,12 +440,15 @@ const Address = (props) => {
             searchCity: "",
             name: "",
             nameErr: false,
+            nameFocus: false,
             nameErrMsg: "",
             phone: "",
             phoneErr: false,
             phoneErrMsg: "",
+            phoneFocus: false,
             locality: "",
             localityErr: false,
+            localityFocus: false,
             localityErrMsg: "",
             landmark: "",
             alternatePhone: "",
@@ -454,7 +465,11 @@ const Address = (props) => {
             });
             return 1;
         }
-        props.dispatch(saveAddress(state.selectedAddress))
+        let payload= {
+                address:state.selectedAddress,
+                cart:props.market.cartList
+        }
+        props.dispatch(saveAddress(payload))
     }
     return (
         <>
@@ -474,10 +489,14 @@ const Address = (props) => {
                                 extraHeight={140}
                             >
                                 <View style={styles.inputContainer}>
+                                    <Text style={styles.label}>Name</Text>
                                     <Components.PrimaryInput
                                         placeholder="Name"
                                         isError={state.nameErr}
                                         error={state.nameErrMsg}
+                                        onFocus={()=>setState({...state,nameFocus:true})}
+                                        onBlur={()=>setState({...state,nameFocus:false})}                                
+                                        isFocus = {state.nameFocus}
                                         value={state.name}
                                         onChangeText={(name) => {
                                             setState({
@@ -490,12 +509,16 @@ const Address = (props) => {
                                     />
                                 </View>
                                 <View style={styles.inputContainer}>
+                                <Text style={styles.label}>Contact Number</Text>
                                     <Components.PrimaryInput
                                         placeholder="Phone"
                                         keyboardType="numeric"
                                         returnKeyType="done"
                                         isError={state.phoneErr}
                                         error={state.phoneErrMsg}
+                                        onFocus={()=>setState({...state,phoneFocus:true})}
+                                        onBlur={()=>setState({...state,phoneFocus:false})}                                
+                                        isFocus = {state.phoneFocus}
                                         value={state.phone}
                                         onChangeText={(phone) => {
                                             setState({
@@ -508,6 +531,7 @@ const Address = (props) => {
                                     />
                                 </View>
                                 <View style={styles.inputContainer}>
+                                <Text style={styles.label}>Address Information</Text>
                                     <Components.DropdownButton
                                         title={state.country ? state.country : "Select Country"}
                                         textColor={state.country ? "#000" : "grey"}
@@ -539,6 +563,9 @@ const Address = (props) => {
                                         placeholder="City/District"
                                         isError={state.cityErr}
                                         error={state.cityErrMsg}
+                                        onFocus={()=>setState({...state,cityFocus:true})}
+                                        onBlur={()=>setState({...state,cityFocus:false})}                                
+                                        isFocus = {state.cityFocus}
                                         value={state.city}
                                         onChangeText={(city) => {
                                             setState({
@@ -555,6 +582,9 @@ const Address = (props) => {
                                         placeholder="Address"
                                         isError={state.addressErr}
                                         error={state.addressErrMsg}
+                                        onFocus={()=>setState({...state,addressFocus:true})}
+                                        onBlur={()=>setState({...state,addressFocus:false})}                                
+                                        isFocus = {state.addressFocus}
                                         value={state.address}
                                         onChangeText={(address) => {
                                             setState({
@@ -571,6 +601,9 @@ const Address = (props) => {
                                         placeholder="Locality"
                                         isError={state.localityErr}
                                         error={state.localityErrMsg}
+                                        onFocus={()=>setState({...state,localityFocus:true})}
+                                        onBlur={()=>setState({...state,localityFocus:false})}                                
+                                        isFocus = {state.localityFocus}
                                         value={state.locality}
                                         onChangeText={(locality) => {
                                             setState({
@@ -585,6 +618,9 @@ const Address = (props) => {
                                 <View style={styles.inputContainer}>
                                     <Components.PrimaryInput
                                         placeholder="Landmark (Optional)"
+                                        onFocus={()=>setState({...state,landmarkFocus:true})}
+                                        onBlur={()=>setState({...state,landmarkFocus:false})}                                
+                                        isFocus = {state.landmarkFocus}
                                         value={state.landmark}
                                         onChangeText={(landmark) => {
                                             setState({
@@ -601,6 +637,9 @@ const Address = (props) => {
                                         keyboardType="numeric"
                                         returnKeyType="done"
                                         isError={state.pinCodeErr}
+                                        onFocus={()=>setState({...state,pinCodeFocus:true})}
+                                        onBlur={()=>setState({...state,pinCodeFocus:false})}                                
+                                        isFocus = {state.pinCodeFocus}
                                         error={state.pinCodeErrMsg}
                                         value={state.pinCode}
                                         onChangeText={(pinCode) => {
@@ -619,6 +658,9 @@ const Address = (props) => {
                                         placeholder="Alternate Phone"
                                         keyboardType="numeric"
                                         returnKeyType="done"
+                                        onFocus={()=>setState({...state,alternatePhoneFocus:true})}
+                                        onBlur={()=>setState({...state,alternatePhoneFocus:false})}                                
+                                        isFocus = {state.alternatePhoneFocus}
                                         value={state.alternatePhone}
                                         onChangeText={(alternatePhone) => {
                                             setState({
@@ -658,20 +700,6 @@ const Address = (props) => {
                                 marginTop: constants.vh(20),
                                 flex: 1
                             }}>
-                                <FlatList
-                                    data={props.auth.shipping_address}
-                                    renderItem={renderAddressList}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsVerticalScrollIndicator={false}
-                                />
-
-                            </View>
-                            <View style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                paddingHorizontal: 15,
-                            }}>
                                 <View
                                     style={{
 
@@ -696,19 +724,29 @@ const Address = (props) => {
                                             })
                                         }}
                                     />
-                                </View>
-                                {/* <View
-                                    style={{
-                                        width: "45%",
+                                      
+                                </View> 
+                                <FlatList
+                                    data={props.auth.shipping_address}
+                                    renderItem={renderAddressList}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    showsVerticalScrollIndicator={false}
+                                />
+
+                            </View>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                paddingHorizontal: 15,
+                            }}>
+                                 
+                                <Components.PrimaryButton
+                                    title="Order"
+                                    onPress={() => {
+                                        handleNext()
                                     }}
-                                >
-                                    <Components.PrimaryButton
-                                        title="Next"
-                                        onPress={() => {
-                                            handleNext()
-                                        }}
-                                    />
-                                </View> */}
+                                />                              
                             </View>
                         </>
                 }

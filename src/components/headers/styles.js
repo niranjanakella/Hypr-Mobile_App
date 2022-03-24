@@ -18,11 +18,10 @@ export const styles = StyleSheet.create({
     },
     headerWithSearchInput: {
         width: "55%",
-        paddingVertical: constants.vh(7),
-        borderWidth: 1,
-        borderColor: "#fff",
+        paddingVertical: constants.vh(5),
+        borderWidth: 1,        
         borderRadius: 10,
-        color: '#fff',
+        color: constants.Colors.fade,
         paddingHorizontal: constants.vw(10)
     },
     text12500: {

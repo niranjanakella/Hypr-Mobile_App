@@ -940,12 +940,67 @@ export const socialLogin = ({ value, onSuccess }) => {
 
 export const saveAddress = (payload) => {
     return async (dispatch) => {
+
         dispatch({
             type: types.SAVE_ADDRESS,
             data: payload
         })
+        
+        let data = {
+           payload:payload
+        }
+        
+        getUserIdFromStorage().then(id => {
+            if (id !== null) {
+                
+               let address = payload.address;
+               let cart    = payload.cart;
 
-        NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
+                
+               let clean_payload = {
+                   product:[]
+               };
+             
+                
+                clean_payload.zip = address.pincode;
+                clean_payload.code  = address.country_code;
+                clean_payload.country = address.country;
+                clean_payload.province = address.state;
+                clean_payload.city = address.city;
+                clean_payload.address = address.address;
+                clean_payload.name = address.name;
+                clean_payload.contact = address.mobile == null ? address.AlternativePhone : address.mobile;                
+                clean_payload.remark = 'New Order';
+                clean_payload.ccode = 'CN';
+                clean_payload.ccode = 'PostNL';
+                
+                cart.map((product=>{
+                    clean_payload.product.push({
+                        vid:product._id,
+                        quantity: product.f_itemQuantity,
+                        shippingName: product.variatNameEn+' 2',
+
+                    })
+                }))
+           
+                
+                POST(
+                    `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.CREATE_ORDER}`,
+                    clean_payload,
+                    {},
+                )
+                .then((result) => {
+                    console.warn(result);
+                }).catch((err)=>{
+
+                    console.warn(err);
+                });
+            }
+        });
+
+
+        
+        // NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
     }
 }
 

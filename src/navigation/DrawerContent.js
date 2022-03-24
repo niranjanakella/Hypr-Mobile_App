@@ -21,7 +21,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import constants from '../constants';
 import { logout } from '../actions/auth';
-
+import LinearGradient from "react-native-linear-gradient";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -48,18 +48,20 @@ const DrawerContent = (props) => {
                 showsVerticalScrollIndicator={false}
                 bounces={false}
             >
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        backgroundColor: constants.Colors.fade,
-                        position: "absolute",                    
-                        top: 0,
-                        paddingVertical: constants.vw(10),
-                        width: "100%",
-                        paddingHorizontal: constants.vw(15)
-                    }}
-                >
+
+            <LinearGradient
+                start={{ x: 0, y: 1 }} end={{ x: 1, y:0  }}
+                colors={[constants.Colors.gradient.contrast_1, constants.Colors.gradient.contrast_3]}
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",                        
+                    position: "absolute",                    
+                    top: 0,
+                    paddingVertical: constants.vw(10),
+                    width: "100%",
+                    paddingHorizontal: constants.vw(15)
+                }}>    
+              
                     <Image
                         source={props.auth.userData.f_picture ? { uri: props.auth.userData.f_picture } : constants.Images.user}
                         style={{
@@ -78,8 +80,8 @@ const DrawerContent = (props) => {
                             color: constants.Colors.white,
                             textTransform: "uppercase"
                         }}>{props.auth.userData.f_name} {props.auth.userData.l_name ? props.auth.userData.l_name.slice(0, 1) : ""}.</Text>
-                    </View>
-                </View>
+                    </View>                
+                </LinearGradient>
 
                 {/* DASHBOARD */}
                 {
@@ -459,6 +461,7 @@ const DrawerContent = (props) => {
 
             <TouchableOpacity
                 onPress={() => {
+                    props.navigation.closeDrawer();
                     props.dispatch(logout())
                 }}
                 activeOpacity={1}

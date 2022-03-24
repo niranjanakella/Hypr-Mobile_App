@@ -60,7 +60,7 @@ export const PrimaryInput = ({
                         height: height,
                         textAlignVertical: textAlignVertical ? textAlignVertical : "center",
                         paddingVertical: paddingVertical ? paddingVertical : constants.vh(16),
-                        borderColor: isFocus || value != '' ? constants.Colors.secondry : isError ? constants.Colors.danger : constants.Colors.fade
+                        borderColor: isFocus || value != '' ? constants.Colors.blue_primary : isError ? constants.Colors.danger : constants.Colors.fade
                     }]}
 
                     value={value}

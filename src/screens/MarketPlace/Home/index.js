@@ -34,7 +34,7 @@ import {
 import { setTabType } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Placeholder } from '../../../components/placeholder';
+import { Placeholder,FooterLoader } from '../../../components/placeholder';
 
 const testImage = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
 const MarketHome = (props) => {
@@ -84,8 +84,8 @@ const MarketHome = (props) => {
                     <Components.CategoryCard
                         image={{ uri: item.productImage }}
                         title={item.productNameEn}
-                        off={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
-                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
+                        off={`${props.auth.currency_symbol} ${item.sellPrice % 1 === 0 ?  calculatePrice(item.sellPrice) : item.sellPrice } `}
+                        // originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
                         onPress={() => { props.dispatch(setVariant(item))}}                                                                                    
                     />
                 </View>                 
@@ -110,9 +110,10 @@ const MarketHome = (props) => {
     )
 
     const renderFooter = ()=>(
-        state.refreshing ?
-        <Placeholder/>
-        : null
+        props.market.allProducts.length == 0 ?
+        null
+        :
+        <FooterLoader/>
     )
     
 
@@ -223,7 +224,7 @@ const MarketHome = (props) => {
                                             await loadMore(props.market.allProducts);
                                         }
                                     }}                             
-                                    ListFooterComponent={renderFooter}
+                                   ListFooterComponent={renderFooter}
                                 />
                             </View>
                         </>

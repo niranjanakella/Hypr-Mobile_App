@@ -343,7 +343,8 @@ const AddAddressMyAccount = (props) => {
             "state": state.state,
             "landmark": state.landmark,
             "AlternativePhone": state.alternatePhone,
-            "country": state.country
+            "country": state.country,
+            "country_code": state.country_code,
         }
         props.dispatch(addNewAddress(payload))
         clearAllState()

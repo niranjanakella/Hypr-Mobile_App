@@ -41,6 +41,9 @@ const Endpoints = {
 
     PLACE_ORDER: `checkoutConfirmation`,
 
+    CREATE_ORDER: `create-order`,
+
+
     CHECK_PIN_EXIST: `IsPincodeExists`,
 
     ORDER_SUMMARY: `OrderSummary`,

@@ -48,6 +48,7 @@ import AddAmountFundTransfer from '../screens/Payment/TopUpWallet/AddAmount';
 
 //Social Media
 import SocialDashboard from '../screens/SocialMedia/Dashboard';
+import { Colors } from 'react-native-paper';
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -75,10 +76,19 @@ export function BottomTabs() {
       barStyle={{ backgroundColor: constants.Colors.blue_primary, }}
       tabBarOptions={{
         style: {
-          backgroundColor: constants.Colors.blue_primary,
+          backgroundColor: constants.Colors.white,
           borderTopRightRadius:20,
           borderTopLeftRadius:20,
-          elevation:0,
+          
+          elevation:10,
+          
+          borderColor:constants.Colors.fade,
+          
+          borderWidth:1,
+          overflow: 'hidden',
+          shadowColor: constants.Colors.fade,
+          shadowRadius: 10,
+          shadowOpacity: 1,
           position: 'absolute'
         }
       }}
@@ -109,14 +119,14 @@ export function BottomTabs() {
           tabBarVisible: getTabBarVisibility(route),
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              color: focused ? constants.Colors.white : "grey",
+              color: focused ? constants.Colors.blue_primary : constants.Colors.dark_text,
               fontFamily:"GothamBold"
 
             }}>Market</Text>
           ),
           tabBarColor: constants.Colors.danger,
           tabBarIcon: ({ focused }) => (
-            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.white : "grey"} size={25} />
+            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.blue_primary : constants.Colors.dark_text} size={25} />
           ),
         })}
       />
@@ -127,14 +137,14 @@ export function BottomTabs() {
           tabBarVisible: getTabBarVisibility(route),
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              color: focused ? constants.Colors.primary : "grey"
+              color: focused ? constants.Colors.blue_primary : constants.Colors.dark_text
             }}>Social</Text>
           ),
           tabBarColor: constants.Colors.white,
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
               name="group"
-              color={focused ? constants.Colors.primary : "grey"}
+              color={focused ? constants.Colors.blue_primary : constants.Colors.dark_text}
               size={30} />
           ),
         })}

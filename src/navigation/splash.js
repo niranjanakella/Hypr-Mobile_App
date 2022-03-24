@@ -13,10 +13,11 @@ import SplashScreen from '../screens/Splash';
 const SplStack = createStackNavigator();
 const SplashStack = () => {
     return (
+        
         <SplStack.Navigator
             headerMode={"none"}
 
-        >
+        >   
             <SplStack.Screen
                 component={SplashScreen}
                 name={constants.ScreensName.SplashScreen.name}

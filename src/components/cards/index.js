@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { BackgroundCarousel } from "../../components/PostSlider";
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { List } from 'react-native-paper';
-
+import { SvgUri } from 'react-native-svg';
 
 export const ProductSelectCard = ({
     title,
@@ -287,7 +287,8 @@ export const CartCard = ({
     onPressIncrease,
     onPressDecrease,
     originalPrice,
-    textDecorationLine
+    textDecorationLine,
+    onPressChangeVariant
 }) => {
     return (
         <View style={styles.CartCardContainer}>
@@ -312,25 +313,42 @@ export const CartCard = ({
                         flexDirection: "row",
                         alignItems: "center"
                     }}>
-                        <Text style={{
+                        {/* <Text style={{
                             fontSize: 16,
                             fontWeight: "400",
                             marginTop: 5,
                             color: constants.Colors.secondry,
                             textDecorationLine: textDecorationLine ? textDecorationLine : "line-through"
-                        }}>{originalPrice}</Text>
+                        }}>{originalPrice}</Text> */}
                         <Text style={{
-                            fontSize: 16,
+                            fontSize: 20,
                             fontWeight: "bold",
                             marginTop: 5,
-                            color: constants.Colors.primary
+                            color: constants.Colors.danger
                         }}>   {price}</Text>
                     </View>
 
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                    onPress={onPressChangeVariant}
+                    style={{ 
+                            flexDirection: "row",
+                            backgroundColor:constants.Colors.mute,                            
+                            paddingHorizontal:constants.width_dim_percent * 1,
+                            paddingVertical:constants.height_dim_percent * 0.5 
+                        }}
+                    >
+                      <Text>{variant}</Text>
+                      <AntDesign
+                            size={16}
+                            name="right"                                
+                            style={{alignSelf:'flex-end',right:0,left:20}}
+                            color={constants.Colors.fade}
+                            />
+                </TouchableOpacity>
+                {/* <View style={{ flexDirection: "row" }}>
                     <Text>{variant}</Text>
-                </View>
+                </View> */}
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-between"
@@ -342,25 +360,23 @@ export const CartCard = ({
                             onPress={onPressDecrease}
                             activeOpacity={1}
                             style={{
-                                borderTopWidth: 1,
-                                borderBottomWidth: 1,
-                                borderLeftWidth: 1,
+                                borderWidth:1,
+                                borderColor:'transparent',
                                 justifyContent: "center",
                                 alignItems: "center",
+                                backgroundColor:constants.Colors.mute,
                                 paddingHorizontal: 3
                             }}
                         >
                             <AntDesign
                                 name="minus"
                                 size={20}
-
+                                color={constants.Colors.fade}
                             />
                         </TouchableOpacity>
                         <View style={{
                             paddingVertical: 4,
-                            paddingHorizontal: 2,
-                            borderTopWidth: 1,
-                            borderBottomWidth: 1,
+                            paddingHorizontal: 2,                     
                             //borderRadius: 2,
                             justifyContent: "center",
                             alignItems: "center",
@@ -372,9 +388,9 @@ export const CartCard = ({
                             onPress={onPressIncrease}
                             activeOpacity={1}
                             style={{
-                                borderTopWidth: 1,
-                                borderBottomWidth: 1,
-                                borderRightWidth: 1,
+                                borderWidth:1,
+                                borderColor:'transparent',
+                                backgroundColor:constants.Colors.mute,
                                 //borderRadius: 2,
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -384,6 +400,7 @@ export const CartCard = ({
                             <AntDesign
                                 name="plus"
                                 size={20}
+                                color={constants.Colors.fade}
                             />
                         </TouchableOpacity>
                     </View>
@@ -579,8 +596,10 @@ export const ViewAllCard = ({
 
 export const CountryCard = ({
     title,
-    onPress
+    onPress,
+    image
 }) => {
+    
     return (
         <TouchableOpacity
             activeOpacity={1}
@@ -599,9 +618,15 @@ export const CountryCard = ({
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
 
-                elevation: 5,
+                elevation: 2,
             }}
-        >
+        >       
+     {/* <FastImage source={{uri:image}} resizeMode={FastImage.resizeMode.center}  style={{ width: 200, height: 200 }}/> */}
+     <SvgUri
+        width="50"
+        height="50"
+        uri={image}
+    />
             <Text style={{
 
             }}>{title}</Text>
@@ -947,7 +972,7 @@ export const AddressCard = ({
                         onPress={onPressSelect}
                         name={isSelected ? "check-circle" : "circle-o"}
                         size={30}
-                        color={constants.Colors.primary}
+                        color={constants.Colors.blue_primary}
                     />
                 }
 

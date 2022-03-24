@@ -14,6 +14,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import constants from '../../constants';
 import { styles } from './styles';
+import { ClipPath } from 'react-native-svg';
+import { Colors } from 'react-native-paper';
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -97,7 +99,10 @@ export const HeaderWithSearch = ({
     onPressInput,
     isNotificationCount,
     notificationCount,
-    onPressNotification
+    onPressNotification,
+    onFocus,
+    onBlur,
+    isFocus
 }) => {
     let count = 0;
     if (count > 9) {
@@ -133,9 +138,13 @@ export const HeaderWithSearch = ({
                     <TextInput
                         onChangeText={onChangeText}
                         onSubmitEditing={onSubmitEditing}
-                        placeholder="Search for Products"
-                        placeholderTextColor="#fff"
-                        style={styles.headerWithSearchInput}
+                        placeholder="Search Products"
+                        placeholderTextColor={constants.Colors.fade}
+                        style={[styles.headerWithSearchInput,
+                            {borderColor: isFocus ? constants.Colors.blue_primary : constants.Colors.fade}
+                        ]}
+                        onFocus = {onFocus}
+                        onBlur = {onFocus}
                         returnKeyType="search"
                         autoFocus={autoFocus}
                         selectionColor={constants.Colors.white}
@@ -245,6 +254,59 @@ export const HeaderWithSearch = ({
 }
 
 export const PrimaryHeader = ({
+    title,
+    onPress
+}) => {
+    return (
+        <View style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            paddingVertical: 10,
+            paddingStart: 15,
+            backgroundColor: constants.Colors.white
+        }}>
+            <TouchableOpacity
+                onPress={onPress}
+                activeOpacity={1}
+                hitSlop={{
+                    top: 5,
+                    bottom: 5,
+                    left: 5,
+                    right: 5
+                }}
+                style={{
+
+                }}
+            >
+                <AntDesign
+                    name="arrowleft"
+                    size={30}
+                    color={constants.Colors.blue_primary}
+                />
+
+            </TouchableOpacity>
+            <View
+                style={{
+                    width: "80%",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                }}
+            >
+                <Text style={{
+                    fontSize: 16,
+                    fontFamily:'GothamBold',                    
+                    color: constants.Colors.dark_text
+                }}>{title}</Text>
+            </View>
+        </View>
+    )
+}
+
+
+
+export const SecondaryHeader = ({
     title,
     onPress
 }) => {

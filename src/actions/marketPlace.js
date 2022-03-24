@@ -60,36 +60,13 @@ export const setProductDetails = (product) => {
     
     return async (dispatch) => {
 
-        console.warn(product);
-        // let variants = product.variants;
-        // let variantName = [];
-        // let variantValue = [];
-        // console.warn(variants);
-        // variants.map((item,index) => {  
-            
-        //     // for (const key of Object.keys(item)) {
-        //     //     alert(item[key])          
-        //     //     const name = key
-        //     //     const val = item[key];
-        //     //     variantName.push(name)
-        //     //     variantValue.push(val)
-
-        //     // }
-
-                    
-        //         const name = item
-        //         const val = item[index];
-        //         variantName.push(name)
-        //         variantValue.push(val)
-
-        // })
 
         
+
         dispatch({
             type: types.SET_PRODUCT_DETAILS,
             product: product            
         })
-
         
         NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.variantImage})
 
@@ -117,7 +94,7 @@ export const getAllProducts = (currentPage,previousProductPage) => {
                     
                     if (id !== null) {
 
-                        console.warn(`${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}?page=${currentPage}`);    
+                        
                         let data = {
                             "userId": id
                         }
@@ -128,18 +105,18 @@ export const getAllProducts = (currentPage,previousProductPage) => {
                             .then((result) => {
                                 console.warn(result.code);
                                 if (result.data.result) {
-                                    
-                                    
+
+                                    console.warn(result.data.data.list)
                                     if(currentPage >= 2){
 
                                         dispatch({
                                             type: types.GET_ALL_PRODUCTS_SUCCESS,
-                                            data: [...new Set(previousProductPage),...result.data.data.list ]  ,
+                                            data: [...new Set(previousProductPage),...result.data.data.list.filter((item)=>item.listingCount != 0) ]  ,
                                         });
                                     }else{
                                         dispatch({
                                             type: types.GET_ALL_PRODUCTS_SUCCESS,
-                                            data: result.data.data.list,
+                                            data: result.data.data.list.filter((item)=>item.listingCount != 0),
                                         });
                                     }
                                     
@@ -224,7 +201,7 @@ export const setVariant = (product) => {
                            
                         )
                             .then((result) => {                                    
-                                console.warn(result.data.data)      
+                                      
                                 if (result.data.data) {
                                       
                                     
@@ -977,7 +954,7 @@ export const getProductByKeyword = (keyword) => {
 
 export const addToCart = (payload) => {
     return async (dispatch) => {
-        console.warn(payload);
+        
         NetInfo.fetch().then(state => {
             if (state.isConnected) {
                 dispatch({
@@ -1100,7 +1077,7 @@ export const getCartList = (payload) => {
                             {},
                         )
                             .then((result) => {
-                                console.warn('result', result.data);
+                                
                                 if (result.data.status) {
                                     let totalAmount = 0;
                                     result.data.id.map(item => {
@@ -1447,7 +1424,8 @@ export const addToWishlist = (payload) => {
                     if (id !== null) {
                         let value = {
                             "userId": id,
-                            "Prod_id": payload.id
+                            "Prod_id": payload.pid,
+                            'product':payload.product
                         }
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.ADD_TO_WISHLIST}`,
@@ -1546,11 +1524,11 @@ export const getWishList = (payload) => {
                             {},
                         )
                             .then((result) => {
-                                console.log('result', result);
+                                console.log('result WishList',  result.data);
                                 if (result.data.status) {
                                     dispatch({
                                         type: types.GET_WISHLIST_SUCCESS,
-                                        data: result.data.id,
+                                        data: result.data,
                                     });
                                     store.dispatch(handleLoader(false))
                                 } else {
@@ -2329,6 +2307,7 @@ export const orderDetails = (payload) => {
 export const filterCountry = (value) => {
     return async (dispatch) => {
         let countryList = store.getState().market.countryList
+        console.warn(store.getState().market.countryList)
         let updatedCountryList = []
         countryList.map((item) => {
             if (item.Name.toLowerCase().includes(value.toLowerCase())) {

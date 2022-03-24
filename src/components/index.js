@@ -16,7 +16,8 @@ import {
 import {
     HeaderWithDrawer,
     HeaderWithSearch,
-    PrimaryHeader
+    PrimaryHeader,
+    SecondaryHeader
 } from './headers';
 import {
     PrimaryInput,
@@ -69,6 +70,7 @@ export default {
     HeaderWithDrawer,
     HeaderWithSearch,
     PrimaryHeader,
+    SecondaryHeader,
 
     PrimaryInput,
     PrimaryPhoneInput,

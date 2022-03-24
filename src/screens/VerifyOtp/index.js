@@ -23,6 +23,8 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 //import GoogleLogin from '../../utils/Google/GoogleLogin';
 
 const VerifyOtp = (props) => {
+
+   
     const [state, setState] = React.useState({
         otp: null,
     })
@@ -47,7 +49,10 @@ const VerifyOtp = (props) => {
     return (
         <>
             <StatusBar barStyle="dark-content" />
-
+            <Components.ProgressView
+                    isProgress={props.auth.isLoading}
+                    title="Verifying OTP"
+            />
             <SafeAreaView style={styles.secondryContainer}>
                 <View style={{
                     paddingHorizontal: 15
@@ -72,7 +77,7 @@ const VerifyOtp = (props) => {
                             <Text style={styles.otp}>One Time Pin</Text>
                             <Text style={styles.otp_desc}>
                                 Your one time pin has been sent to your email {'\n'}
-                                <Text style={[styles.otp_desc,{color:constants.Colors.blue_primary}]}>  developer01000@ </Text>
+                                <Text style={[styles.otp_desc,{color:constants.Colors.blue_primary}]}> {props.auth.userData.f_email} </Text>
                             </Text>
                         </View>     
 
@@ -102,14 +107,14 @@ const VerifyOtp = (props) => {
                     isProgress={props.auth.isLoading}
                     title="Hypr"
                 />
-                <View style={{ marginHorizontal: 15, marginBottom: 15 }}>
+                <View style={{ marginHorizontal:constants.width_dim_percent * 5,bottom:0,left:0,right:0,marginBottom: constants.height_dim_percent * 50,position:'absolute' }}>
                     <Components.PrimaryButton
                         onPress={handleVerifyOtp}
                         title="VERIFY"
                     />
                 </View>
-
-                <View style={{ marginHorizontal: 15, marginBottom: 15 }}>
+                
+                <View style={{ marginHorizontal:constants.width_dim_percent * 5,bottom:0,left:0,right:0, marginBottom: constants.height_dim_percent *45,position:'absolute' }}>
                     <Components.PrimaryOutlineButton
                         onPress={handleResetOtp}
                         title="RESEND OTP"

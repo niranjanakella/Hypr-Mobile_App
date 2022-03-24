@@ -109,6 +109,7 @@ const Cart = (props) => {
                 <Components.PrimaryHeader
                     onPress={() => props.navigation.goBack()}
                     title="Cart"
+                    
                 />
                 <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
@@ -124,7 +125,7 @@ const Cart = (props) => {
                     <View style={{ paddingHorizontal: 15 }}>
                         <Components.PrimaryButton
                             
-                            title={`Buy ${props.auth.currency_symbol} ${calculatePrice(props.market.totalPayingAmount)}`}
+                            title={`Checkout ${props.auth.currency_symbol} ${calculatePrice(props.market.totalPayingAmount)}`}
                             onPress={() => {
                                 NavigationService.navigate(constants.ScreensName.Address.name, null)
                             }}

@@ -4,7 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import constants from '../constants';
-
+import {
+    CardStyleInterpolators,
+  } from '@react-navigation/stack';
 //Auth
 import LogIn from '../screens/login';
 import Signup from '../screens/SignUp';
@@ -26,7 +28,7 @@ const AuthStackFunc = () => {
             <AuthStack.Screen
                 component={LogIn}
                 name={constants.ScreensName.LogIn.name}
-                options={{ gestureEnabled: false }}
+                options={{ gestureEnabled: false,cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS}}
             />
             <AuthStack.Screen
                 component={Signup}
@@ -42,7 +44,7 @@ const AuthStackFunc = () => {
             <AuthStack.Screen
                 component={VerifyOtp}
                 name={constants.ScreensName.VerifyOtp.name}
-                options={{ gestureEnabled: false }}
+                options={{ gestureEnabled: false ,cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS}}
             />
             <AuthStack.Screen
                 component={ForgotPassword}
