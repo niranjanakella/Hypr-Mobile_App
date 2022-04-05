@@ -4,4 +4,5 @@ export default {
     splash_screen_background: require("../../assets/Images/splash-screen-background.jpg"),
     google: require("../../assets/Images/google.png"),
     user: require("../../assets/Images/user.jpg"),
+    fade_bg: require("../../assets/Images/fade-bg.jpg")
 };

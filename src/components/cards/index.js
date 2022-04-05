@@ -25,7 +25,8 @@ import { BackgroundCarousel } from "../../components/PostSlider";
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { List } from 'react-native-paper';
 import { SvgUri } from 'react-native-svg';
-
+import Fonts from '../../constants/Fonts';
+import LinearGradient from 'react-native-linear-gradient';
 export const ProductSelectCard = ({
     title,
     isSelected,
@@ -73,9 +74,9 @@ export const VariantList = ({
         <>            
             <List.Item 
                 title={itemName}
-                titleStyle={{fontFamily:'GothamBold',fontSize:14}}
-                descriptionStyle={{color:constants.Colors.danger,fontFamily:'GothamBold'}}
-                description={currencySymbol+variantPrice}
+                titleStyle={{fontFamily:Fonts.GothamBold,fontSize:14}}
+                descriptionStyle={{color:constants.Colors.danger,fontFamily:Fonts.GothamBold}}
+                description={`$${variantPrice}`}
                 left={()=>                
                     <FastImage source={{uri:imageID}}
                         resizeMode={"contain"}
@@ -703,6 +704,10 @@ export const OrderCard = ({
     )
 }
 
+
+
+
+
 export const WalletHistoryCardCredit = ({
     onPress,
     currency,
@@ -741,20 +746,46 @@ export const WalletHistoryCardCredit = ({
     )
 }
 
+// export const WalletDetailsCard = ({
+//     title,
+//     details,
+//     detailTextColor
+// }) => {
+//     return (
+
+            
+//         <View style={styles.detailContainer}>
+//             <View style={{ width: "30%" }}>
+//                 <Text style={styles.headerTextWalletDetailCard}>{title}</Text>
+//             </View>
+//             <View style={{ width: "70%" }}>
+//                 <Text style={[styles.dataTextWalletDetailCard, { color: detailTextColor }]}>{details}</Text>
+//             </View>
+//         </View>
+//     )
+// }
+
+
 export const WalletDetailsCard = ({
     title,
     details,
     detailTextColor
 }) => {
     return (
-        <View style={styles.detailContainer}>
-            <View style={{ width: "30%" }}>
-                <Text style={styles.headerTextWalletDetailCard}>{title}</Text>
-            </View>
-            <View style={{ width: "70%" }}>
-                <Text style={[styles.dataTextWalletDetailCard, { color: detailTextColor }]}>{details}</Text>
-            </View>
-        </View>
+        <LinearGradient
+        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+        colors={[constants.Colors.gradient.contrast_1, constants.Colors.gradient.contrast_3]}
+        style={[styles.linearGradient,{borderRadius:10}]}>                                  
+            <Text style={styles.headerTextWalletDetailCard}>{title}</Text>
+            <Text style={[styles.dataTextWalletDetailCard, { color: detailTextColor }]}>{details}</Text>
+                {/* <View style={{ alignContent:'center'}}>
+                    <Text style={styles.headerTextWalletDetailCard}>{title}</Text>
+                </View>
+                <View style={{ width: "70%" }}>
+                    <Text style={[styles.dataTextWalletDetailCard, { color: detailTextColor }]}>{details}</Text>
+                </View> */}
+     
+        </LinearGradient>
     )
 }
 
@@ -960,7 +991,7 @@ export const AddressCard = ({
         <TouchableOpacity
             onPress={onPress}
             activeOpacity={1}
-            style={styles.addressCardContainer}>
+            style={[styles.addressCardContainer,{borderColor: isSelected ? constants.Colors.blue_primary : 'transparent',borderWidth:1}]}>
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -1006,6 +1037,52 @@ export const AddressCard = ({
     )
 }
 
+
+
+export const LogisticCard = ({
+    onPress,
+    logisticName,
+    logisticPrice,
+    showSelect,
+    isSelected,
+    onPressSelect,
+    logisticPriceCn,
+    logisticAging,
+}) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={1}
+            style={[styles.addressCardContainer,{borderColor: isSelected ? constants.Colors.blue_primary : 'transparent',borderWidth:1}]}>
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+            }}>
+                {
+                    showSelect &&
+                    <FontAwesome
+                        onPress={onPressSelect}
+                        name={isSelected ? "check-circle" : "circle-o"}
+                        size={30}
+                        color={constants.Colors.blue_primary}
+                    />
+                }
+
+                <View style={{
+                    width: "85%",
+
+                }}>                    
+                    <Text numberOfLines={1} style={{ marginVertical: 2 }}>{logisticName}</Text>
+                    <Text numberOfLines={1} style={{ marginVertical: 2,color:constants.Colors.danger }}>${logisticPrice}  - ¥{logisticPriceCn}</Text>
+                    <Text numberOfLines={1} style={{ marginVertical: 2 }}>{logisticAging} Days</Text>                    
+                </View>
+         
+
+            </View>
+        </TouchableOpacity>
+    )
+}
 //SOCIAL
 
 export const PostCard = ({
@@ -1640,6 +1717,49 @@ export const FriendSuggestionCard = ({
                 </TouchableOpacity>
             }
 
+        </TouchableOpacity>
+    )
+    
+}
+
+
+
+
+
+export const ModeOfPaymentCard = ({
+    onPress,
+    showSelect,
+    isSelected,
+    onPressSelect,
+
+    title
+
+}) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={1}
+            style={[styles.addressCardContainer,{borderColor: isSelected ? constants.Colors.blue_primary : 'transparent',borderWidth:1}]}>
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+            }}>
+                {
+                    showSelect &&
+                    <FontAwesome
+                        onPress={onPressSelect}
+                        name={isSelected ? "check-circle" : "circle-o"}
+                        size={30}
+                        color={constants.Colors.blue_primary}
+                    />
+                }
+
+                <Text>
+                    {title}
+                </Text>
+
+            </View>
         </TouchableOpacity>
     )
 }

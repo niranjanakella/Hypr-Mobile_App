@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 import constants from '../../../constants';
-import Fonts from '../../../constants/Fonts';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -34,42 +33,12 @@ const iPhoneX = Dimensions.get('window').height >= 812
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: constants.Colors.primary_bg_color
+        backgroundColor: constants.Colors.white
     },
     secondryContainer: {
         flex: 1,
         backgroundColor: constants.Colors.white,
         paddingHorizontal: 15,
-    },
-    deliveryDetails:{
-        flexDirection: "row",
-        justifyContent: "space-between",    
-        bottom:constants.height_dim_percent * 5,    
-        backgroundColor: constants.Colors.white,        
-        paddingHorizontal:constants.width_dim_percent  * 2,
-        paddingVertical:constants.height_dim_percent  * 5,
-        alignItems: "center"
-    },
-    deliveryDetailsText:{
-        fontSize: 18,
-        fontWeight: "bold",
-        fontFamily:Fonts.GothamBold,
-        color: constants.Colors.dark_text
-    },
-    modeOfPayment:{
-        flexDirection: "row",
-        justifyContent: "space-between",    
-        bottom:constants.height_dim_percent * 4,    
-        backgroundColor: constants.Colors.white,        
-        paddingHorizontal:constants.width_dim_percent  * 2,
-        paddingVertical:constants.height_dim_percent  * 5,
-        alignItems: "center"
-    },
-    modeOfPaymentText:{
-        fontSize: 18,
-        fontWeight: "bold",
-        fontFamily:Fonts.GothamBold,
-        color: constants.Colors.dark_text
     },
     headerContainer: {
         backgroundColor: constants.Colors.primary,

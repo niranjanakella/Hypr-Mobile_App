@@ -28,10 +28,10 @@ import { calculatePrice } from '../../../utils/CalculatePrice';
 import LinearGradient from 'react-native-linear-gradient';
 
 const Variant = (props) => {
-    console.warn(props.market   )
+    
     const [state, setState] = React.useState({
         sliderImage: [props.market.variants.variantImage],
-        variants:props.market.variants,
+        variants:props.market.variants,        
         country: "",
         pincode: "",
         pincodeErr: false,
@@ -55,17 +55,17 @@ const Variant = (props) => {
         return unsubscribe;
     }, [])
 
-    const handleAddToCart = async (value) => {     
-    }
 
-    const renderItem = (data) =>{
+    const renderItem =   (data) =>{
         
+        let getCountryCode =  props.auth.shipping_address[0].country_code;
+     
         return (<Components.VariantList
                     currencySymbol = {props.auth.currency_symbol}
                     variantPrice   = {data.item.variantSellPrice}    
                     itemName       = {data.item.variantNameEn ?data.item.variantNameEn : data.item.variantKey }
-                    imageID        = {data.item.variantImage}
-                    onPress        = {()=>props.dispatch(setProductDetails(data.item))}
+                    imageID        = {data.item.variantImage}                    
+                    onPress        = {()=>props.dispatch(setProductDetails(data.item,getCountryCode))}
                 
 
                 />

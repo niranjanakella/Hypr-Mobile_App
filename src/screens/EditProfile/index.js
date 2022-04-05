@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -17,16 +17,23 @@ import Toast from 'react-native-toast-message';
 import ActionSheet from "react-native-actions-sheet";
 import ImagePicker from 'react-native-image-crop-picker';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-
+import { getUserDataFromStorage } from '../../utils/asyncstorage';
 import * as NavigationService from '../../navigation/NavigationService';
 import constants from '../../constants';
 import Components from '../../components';
 import { styles } from './styles';
 import { login, updateUser } from '../../actions/auth';
+import FastImage from 'react-native-fast-image';
+import Images from '../../constants/Images';
 
 const EditProfile = (props) => {
+
+    useEffect(()=>{
+        console.warn(props.auth)
+    },[])
     const actionSheetRef = createRef();
     let actionSheet;
+    
     const [state, setState] = React.useState({
         firstName: props.auth.userData.f_name,
         lastName: props.auth.userData.l_name,
@@ -34,12 +41,14 @@ const EditProfile = (props) => {
         phone: JSON.stringify(props.auth.userData.f_phone),
         shortBio: "",
         liveIn: "",
-        image: "",
+        focus_shortBio: false,
+        focus_liveIn: false,
+        image: props.auth.userData.f_picture,
         imageFull: "",
-        countrycode: "91",
-        callingCode: "91",
-        countryName: "IN",
-        selectedCountryCode: "91",
+        countrycode: "63",
+        callingCode: "63",
+        countryName: "PH",
+        selectedCountryCode: "63",
     })
     const handleUpdateProfile = () => {
         const payload = {
@@ -47,8 +56,9 @@ const EditProfile = (props) => {
             "lastName": state.lastName,
             "mobileNo": state.phone,
             "countryCode": state.countryCode,
-            "profilePhoto": "",
+            "profilePhoto": state.image,
         }
+        console.warn(state.image);
         props.dispatch(updateUser(payload))
     }
 
@@ -181,22 +191,29 @@ const EditProfile = (props) => {
             <StatusBar barStyle="dark-content" />
 
             <SafeAreaView style={styles.secondryContainer}>
+            <FastImage
+                    source={Images.fade_bg}
+                    style={{
+                        width: constants.width_dim_percent * 100,
+                        height: constants.height_dim_percent * 100, 
+                        android: {
+                            elevation:100
+                        }                
+                        
+                    }}            
+                    resizeMode="cover">
                 <Components.PrimaryHeader
                     onPress={() => props.navigation.goBack()}
-                    title="Edit Profile"
+                    title="Update Profile"
                 />
-                <KeyboardAwareScrollView
-                    keyboardShouldPersistTaps="handled"
-                    enableOnAndroid={true}
-                    extraHeight={140}
-                >
                     <View style={styles.dataContainer}>
-                        <Image
+                 <Image
                             source={state.image ? { uri: state.image } : constants.Images.user}
                             style={{
                                 width: constants.vw(150),
                                 height: constants.vw(150),
                                 borderRadius: constants.vw(75),
+                                
                                 resizeMode: "cover"
                             }}
                         />
@@ -221,6 +238,16 @@ const EditProfile = (props) => {
                             />
                         </TouchableOpacity>
                         <Text style={styles.loginText}>Edit Profile</Text>
+                </View>
+                <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps="handled"
+                    enableOnAndroid={true}
+                    extraHeight={140}
+                >
+
+                    
+                    <View style={styles.dataContainer}>
+                      
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
                                 placeholder="First Name"
@@ -289,6 +316,10 @@ const EditProfile = (props) => {
                             <Components.PrimaryInput
                                 placeholder="Short Bio"
                                 value={state.shortBio}
+                                onFocus={()=>setState({...state,focus_shortBio:true})}
+                                onBlur={()=>setState({...state,focus_shortBio:false})}                                
+                                isFocus = {state.focus_shortBio}
+                                style={{backgroundColor:constants.Colors.white}}                             
                                 onChangeText={(shortBio) => {
                                     setState({
                                         ...state,
@@ -301,6 +332,10 @@ const EditProfile = (props) => {
                             <Components.PrimaryInput
                                 placeholder="Live In"
                                 value={state.liveIn}
+                                onFocus={()=>setState({...state,focus_liveIn:true})}
+                                onBlur={()=>setState({...state,focus_liveIn:false})}   
+                                style={{backgroundColor:constants.Colors.white}}                             
+                                isFocus = {state.focus_liveIn}
                                 onChangeText={(liveIn) => {
                                     setState({
                                         ...state,
@@ -310,7 +345,7 @@ const EditProfile = (props) => {
                             />
                         </View>
 
-                        <View style={[styles.inputContainer, { width: "100%" }]}>
+                        <View style={[styles.inputContainer, { width: "100%" ,marginBottom:20}]}>
                             <Components.PrimaryButton
                                 onPress={handleUpdateProfile}
                                 title="UPDATE"
@@ -321,11 +356,13 @@ const EditProfile = (props) => {
                     </View>
 
                 </KeyboardAwareScrollView>
-
+             
                 <ActionSheet ref={actionSheetRef}>
                     <View style={{
                         paddingTop: 20,
-                        paddingBottom: 10
+                        paddingBottom: 10,
+                        
+                        
                     }}>
                         <View style={{
                             borderBottomWidth: 1,
@@ -352,6 +389,7 @@ const EditProfile = (props) => {
                     isProgress={props.auth.isLoading}
                     title="Hypr"
                 />
+                   </FastImage>
             </SafeAreaView>
         </>
     )

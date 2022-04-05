@@ -42,6 +42,7 @@ export const styles = StyleSheet.create({
     dataContainer: {
         alignItems: "center",
         paddingHorizontal: 15,
+        
         marginTop: constants.vh(40)
     },
     loginText: {
@@ -50,7 +51,9 @@ export const styles = StyleSheet.create({
         marginTop: constants.vh(10)
     },
     inputContainer: {
-        marginTop: constants.vh(20)
+        marginTop: constants.vh(30),
+        backgroundColor:'white',
+        borderRadius:10
     },
     forgotPasswordContainer: {
         alignSelf: "flex-end",

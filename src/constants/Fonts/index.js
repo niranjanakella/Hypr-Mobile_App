@@ -8,4 +8,6 @@ export default {
     K2D_Bold: "K2D-Bold",
     K2D_ExtraBold: "K2D-ExtraBold",
     SF_ProText: "SFProText-Regular",
+    GothamBold: "GothamBold",
+    GothamLight: "Gotham_light",
 }

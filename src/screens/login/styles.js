@@ -7,6 +7,7 @@ import {
 import { concat } from 'react-native-reanimated';
 
 import constants from '../../constants';
+import Fonts from '../../constants/Fonts';
 import { height_dim_percent, width_dim_percent } from '../../constants/Dimension';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -61,7 +62,7 @@ export const styles = StyleSheet.create({
         marginTop: constants.vh(50),
         left:constants.width_dim_percent * 1,
         color:constants.Colors.blue_primary,
-        fontFamily:"GothamBold"
+        fontFamily:Fonts.GothamBold
     },
     inputContainer: {
         marginTop: constants.vh(20)

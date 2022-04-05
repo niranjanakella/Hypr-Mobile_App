@@ -199,6 +199,7 @@ const AddAddressMyAccount = (props) => {
         const payload = {
             state_id: item.ID
         }
+        
         props.dispatch(getStateList(payload))
         setState({
             ...state,
@@ -371,6 +372,7 @@ const AddAddressMyAccount = (props) => {
         props.dispatch(filterCity(city))
     }
     const renderAddressList = ({ item, index }) => {
+        console.warn('renderAddress',item)
         return (
             <View style={{
                 marginVertical: constants.vh(5),
@@ -443,7 +445,11 @@ const AddAddressMyAccount = (props) => {
             <StatusBar barStyle="dark-content" />
             <SafeAreaView style={styles.container}>
                 <Components.PrimaryHeader
-                    onPress={() => { clearAllState(), props.navigation.goBack() }}
+                    onPress={() => { clearAllState();
+                        
+                    
+                        
+                        props.navigation.goBack() }}
                     title="Address"
                 />
                 {
@@ -640,8 +646,10 @@ const AddAddressMyAccount = (props) => {
                                 marginTop: constants.vh(20),
                                 flex: 1
                             }}>
+
+                                
                                 <FlatList
-                                    data={props.auth.shipping_address}
+                                    data={props.auth.userData.f_shipping_Address}
                                     renderItem={renderAddressList}
                                     keyExtractor={(item, index) => index.toString()}
                                     showsVerticalScrollIndicator={false}

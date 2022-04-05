@@ -20,8 +20,10 @@ import {
     getCartList,
     decreaseCartItem,
     increaseCartItem,
-    removeCartItem
+    removeCartItem,
+    createOrder
 } from '../../../actions/marketPlace';
+import { getUser } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 
 const HEIGHT = Dimensions.get("window").height
@@ -31,7 +33,8 @@ const Cart = (props) => {
         totalPrice: 0,
     })
     useEffect(() => {
-        props.dispatch(getCartList())
+        props.dispatch(getCartList()),
+        props.dispatch(getUser())
     }, [])
 
     const renderCart = ({ item, index }) => {
@@ -81,6 +84,7 @@ const Cart = (props) => {
         }
         props.dispatch(removeCartItem(payload))
     }
+
     const renderEmpty = () => {
         return (
             <View style={{
@@ -102,6 +106,20 @@ const Cart = (props) => {
             </View>
         )
     }
+
+
+    const handleCreateOrder = () => {
+                
+        let payload= {
+                address:props.auth.shipping_address.filter((item)=>item.isSelected == true)[0],
+                cart:props.market.cartList
+        }
+        
+        
+        props.dispatch(createOrder(payload))
+    }
+
+
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor={constants.Colors.primary} />
@@ -125,9 +143,9 @@ const Cart = (props) => {
                     <View style={{ paddingHorizontal: 15 }}>
                         <Components.PrimaryButton
                             
-                            title={`Checkout ${props.auth.currency_symbol} ${calculatePrice(props.market.totalPayingAmount)}`}
-                            onPress={() => {
-                                NavigationService.navigate(constants.ScreensName.Address.name, null)
+                            title={`Checkout  $${calculatePrice(props.market.totalPayingAmount)}`}
+                            onPress={() => {                                
+                                handleCreateOrder()
                             }}
                         />
                     </View>

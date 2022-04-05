@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 
 import constants from '../../constants';
-
+import Fonts from '../../constants/Fonts';
 export const styles = StyleSheet.create({
     primaryButtonContainer: {
         justifyContent: "center",
@@ -47,13 +47,13 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "600",
         color: constants.Colors.white,
-        fontFamily:'GothamBold'
+        fontFamily:Fonts.GothamBold
     },
     textOutlineButton: {
         fontSize: 16,
         fontWeight: "600",
         color: constants.Colors.blue_primary,
-        fontFamily:'GothamBold',
+        fontFamily:Fonts.GothamBold,
         borderColor:constants.Colors.blue_primary,
         borderWidth:1,
         textAlign:'center',

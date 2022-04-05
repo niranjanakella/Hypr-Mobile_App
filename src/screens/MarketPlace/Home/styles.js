@@ -33,11 +33,11 @@ const iPhoneX = Dimensions.get('window').height >= 812
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: constants.Colors.white
+        backgroundColor: constants.Colors.primary_bg_color
     },
     secondryContainer: {
         flex: 1,
-        backgroundColor: constants.Colors.white
+        backgroundColor: constants.Colors.primary_bg_color
     },
     viewAllContainer: {
         flexDirection: "row",

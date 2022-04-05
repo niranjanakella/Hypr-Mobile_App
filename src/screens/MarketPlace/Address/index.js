@@ -26,7 +26,9 @@ import {
     filterCountry,
     filterState,
     filterCity,
-    addNewAddress
+    addNewAddress,
+    updateAddress,
+    clearShippingAddress
 } from '../../../actions/marketPlace';
 import { saveAddress,getUser } from '../../../actions/auth';
 import * as NavigationService from '../../../navigation/NavigationService';
@@ -209,7 +211,7 @@ const Address = (props) => {
             ...state,
             showCountryModal: false,
             country: item.Name,
-            countryCode: item.ID,
+            countryCode: item.CountryCode,
             state: "",
             stateCode: null,
             //city: "",
@@ -224,6 +226,7 @@ const Address = (props) => {
             pinCodeErr: false,
             pinCodeErrMsg: ""
         })
+       
     }
     const handleSelectState = (item) => {
         const payload = {
@@ -348,8 +351,10 @@ const Address = (props) => {
             "state": state.state,
             "landmark": state.landmark,
             "AlternativePhone": state.alternatePhone,
-            "country": state.country
+            "country": state.country,
+            "countryCode": state.countryCode
         }
+  
         props.dispatch(addNewAddress(payload))
         clearAllState()
     }
@@ -375,6 +380,7 @@ const Address = (props) => {
         props.dispatch(filterCity(city))
     }
     const renderAddressList = ({ item, index }) => {
+        
         return (
             <View style={{
                 marginVertical: constants.vh(5),
@@ -384,7 +390,7 @@ const Address = (props) => {
                     onPress={() => handleOnPressSelect(item, index)}
                     username={item.name}
                     phone={item.mobile}
-                    isSelected={item.isSelected}
+                    // isSelected={item.isSelected}
                     address={item.address}
                     landmark={item.landmark}
                     city={item.city}
@@ -393,13 +399,18 @@ const Address = (props) => {
                     //country={item.country}
                     pinCode={item.pincode}
                     showSelect={true}
-                    isSelected={state.selectedAddressIndex === index ? true : false}
+                    isSelected={state.selectedAddressIndex === index  || item.isSelected ? true : false}
                     alternatePhone={item.AlternativePhone}
                 />
             </View>
         )
     }
     const handleOnPressSelect = (item, index) => {
+        let new_shipping_address = props.auth.shipping_address.map((prev)=>{
+            prev.isSelected = false ;
+        })
+    
+        props.dispatch(clearShippingAddress([new_shipping_address]));
         state.selectedAddressIndex = index
         state.selectedAddress = item
         setState({
@@ -455,7 +466,9 @@ const Address = (props) => {
             isAddingAddress: false,
         })
     }
-    const handleNext = () => {
+
+    // CREATE ORDER BUTTON
+    const handleCreateOrder = () => {
         if (state.selectedAddress === "") {
             Toast.show({
                 text1: "Hypr",
@@ -465,18 +478,49 @@ const Address = (props) => {
             });
             return 1;
         }
+        
         let payload= {
                 address:state.selectedAddress,
                 cart:props.market.cartList
         }
+        console.warn('MARKET',props.market.cartList);
         props.dispatch(saveAddress(payload))
+    }
+
+
+    // update address
+    const handleUpdateAddress = () =>{
+        if (state.selectedAddress === "") {
+            Toast.show({
+                text1: "Hypr",
+                text2: "Please select an address.",
+                type: "info",
+                position: "top"
+            });
+            return 1;
+        }
+
+        let payload= {
+                selectedAddress: state.selectedAddress,
+                index: state.selectedAddressIndex,
+                new_params:props.route.params
+        }
+
+        props.dispatch(updateAddress(payload,props))
     }
     return (
         <>
             <StatusBar barStyle="dark-content" />
+            <Components.ProgressView
+                    isProgress={props.auth.isLoading}
+                    title="Loading..."
+                />
             <SafeAreaView style={styles.container}>
                 <Components.PrimaryHeader
-                    onPress={() => { clearAllState(), props.navigation.goBack() }}
+                    onPress={() => { 
+                        
+                        
+                        props.navigation.goBack() }}
                     title="Address"
                 />
                 {
@@ -684,12 +728,16 @@ const Address = (props) => {
                                         }}
                                     />
                                 </View>
-                                <View style={{ width: "48%" }}>
-                                    <Components.PrimaryButton
-                                        title="SAVE"
-                                        onPress={handleSaveAddress}
-                                    />
-                                </View>
+
+                                
+                                    <View style={{ width: "48%" }}>
+                                        <Components.PrimaryButton
+                                            title="SAVE"
+                                            onPress={handleSaveAddress}
+                                        />
+                                    </View>
+                                
+                                
                             </View>
                         </>
 
@@ -734,20 +782,38 @@ const Address = (props) => {
                                 />
 
                             </View>
-                            <View style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                paddingHorizontal: 15,
-                            }}>
-                                 
-                                <Components.PrimaryButton
-                                    title="Order"
-                                    onPress={() => {
-                                        handleNext()
-                                    }}
-                                />                              
-                            </View>
+
+                            {
+                                props.route.params.previous_screen == 'PRODUCT_DETAIL'   ?              
+                                <View style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    paddingHorizontal: 15,
+                                }}>
+                                        
+                                    <Components.PrimaryButton
+                                        title="Update Default Address"
+                                        onPress={handleUpdateAddress}
+                                    />                              
+                                </View>
+                                :
+                             
+                                 <View style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    paddingHorizontal: 15,
+                                }}>
+                                        
+                                    <Components.PrimaryButton
+                                        title="Order"
+                                        onPress={() => {
+                                            handleCreateOrder()
+                                        }}
+                                    />                              
+                                </View>
+                            }
                         </>
                 }
 

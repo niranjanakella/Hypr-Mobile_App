@@ -14,7 +14,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-toast-message';
-
+import FastImage from 'react-native-fast-image';
 import constants from '../../constants';
 import Components from '../../components';
 import { styles } from './styles';
@@ -26,6 +26,7 @@ import {
 } from '../../actions/auth';
 import * as NavigationService from '../../navigation/NavigationService';
 import { calculatePrice } from '../../utils/CalculatePrice';
+import Images from '../../constants/Images';
 
 const MyAccount = (props) => {
     const [state, setState] = useState({
@@ -72,10 +73,24 @@ const MyAccount = (props) => {
     return (
         <>
             <StatusBar barStyle="dark-content" />
+            
+
+
+         
             <SafeAreaView style={styles.container}>
                 <Components.HeaderWithDrawer
                     onPressDrawer={() => { props.navigation.toggleDrawer() }}
-                />
+                /><FastImage
+                source={Images.fade_bg}
+                style={{
+                    width: constants.width_dim_percent * 100,
+                    height: constants.height_dim_percent * 100, 
+                    position:'absolute',
+                    zIndex:-1
+                    
+                    
+                }}            
+                resizeMode="cover">
                 <View style={{
                     flex: 1,
                     paddingHorizontal: 15,
@@ -88,7 +103,8 @@ const MyAccount = (props) => {
                             width: constants.vw(150),
                             height: constants.vw(150),
                             borderRadius: constants.vw(75),
-                            borderWidth: 1
+                            borderWidth: 1,                            
+                                                        
                         }}
                         resizeMode="cover"
                     />
@@ -97,7 +113,10 @@ const MyAccount = (props) => {
                             textTransform: "uppercase"
                         }]}>{props.auth.userData.f_name} {props.auth.userData.l_name ? props.auth.userData.l_name.toUpperCase() : ""}</Text>
                     </View>
-                    <View style={{
+
+            
+                    
+                    {/* <View style={{
                         marginTop: constants.vh(20),
                         alignItems: "center"
                     }}>
@@ -138,9 +157,10 @@ const MyAccount = (props) => {
                             </TouchableOpacity>
 
                         </View>
-                    </View>
+                    </View> */}
 
                 </View>
+                </FastImage>
             </SafeAreaView>
 
         </>

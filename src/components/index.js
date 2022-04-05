@@ -52,7 +52,9 @@ import {
     UserNameByTag,
     CommentCard,
     FriendSuggestionCard,
-    VariantList
+    VariantList,
+    LogisticCard,
+    ModeOfPaymentCard
 } from './cards';
 
 import OTPTextView from './OTP';
@@ -104,7 +106,12 @@ export default {
     CommentCard,
     FriendSuggestionCard,
 
+    
+    LogisticCard,
+
     VariantList,
+
+    ModeOfPaymentCard,
 
     ProgressView,
 

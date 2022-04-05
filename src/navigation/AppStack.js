@@ -19,6 +19,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 import constants from '../constants';
+import Fonts from '../constants/Fonts';
 import DrawerContent from './DrawerContent';
 
 import { MarketPlaceStackFunc } from './MarketPlace';
@@ -119,18 +120,18 @@ export function BottomTabs() {
           tabBarVisible: getTabBarVisibility(route),
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              color: focused ? constants.Colors.blue_primary : constants.Colors.dark_text,
-              fontFamily:"GothamBold"
+              color: focused ? constants.Colors.blue_primary : constants.Colors.fade,
+              fontFamily:Fonts.GothamBold
 
             }}>Market</Text>
           ),
           tabBarColor: constants.Colors.danger,
           tabBarIcon: ({ focused }) => (
-            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.blue_primary : constants.Colors.dark_text} size={25} />
+            <FontAwesome name="shopping-cart" color={focused ? constants.Colors.blue_primary : constants.Colors.fade} size={25} />
           ),
         })}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Social"
         component={SocialStackFunc}
         options={({ route }) => ({
@@ -148,26 +149,27 @@ export function BottomTabs() {
               size={30} />
           ),
         })}
-      />
-      {/* <Tab.Screen
+      /> */}
+      <Tab.Screen
         name="My Account"
         component={SettingStackFunc}
         options={({ route }) => ({
           tabBarVisible: getTabBarVisibility(route),
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              color: focused ? constants.Colors.primary : "grey"
+              color: focused ? constants.Colors.blue_primary : constants.Colors.fade,
+              fontFamily:Fonts.GothamBold
             }}>My Account</Text>
           ),
           tabBarColor: constants.Colors.white,
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
               name="user-alt"
-              color={focused ? constants.Colors.primary : "grey"}
+              color={focused ? constants.Colors.blue_primary :  constants.Colors.fade}
               size={20} />
           ),
         })}
-      /> */}
+      />
     </Tab.Navigator>
   );
 }

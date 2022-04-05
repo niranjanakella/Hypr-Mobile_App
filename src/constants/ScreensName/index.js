@@ -41,6 +41,9 @@ const Screens = {
     WishList: {
         name: "WishList"
     },
+    Wallet: {
+        name: "Wallet"
+    },
     ChangePassword: {
         name: "ChangePassword"
     },
@@ -52,6 +55,9 @@ const Screens = {
     },
     OrderScreen: {
         name: "OrderScreen"
+    },
+    SelectLogistic: {
+        name: "SelectLogistic"
     },
     OrderDetails: {
         name: "OrderDetails"

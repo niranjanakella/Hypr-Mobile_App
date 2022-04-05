@@ -8,6 +8,7 @@ import {
     Platform,
 } from "react-native";
 import PropTypes from "prop-types";
+import Fonts from "../../constants/Fonts";
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 22,
         fontWeight: "500",
-        fontFamily:"GothamBold",
+        fontFamily:Fonts.GothamBold,
         color: "#000000",
     },
 });

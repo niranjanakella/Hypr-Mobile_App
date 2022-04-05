@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Toast from 'react-native-toast-message';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import RenderHtml from 'react-native-render-html';
 import {
     getWishList,
@@ -31,10 +32,15 @@ import { styles } from './styles';
 import { unsetPinCodeData, addToCart, addToWishlist, checkIfPinExist } from '../../../actions/marketPlace';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 import LinearGradient from 'react-native-linear-gradient';
-
+import Fonts from '../../../constants/Fonts';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const ProductDetail = (props) => {
+    
     const [state, setState] = React.useState({
         sliderImage: [props.market.productDetails.variantImage, props.market.productDetails.variantImage, props.market.productDetails.variantImage, props.market.productDetails.variantImage],
+        defaultAddress:props.auth.shipping_address[0],
+        freightCalculation:props.market.freightCalculation.filter((item)=>item.isSelected == true)[0],
         country: "",
         pincode: "",
         pincodeErr: false,
@@ -52,10 +58,13 @@ const ProductDetail = (props) => {
         variantPrice: props.market.productDetails.variantSellPrice
     })
     useEffect(() => {
+        console.warn()
         props.dispatch(getWishList())
         const unsubscribe = props.navigation.addListener('blur', () => {
             props.dispatch(unsetPinCodeData())
         });
+   
+      
         return unsubscribe;
     }, [])
 
@@ -276,8 +285,10 @@ const ProductDetail = (props) => {
             variantName:props.market.productDetails.variantNameEn ?  props.market.productDetails.variantNameEn : props.market.productDetails.variantKey,
             price: state.variantPrice,
             product_code : props.market.productDetails.variantSku,
-            product_image : props.market.productDetails.variantImage
+            product_image : props.market.productDetails.variantImage,
+            freightCalculation: props.market.freightCalculation.filter((item)=>item.isSelected == true)
         }
+        
         props.dispatch(addToCart(payload))
     }
 
@@ -286,10 +297,12 @@ const ProductDetail = (props) => {
             pid: props.market.productDetails.pid,            
             product:props.market.productDetails
         }
-        console.warn(props.market.wishList)
+  
         props.dispatch(addToWishlist(payload))
     }
   
+    
+
     
 
     const handleCheckPinCode = () => {
@@ -318,6 +331,17 @@ const ProductDetail = (props) => {
         }
         props.dispatch(checkIfPinExist(payload))
     }
+
+    const handleChangeAddress = ()=>{
+        NavigationService.navigate(constants.ScreensName.Address.name, { previous_screen: 'PRODUCT_DETAIL'})
+    }
+
+
+    const handleChangeLogistic = () =>{
+        NavigationService.navigate(constants.ScreensName.SelectLogistic.name);
+    }
+
+
     const { width } = useWindowDimensions();
 
     return (
@@ -354,11 +378,94 @@ const ProductDetail = (props) => {
                         <View>
                             <Text style={[styles.text16500,{color:constants.Colors.danger,fontSize:30}]}>{props.auth.currency_symbol} {calculatePrice(state.variantPrice)}</Text>
                             {/* <Text style={[styles.text14500, { textDecorationLine: "line-through",color:constants.Colors.fade,left: constants.width_dim_percent * 15 }]}>{props.auth.currency_symbol} {calculatePrice(props.market.productDetails.f_product_price)}</Text> */}
+                            
                         </View>
                     </View>
                     <View style={styles.DeliveryContainer}>
                         <View  >
-                            <Text style={[styles.DeliveryText, { fontSize: 20, textTransform: "capitalize", }]}>Delivery</Text>
+                            <View style={{flexDirection:'row',bottom:constants.height_dim_percent * 3,width:constants.width_dim_percent * 97}}>                            
+                            <Text style={[styles.DeliveryText, { fontFamily:Fonts.GothamBold,fontSize: 20, textTransform: "capitalize", fontWeight:'600'}]}>Delivery</Text>
+                            <View style={{                                   
+                                    marginLeft:"auto",
+                                   justifyContent:'flex-end'
+                                   }}>
+                                <TouchableOpacity
+                                    onPress={handleChangeAddress}
+                                    style={{                                        
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'space-between',                                                       
+                                            maxWidth:constants.width_dim_percent * 50,
+                                            flexDirection:'row',
+
+                                    }} >
+                                <Ionicons
+                                        name="location"
+                                        size={20}
+                                        color={constants.Colors.blue_primary}
+                                    />
+                                    <Text style={[{color:constants.Colors.dark_text,fontSize:18,fontFamily:Fonts.GothamLight,flexWrap:'wrap',overflow:'hidden',maxWidth: '80%'}]} numberOfLines={1}  >                                                    
+                                        {props.auth.shipping_address[0].address}                                                                                
+                                    </Text>                              
+                                    <AntDesign
+                                        name="right"
+                                        size={20}
+                                        color={constants.Colors.fade}
+                                    />                                
+                                </TouchableOpacity>
+                            </View>                          
+                            </View>
+
+                            <View style={{flexDirection:'row',bottom:constants.height_dim_percent * 1,width:constants.width_dim_percent * 97}}>                            
+
+                            {/* delivery fee row */}
+                            <Text style={[styles.DeliveryText, { fontFamily:Fonts.GothamBold,fontSize: 12, textTransform: "capitalize", fontWeight:'600',color:constants.Colors.fade}]}>Delivery Fee</Text>
+                            <View style={{                                   
+                                    marginLeft:"auto",
+                                   justifyContent:'flex-end'
+                                   }}>                                
+
+                                <TouchableOpacity
+                                    onPress={handleChangeLogistic}
+                                    style={{                                        
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'space-between',                                                       
+                                            maxWidth:constants.width_dim_percent * 50,
+                                            flexDirection:'row',
+
+                                    }} >
+                                <MaterialCommunityIcons
+                                        name="truck-delivery-outline"
+                                        size={20}
+                                        color={constants.Colors.blue_primary}
+                                    />                                    
+                                    
+                                    <Text style={ { fontFamily:Fonts.GothamBold,fontSize: 20, textTransform: "capitalize", fontWeight:'600',color:constants.Colors.fade}}>
+                                        ${props.market.freightCalculation.filter((item)=>item.isSelected == true)[0].logisticPrice}                                    
+                                    </Text>                         
+                                    <AntDesign
+                                        name="right"
+                                        size={20}
+                                        color={constants.Colors.fade}
+                                    />                                
+                                </TouchableOpacity>
+                            </View>
+                            </View>
+
+                            {/* delivery days row */}
+                            <View style={{flexDirection:'row',top:constants.height_dim_percent * 1,width:constants.width_dim_percent * 97}}>                            
+                            <Text style={[styles.DeliveryText, { fontFamily:Fonts.GothamBold,fontSize: 12, textTransform: "capitalize", fontWeight:'600',color:constants.Colors.fade}]}>Delivery Days</Text>
+                            <View style={{                                   
+                                    marginLeft:"auto",
+                                   justifyContent:'flex-end'
+                                   }}>
+                                <Text style={ { fontFamily:Fonts.GothamBold,fontSize: 12, textTransform: "capitalize", fontWeight:'600',color:constants.Colors.fade}}>
+                                    {props.market.freightCalculation[0].logisticAging} Days
+                                    
+                                </Text>  
+                            </View>
+                            </View>
+                            
+
                         </View>
                     </View>
 

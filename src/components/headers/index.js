@@ -11,12 +11,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import constants from '../../constants';
 import { styles } from './styles';
 import { ClipPath } from 'react-native-svg';
 import { Colors } from 'react-native-paper';
-
+import Fonts from '../../constants/Fonts';
 const WIDTH = Dimensions.get("window").width;
 
 export const HeaderWithDrawer = ({
@@ -31,7 +32,7 @@ export const HeaderWithDrawer = ({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: constants.Colors.primary,
+                backgroundColor: 'transparent',
                 paddingHorizontal: 15,
                 paddingVertical: 10
             }}
@@ -42,7 +43,7 @@ export const HeaderWithDrawer = ({
                 <Entypo
                     name="menu"
                     size={30}
-                    color={constants.Colors.white}
+                    color={constants.Colors.blue_primary}
                 />
             </TouchableOpacity>
             <TouchableOpacity
@@ -56,7 +57,7 @@ export const HeaderWithDrawer = ({
                 <FontAwesome
                     name="bell"
                     size={constants.vw(20)}
-                    color={constants.Colors.white}
+                    color={constants.Colors.blue_primary}
                 />
                 {
                     isNotificationCount &&
@@ -70,7 +71,7 @@ export const HeaderWithDrawer = ({
                             justifyContent: "center",
                             alignItems: "center",
                             borderRadius: 20,
-                            backgroundColor: constants.Colors.primary
+                            backgroundColor: constants.Colors.blue_primary
                         }}
                     >
                         <Text style={{ fontSize: 12, color: "#fff" }}>{notificationCount}</Text>
@@ -102,7 +103,8 @@ export const HeaderWithSearch = ({
     onPressNotification,
     onFocus,
     onBlur,
-    isFocus
+    isFocus,
+    onPressWallet
 }) => {
     let count = 0;
     if (count > 9) {
@@ -186,7 +188,7 @@ export const HeaderWithSearch = ({
                                 justifyContent: "center",
                                 alignItems: "center",
                                 borderRadius: 20,
-                                backgroundColor: constants.Colors.primary
+                                backgroundColor: constants.Colors.danger
                             }}
                         >
                             <Text style={{ fontSize: 12, color: "#fff" }}>{count}</Text>
@@ -212,7 +214,10 @@ export const HeaderWithSearch = ({
                     {/* <Text style={{ fontSize: 16, color: "#fff" }}>Wishlist</Text> */}
                 </TouchableOpacity>
 
-                <TouchableOpacity
+
+              
+
+                {/* <TouchableOpacity
                     activeOpacity={1}
                     onPress={onPressNotification}
                     style={{
@@ -237,15 +242,35 @@ export const HeaderWithSearch = ({
                                 justifyContent: "center",
                                 alignItems: "center",
                                 borderRadius: 20,
-                                backgroundColor: constants.Colors.primary
+                                backgroundColor: constants.Colors.danger
                             }}
                         >
                             <Text style={{ fontSize: 12, color: "#fff" }}>{notificationCount}</Text>
                         </View>
                     }
-
+                    {
+                        
+                    }
                     {/* <Text style={{ fontSize: 16, color: "#fff" }}>Cart</Text> */}
+                {/* </TouchableOpacity> */}
+
+
+                  <TouchableOpacity
+                    onPress={onPressWallet}
+                    activeOpacity={1}
+                    style={{
+                        flexDirection: "column",
+                        alignItems: "center"
+                    }}
+                >
+                    <FontAwesome5
+                        name="wallet"
+                        size={constants.vw(22)}
+                        color={constants.Colors.blue_primary}
+                    />
+                    
                 </TouchableOpacity>
+
 
             </View>
 
@@ -264,7 +289,7 @@ export const PrimaryHeader = ({
             alignItems: "center",
             paddingVertical: 10,
             paddingStart: 15,
-            backgroundColor: constants.Colors.white
+            backgroundColor: 'transparent'
         }}>
             <TouchableOpacity
                 onPress={onPress}
@@ -296,7 +321,7 @@ export const PrimaryHeader = ({
             >
                 <Text style={{
                     fontSize: 16,
-                    fontFamily:'GothamBold',                    
+                    fontFamily:Fonts.GothamBold,                    
                     color: constants.Colors.dark_text
                 }}>{title}</Text>
             </View>
@@ -349,7 +374,7 @@ export const SecondaryHeader = ({
             >
                 <Text style={{
                     fontSize: 16,
-                    fontFamily:'GothamBold',                    
+                    fontFamily:Fonts.GothamBold,                    
                     color: constants.Colors.dark_text
                 }}>{title}</Text>
             </View>

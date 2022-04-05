@@ -1,6 +1,7 @@
 import types from '../constants/Types';
 const initialstate = {
     productType: "",
+    freightCalculation:[],
     productDetails: null,
     variantName: [],
     variantValue: [],
@@ -29,7 +30,8 @@ const initialstate = {
     cancelledOrderSummary: [],
     deliveredOrderSummary: [],
     OrderDetails: null,
-    searchProductList: [],
+    searchProductList: []
+    
 }
 
 const marketReducer = (prevState = initialstate, action) => {
@@ -55,13 +57,30 @@ const marketReducer = (prevState = initialstate, action) => {
                 variantName: action.variantName,
                 variantValue: action.variantValue
             }
-
+            case types.CLEAR_SHIPPING_ADDRESS:
+                return {
+                    ...prevState,
+                    shipping_address: action.new_shipping_address,
+                 
+                }
+    
         case types.GET_FLASH_PRODUCT_SUCCESS:
             return {
                 ...prevState,
                 flashSale: action.data
             }
 
+          case types.GET_FREIGHT_PRODUCT_SUCCESS:
+            return {
+                ...prevState,
+                freightCalculation: action.data
+            }
+
+        case types.UPDATE_FREIGHT_SUCCESS:
+                return {
+                    ...prevState,
+                    freightCalculation: action.freightCalculation
+        }
         case types.GET_ALL_PRODUCTS_SUCCESS:
             return {
                 ...prevState,
@@ -130,7 +149,7 @@ const marketReducer = (prevState = initialstate, action) => {
             return {
                 ...prevState,
                 cityList: action.data
-            }
+            }      
         case types.CHECK_IF_PIN_EXIST_SUCCESS:
             return {
                 ...prevState,

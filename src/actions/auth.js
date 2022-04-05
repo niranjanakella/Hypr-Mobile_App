@@ -5,6 +5,7 @@ import Toast from 'react-native-toast-message';
 import store from '../store';
 import types from '../constants/Types'
 import constants from '../constants'
+
 import { GET, POST, DELETE, PUT } from '../constants/ServiceAxios';
 import {
     getUserAccessTokenFromStorage,
@@ -19,44 +20,101 @@ import {
     setCurrencyRateToStorage,
     getCurrencyFromStorage,
     getCurrencySymbolFromStorage,
-    getCurrencyRateFromStorage
+    getCurrencyRateFromStorage,
+    setUserDataToStorage,
+    getUserDataFromStorage
 } from '../utils/asyncstorage'
+
+
 import getConfig from '../utils/config';
 import * as NavigationService from '../navigation/NavigationService';
 
-export const switchRoute = () => {
+
+export const getUserAuth = () => {
+    let response = '';
+        getUserIdFromStorage().then(id => {
+            if (id) {
+                const value = {
+                    "_id": id
+                }
+
+                let get_result = '';
+                POST(
+                    `${getConfig().accesspoint}${constants.EndPoint.EDIT_USER}`,
+                    value,
+                    {},
+                )
+                    .then((result) => {
+                     
+                        if (!result.data.status) {
+                           
+                           get_result = result.data.data[0];
+                           setUserDataToStorage(result.data.data[0])
+                          
+                        } else {
+                          
+                        }
+                    })
+                    .catch((error) => {
+                    
+                    });
+
+                response = get_result;
+            }
+            else {
+                
+            }
+        })
+
+
+    // setUserDataToStorage(response)
+};
+
+
+export const switchRoute = (props) => {
     return async (dispatch) => {
+        
+        await getUserAuth();
         dispatch({
             type: types.AUTH_SWITCH_ROUTE,
             isLoading: true,
             isAppLoading: false
         })
-        
-        getUserAccessTokenFromStorage().then(token => {
-            if (token !== null) {
-                dispatch({
-                    type: types.AUTH_SWITCH_ROUTE,
-                    isLoading: false,
-                    isAppLoading: false,
-                    accessToken: token,
-                    isVerified: true
-                })
-            } else {
+
+         getUserDataFromStorage().then((userData)=> {
+            console.warn('User Data',userData);
+            getUserAccessTokenFromStorage().then(token => {
+                if (token !== null) {
+                    
+                    
+                    dispatch({
+                        type: types.AUTH_SWITCH_ROUTE,
+                        isLoading: false,
+                        isAppLoading: false,
+                        accessToken: token,
+                        userData:userData,
+                        shipping_address:userData.f_shipping_Address.filter((item)=> item.isSelected == true),
+                        isVerified: true
+                    })
+                } else {
+                    dispatch({
+                        type: types.AUTH_SWITCH_ROUTE,
+                        isLoading: false,
+                        isAppLoading: false,
+                        accessToken: null,
+                        userData:null,
+                        isVerified: false
+                    })
+                }
+            }).catch(() => {
                 dispatch({
                     type: types.AUTH_SWITCH_ROUTE,
                     isLoading: false,
                     isAppLoading: false,
                     accessToken: null,
+                    userData:null,
                     isVerified: false
                 })
-            }
-        }).catch(() => {
-            dispatch({
-                type: types.AUTH_SWITCH_ROUTE,
-                isLoading: false,
-                isAppLoading: false,
-                accessToken: null,
-                isVerified: false
             })
         })
 
@@ -181,7 +239,7 @@ export const signup = (payload) => {
                             store.dispatch(handleLoader(false))
                             
                             setSignUpUserIdToStorage(result.data.id)
-                            NavigationService.navigate(constants.ScreensName.VerifyOtp.name, null)
+                            NavigationService.goback();
                         } else {
                             
                             console.log(JSON.stringify(result.data))
@@ -256,14 +314,14 @@ export const login = (payload) => {
                     {},
                 )
                     .then((result) => {
-                        console.warn('result', result.data);
+                        console.warn('result', result.data.data);
                         
                         if (result.data.status) {
                             dispatch({
                                 type: types.LOGIN_SUCCESS,
                                 isLoading: false,
                                 data: result.data.data,
-                                // userData:
+                                userData:result.data.data,
                                 errorMessage: null   
                             });  
                             
@@ -273,7 +331,7 @@ export const login = (payload) => {
                             // store.dispatch(switchRoute())
                             
                             setUserIdToStorage(user_id)                            
-                            NavigationService.navigate(constants.ScreensName.VerifyOtp.name, null)
+                            NavigationService.navigate(constants.ScreensName.VerifyOtp.name, {userData:result.data.data})
                             store.dispatch(handleLoader(false))
                             
                         } else {
@@ -415,12 +473,13 @@ export const getUser = () => {
                     {},
                 )
                     .then((result) => {
-                        console.log('result', result);
+                     
                         if (!result.data.status) {
-                            let shippingAddress = result.data.data[0].f_shipping_Address
-                            shippingAddress.map(item => {
-                                { item.isSelected = false; return item; }
-                            })
+                            let shippingAddress = result.data.data[0].f_shipping_Address;
+                            // shippingAddress.map(item => {
+                            //     { item.isSelected = false; return item; }
+                            // })  
+                             
                             dispatch({
                                 type: types.GET_USER_SUCCESS,
                                 isLoading: false,
@@ -720,7 +779,7 @@ export const forgotPassword = (value) => {
 };
 
 export const verifyOtp = (value) => {
-    
+                
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected && state.isInternetReachable) {
@@ -757,11 +816,14 @@ export const verifyOtp = (value) => {
                                     });
                                     store.dispatch(handleLoader(false))
                                     setUserIdToStorage(id)
-                                    setUserAccessTokenToStorage(id)                            
+                                    setUserAccessTokenToStorage(id)    
+                                    setUserDataToStorage(value.userData)                                    
+                                    
                                     store.dispatch(switchRoute())
                             
                              
                                 } else {
+                                    
                                     //@failed return from server
                                     dispatch({
                                         type: types.VERIFY_OTP_FAIL,
@@ -839,7 +901,7 @@ export const resendOTP = (value) => {
                             ...value,
                             "_id": id
                         }
-                        console.warn(value)
+                        
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.RESEND_OTP}`,
                             value,
@@ -941,10 +1003,10 @@ export const socialLogin = ({ value, onSuccess }) => {
 export const saveAddress = (payload) => {
     return async (dispatch) => {
 
-        dispatch({
-            type: types.SAVE_ADDRESS,
-            data: payload
-        })
+        // dispatch({
+        //     type: types.SAVE_ADDRESS,
+        //     data: payload
+        // })
         
         let data = {
            payload:payload
@@ -958,9 +1020,10 @@ export const saveAddress = (payload) => {
 
                 
                let clean_payload = {
-                   product:[]
+                   products:[]
                };
-             
+               
+               console.warn('Cart',cart)
                 
                 clean_payload.zip = address.pincode;
                 clean_payload.code  = address.country_code;
@@ -971,18 +1034,20 @@ export const saveAddress = (payload) => {
                 clean_payload.name = address.name;
                 clean_payload.contact = address.mobile == null ? address.AlternativePhone : address.mobile;                
                 clean_payload.remark = 'New Order';
-                clean_payload.ccode = 'CN';
-                clean_payload.ccode = 'PostNL';
-                
+                clean_payload.ccode = address.country_code;
+                clean_payload.logistic = payload.cart[0].f_freightCalculation[0].logisticName;                
+                console.warn(payload.cart[0].f_freightCalculation[0].logisticName);
                 cart.map((product=>{
-                    clean_payload.product.push({
-                        vid:product._id,
+                    
+                    clean_payload.products.push({
+                        vid:product.f_ProductId,
                         quantity: product.f_itemQuantity,
-                        shippingName: product.variatNameEn+' 2',
+                        shippingName: product.variatName+' 2',
 
                     })
                 }))
-           
+
+                
                 
                 POST(
                     `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.CREATE_ORDER}`,
@@ -990,7 +1055,8 @@ export const saveAddress = (payload) => {
                     {},
                 )
                 .then((result) => {
-                    console.warn(result);
+                    console.warn('MY ORDEr', result);
+
                 }).catch((err)=>{
 
                     console.warn(err);
@@ -1000,7 +1066,7 @@ export const saveAddress = (payload) => {
 
 
         
-        // NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
+        NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
     }
 }
 

@@ -18,7 +18,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Fonts from "../constants/Fonts";
 import constants from '../constants';
 import { logout } from '../actions/auth';
 import LinearGradient from "react-native-linear-gradient";
@@ -161,8 +161,75 @@ const DrawerContent = (props) => {
                 {
                     props.auth.tab_type === "market" &&
                     <>
+                            
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate("EditProfile")}
+                            activeOpacity={1}
+                            style={[styles.itemContainer, styles.margintopDrawer]}>
+                            <View style={[styles.itemSecondryContainer]}>
+                                <MaterialIcons
+                                    name="edit"
+                                    size={27}
+                                    color={constants.Colors.blue_primary}
+                                />
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.textStyle}>Edit Profile</Text>
+                                </View>
+                            </View>
+
+                            <AntDesign
+                                name="right"
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                            />
+                        </TouchableOpacity>
 
                         <TouchableOpacity
+                            onPress={() => props.navigation.navigate("ChangePassword")}
+                            activeOpacity={1}
+                            style={styles.itemContainer}>
+                            <View style={styles.itemSecondryContainer}>
+                                <MaterialIcons
+                                    name="lock-outline"
+                                    size={30}
+                                    color={constants.Colors.blue_primary}
+                                />
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.textStyle}>Change Password</Text>
+                                </View>
+                            </View>
+
+                            <AntDesign
+                                name="right"
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                            />
+                        </TouchableOpacity>
+
+                 
+
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate("AddAddressMyAccount")}
+                            activeOpacity={1}
+                            style={styles.itemContainer}>
+                            <View style={styles.itemSecondryContainer}>
+                                <FontAwesome
+                                    name="address-book"
+                                    size={25}
+                                    color={constants.Colors.blue_primary}
+                                />
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.textStyle}>Address</Text>
+                                </View>
+                            </View>
+
+                            <AntDesign
+                                name="right"
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                            />
+                        </TouchableOpacity>
+                        {/* <TouchableOpacity
                             onPress={() => props.navigation.navigate("Products")}
                             activeOpacity={1}
                             style={[styles.itemContainer, styles.margintopDrawer]}>
@@ -203,7 +270,7 @@ const DrawerContent = (props) => {
                                 size={20}
                                 color={constants.Colors.blue_primary}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         {/* <TouchableOpacity
                             activeOpacity={1}
@@ -475,7 +542,7 @@ const DrawerContent = (props) => {
                 }]}>
                 <View style={styles.itemSecondryContainer}>
                     <View style={styles.textContainer}>
-                        <Text style={[{fontFamily:'GothamBold'}]}>LOG OUT</Text>
+                        <Text style={[{fontFamily:Fonts.GothamBold}]}>LOG OUT</Text>
                     </View>
                 </View>
 

@@ -19,9 +19,11 @@ import WishList from '../screens/MarketPlace/Wishlist';
 import AddAddress from '../screens/MarketPlace/Address';
 import OrderScreen from '../screens/MarketPlace/OrderScreen';
 import SearchProduct from '../screens/MarketPlace/SearchProduct';
-
+import SelectLogistic from '../screens/MarketPlace/SelectLogistic';
+import Payment from '../screens/Payment/Payment';
 //Products
 import Products from '../screens/Products';
+import Wallet from '../screens/MarketPlace/Wallet';
 // const MarketPlaceStack  = createSharedElementStackNavigator(); 
 const MarketPlaceStack = createStackNavigator();
 
@@ -55,6 +57,8 @@ export const MarketPlaceStackFunc = () => {
                 //     return [{   id: item.product_image,}];
                 // }}
             />
+
+            
              <MarketPlaceStack.Screen
                 component={Variant}
                 name={constants.ScreensName.Variant.name}
@@ -81,6 +85,18 @@ export const MarketPlaceStackFunc = () => {
                 name={constants.ScreensName.OrderScreen.name}
                 options={{ gestureEnabled: false }}
             />
+
+            <MarketPlaceStack.Screen
+                component={SelectLogistic}
+                name={constants.ScreensName.SelectLogistic.name}
+                options={{ gestureEnabled: false }}
+            />
+
+            <MarketPlaceStack.Screen
+                component={Payment}
+                name={constants.ScreensName.Payment.name}
+                options={{ gestureEnabled: false }}
+            />
             
              <MarketPlaceStack.Screen
                 component={SearchProduct}
@@ -92,6 +108,14 @@ export const MarketPlaceStackFunc = () => {
                 name={constants.ScreensName.Products.name}
                 options={{ gestureEnabled: false }}
             />
+
+            <MarketPlaceStack.Screen
+                component={Wallet}
+                name={constants.ScreensName.Wallet.name}
+                options={{ gestureEnabled: false }}
+            />
+
+
             </MarketPlaceStack.Navigator>
     )
 }

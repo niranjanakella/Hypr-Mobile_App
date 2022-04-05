@@ -12,6 +12,7 @@ import {
     TextInput
 } from 'react-native';
 import { connect } from 'react-redux';
+import types from '../../../constants/Types';
 import * as NavigationService from '../../../navigation/NavigationService';
 import constants from '../../../constants';
 import Components from '../../../components';
@@ -31,7 +32,7 @@ import {
     getProductByKeyword,
     getAllProducts
 } from '../../../actions/marketPlace';
-import { setTabType } from '../../../actions/auth';
+import { saveAddress, setTabType } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Placeholder,FooterLoader } from '../../../components/placeholder';
@@ -47,8 +48,9 @@ const MarketHome = (props) => {
     useLayoutEffect(() => {
 
         props.dispatch(getAllProducts(state.currentPage))
+        props.dispatch(getCartList())
         
-        
+    
         const subscribe = props.navigation.addListener('focus', () => {
             props.dispatch(setTabType("market"))
         })
@@ -56,6 +58,9 @@ const MarketHome = (props) => {
             subscribe
         }
     }, [])
+
+
+    
     const renderCategory = ({ item, index }) => {
         if (item.t_CategoryTypes === 0) {
             return (
@@ -78,14 +83,14 @@ const MarketHome = (props) => {
     }
     const renderAllProducts = ({ item, index }) => {
         
-        
+            console.warn(item)
             return (
                 <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
                     <Components.CategoryCard
                         image={{ uri: item.productImage }}
                         title={item.productNameEn}
-                        off={`${props.auth.currency_symbol} ${item.sellPrice % 1 === 0 ?  calculatePrice(item.sellPrice) : item.sellPrice } `}
-                        // originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
+                        off={`$${item.sellPrice } `}
+                        originalPrice={`${props.auth.currency_symbol} ${calculatePrice(item.sellPrice)}`}
                         onPress={() => { props.dispatch(setVariant(item))}}                                                                                    
                     />
                 </View>                 
@@ -94,7 +99,7 @@ const MarketHome = (props) => {
     }
     
     const loadMore = async (allProducts) => { 
-        
+        alert(state.currentPage);
         await props.dispatch(getAllProducts(state.currentPage + 1,allProducts)).then(async()=>{
 
             return new Promise(function (resolve) {
@@ -137,9 +142,17 @@ const MarketHome = (props) => {
                     onPressCart={() => { NavigationService.navigate(constants.ScreensName.Cart.name, null) }}
                     onPressDrawer={() => { props.navigation.toggleDrawer() }}
                     onPressWishlist={() => NavigationService.navigate(constants.ScreensName.WishList.name, null)}
+                    onPressWallet={() => { NavigationService.navigate(constants.ScreensName.Wallet.name, null) }}
                 />
                 <TouchableOpacity
-                    onPress={() => { NavigationService.navigate(constants.ScreensName.SearchProduct.name, null) }}
+                    onPress={() => {
+                        //  NavigationService.navigate(constants.ScreensName.SearchProduct.name, null) 
+                         let sample_item =  {
+                            pid : '00006BC5-E1F5-4C65-BE2B-3FE0956DA21B'
+                        }
+                        props.dispatch(setVariant(sample_item))
+                        
+                        }}
                     style={{
                         marginTop: constants.vh(10),
                         paddingVertical: constants.vh(10),
@@ -161,7 +174,7 @@ const MarketHome = (props) => {
                 <ScrollView
                     style={{
                         flex: 1,
-                        backgroundColor: constants.Colors.white
+                        backgroundColor: constants.Colors.primary_bg_color
                     }}
                 >
                     {/* {
@@ -201,6 +214,11 @@ const MarketHome = (props) => {
                                     ListEmptyComponent={renderEmptyComponent}
                                     refreshing={state.refreshing}
                                     onRefresh={()=>{
+                                        props.dispatch({
+                                            type: types.GET_ALL_PRODUCTS_SUCCESS,
+                                            data: []  
+                                        })
+
                                         props.dispatch(getAllProducts(1)).then( async()=>{
                                             await setState( (prevState) => ({...prevState,currentPage:1}));
                                         })
@@ -208,7 +226,7 @@ const MarketHome = (props) => {
                                     }}
                                     renderItem={renderAllProducts}                                    
                                     keyExtractor={(item, index) => index}                                           
-                                    // extraData={props.market.allProducts}
+                                    extraData={props.market.allProducts}
 
 
                                     style={{height:constants.height_dim_percent * 80,flexGrow:0}}

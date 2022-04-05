@@ -25,31 +25,39 @@ import { login, signup } from '../../actions/auth';
 
 const SignUp = (props) => {
     const [state, setState] = React.useState({
+        
         hidePassword: true,
         hideConfirmPassword: true,
         firstName: props.auth.socialMediaFirstName,
         firstNameErr: false,
+        focusFirstName:false,
         firstNameErrMsg: "",
         lastName: props.auth.socialMediaLastName,
         lastNameErr: false,
+        focusLastName:false,
         lastNameErrMsg: "",
         username: "",
         usernameErr: false,
+        focusUsername:false,
         usernameErrMsg: "",
         email: props.auth.socialMediaEmail,
         emailErr: false,
+        focusEmail:false,
         emailErrMsg: "",
         password: '',
         passwordErr: false,
+        focusPassword:false,
         passwordErrMsg: "",
         confirmPassword: "",
         confirmPassword: "",
         confirmPasswordErr: false,
+        focusConfirmPassword:false,
         dob: null,
         dobErr: false,
         dobErrMsg: "",
         phone: "",
         phoneErr: false,
+        focusPhone:false,
         phoneErrMsg: "",
         countrycode: "91",
         callingCode: "91",
@@ -60,6 +68,7 @@ const SignUp = (props) => {
         isAgree: false,
         refCode: "",
         refCodeErr: false,
+        focusRefCode:false,
         refCodeErrMsg: ""
     })
     const handlePasswordShow = () => {
@@ -192,8 +201,8 @@ const SignUp = (props) => {
             if (state.refCode.length === 0) {
                 setState({
                     ...state,
-                    usernameErr: true,
-                    usernameErrMsg: "Please enter referral code."
+                    refCodeErr: true,
+                    refCodeErrMsg: "Please enter referral code."
                 })
                 return 0;
             }
@@ -261,13 +270,13 @@ const SignUp = (props) => {
                         />
                         <Text style={styles.loginText}>MEMBER</Text>
                         <View style={styles.signupTextContainer}>
-                            <Text
+                            {/* <Text
                                 style={{
                                     fontSize: 18,
                                     fontWeight: "500",
                                     color: constants.Colors.placeholder
-                                }}>Want to be seller?</Text>
-                            <Text>{" "}</Text>
+                                }}>Want to be seller?</Text> */}
+                            {/* <Text>{" "}</Text>
                             <Text
                                 //onPress={() => NavigationService.navigate(constants.ScreensName.SignUpSeller.name, null)}
                                 onPress={() => { alert("seller website will be added here") }}
@@ -276,7 +285,7 @@ const SignUp = (props) => {
                                     fontWeight: "500",
                                     color: constants.Colors.linkText
                                 }}
-                            >Click here</Text>
+                            >Click here</Text> */}
                         </View>
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
@@ -284,6 +293,9 @@ const SignUp = (props) => {
                                 value={state.firstName}
                                 isError={state.firstNameErr}
                                 error={state.firstNameErrMsg}
+                                onFocus={()=>setState({...state,focusFirstName:true})}
+                                onBlur={()=>setState({...state,focusFirstName:false})}                                
+                                isFocus = {state.focusFirstName}
                                 onChangeText={(firstName) => {
                                     setState({
                                         ...state,
@@ -300,6 +312,9 @@ const SignUp = (props) => {
                                 value={state.lastName}
                                 isError={state.lastNameErr}
                                 error={state.lastNameErrMsg}
+                                onFocus={()=>setState({...state,focusLastName:true})}
+                                onBlur={()=>setState({...state,focusLastName:false})}                                
+                                isFocus = {state.focusLastName}
                                 onChangeText={(lastName) => {
                                     setState({
                                         ...state,
@@ -313,8 +328,12 @@ const SignUp = (props) => {
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
                                 placeholder="Username"
+                                value={state.username}
                                 isError={state.usernameErr}
                                 error={state.usernameErrMsg}
+                                onFocus={()=>setState({...state,focusUsername:true})}
+                                onBlur={()=>setState({...state,focusUsername:false})}                                
+                                isFocus = {state.focusUsername}
                                 onChangeText={(username) => {
                                     setState({
                                         ...state,
@@ -331,6 +350,9 @@ const SignUp = (props) => {
                                 value={state.email}
                                 isError={state.emailErr}
                                 error={state.emailErrMsg}
+                                onFocus={()=>setState({...state,focusEmail:true})}
+                                onBlur={()=>setState({...state,focusEmail:false})}                                
+                                isFocus = {state.focusEmail}
                                 onChangeText={(email) => {
                                     setState({
                                         ...state,
@@ -346,6 +368,9 @@ const SignUp = (props) => {
                                 placeholder="Mobile No"
                                 isError={state.phoneErr}
                                 error={state.phoneErrMsg}
+                                onFocus={()=>setState({...state,focusPhone:true})}
+                                onBlur={()=>setState({...state,focusPhone:false})}                                
+                                isFocus = {state.focusPhone}
                                 callingCode={state.callingCode}
                                 countryName={state.countryName}
                                 selectedCountryCode={state.selectedCountryCode}
@@ -395,8 +420,12 @@ const SignUp = (props) => {
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
                                 placeholder="Password"
+                                value={state.password}
                                 isError={state.passwordErr}
                                 error={state.passwordErrMsg}
+                                onFocus={()=>setState({...state,focusPassword:true})}
+                                onBlur={()=>setState({...state,focusPassword:false})}                                
+                                isFocus = {state.focusPassword}
                                 showSecure={true}
                                 isSecure={state.hidePassword}
                                 onIconpress={handlePasswordShow}
@@ -413,8 +442,12 @@ const SignUp = (props) => {
                         <View style={styles.inputContainer}>
                             <Components.PrimaryInput
                                 placeholder="Confirm Password"
-                                isError={state.confirmPasswordErr}
+                                value={state.confirmPassword}
+                                isError={state.confirmPasswordErr}                                
                                 error={state.confirmPasswordErrMsg}
+                                onFocus={()=>setState({...state,focusConfirmPassword:true})}
+                                onBlur={()=>setState({...state,focusConfirmPassword:false})}                                
+                                isFocus = {state.focusConfirmPassword}
                                 showSecure={true}
                                 isSecure={state.hideConfirmPassword}
                                 onIconpress={handleConfirmPasswordShow}
@@ -434,6 +467,9 @@ const SignUp = (props) => {
                                 value={state.refCode}
                                 isError={state.refCodeErr}
                                 error={state.refCodeErrMsg}
+                                onFocus={()=>setState({...state,focusRefCode:true})}
+                                onBlur={()=>setState({...state,focusRefCode:false})}                                
+                                isFocus = {state.focusRefCode}
                                 onChangeText={(refCode) => {
                                     setState({
                                         ...state,

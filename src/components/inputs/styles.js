@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
         right: constants.vw(18)
     },
     phoneInputContainer: {
+        borderWidth:1,
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
@@ -59,10 +60,12 @@ export const styles = StyleSheet.create({
     codeAndPhoneContainer: {
         flexDirection: "row",
         justifyContent: "flex-start",
-        alignItems: "center"
+        alignItems: "center",
+        
     },
     phoneNumber: {
         fontSize: 16,
+        
         marginStart: constants.vw(10),
         width: "68%"
     },

@@ -7,6 +7,7 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import constants from '../../../constants';
+import Fonts from '../../../constants/Fonts';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -73,14 +74,14 @@ export const styles = StyleSheet.create({
     text16500: {
         fontSize: 18,
         fontWeight: "bold",
-        fontFamily:"GothamBold",
+        fontFamily:Fonts.GothamBold,
         color: constants.Colors.dark_text
     },
     DeliveryText: {
-        bottom:constants.height_dim_percent * 3,
+        
         fontSize: 18,
         fontWeight: "bold",
-        fontFamily:"GothamBold",
+        fontFamily:Fonts.GothamBold,
         color: constants.Colors.dark_text
     },
     text14500: {

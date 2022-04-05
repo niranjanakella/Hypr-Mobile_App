@@ -56,24 +56,115 @@ export const clearSearchList = () => {
     }
 }
 
-export const setProductDetails = (product) => {
+export const setProductDetails = (product,country_code) => {
     
     return async (dispatch) => {
 
+        NetInfo.fetch().then(state => {
+            
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.GET_FREIGHT_PRODUCT_LOADING,
+                    isLoading: true,
+                });
+                
+                store.dispatch(handleLoader(true))                
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {
+                        // freight calculation
+                        console.warn(country_code);
+                        let data = {                            
+                            eccode: country_code,
+                            products:[{
+                                quantity: 1,
+			                    vid: product.vid
+                            }]
+                        }   
+                        
+                        
+                        POST(
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.FREIGHT_CALCULATION}`,
+                            data,
+                            {},
+                        ).then((result) => {
+                            console.warn('result', result.data.data);
+                            if (result.data.code == 200) {
+                                let clean_freight = result.data.data;
 
-        
+                                clean_freight.map((item,index)=>{
+                                    index == 0 ? item['isSelected'] = true : item['isSelected'] = false;
+                                })
 
+                                store.dispatch(handleLoader(false)) 
+                                dispatch({
+                                    type: types.GET_FREIGHT_PRODUCT_SUCCESS,
+                                    data: clean_freight,
+                                });
+
+                                NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.variantImage})
+                            } else {
+                                //@failed return from server
+                                dispatch({
+                                    type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                    isLoading: false,
+                                    errorMessage: result.data.msg
+                                });
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: result.data.msg,
+                                    type: "error",
+                                    position: "top"
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            dispatch({
+                                type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                isLoading: false,
+                                errorMessage: JSON.stringify(error)
+                            });
+                            console.log("error", error);
+                            Toast.show({
+                                text1: constants.AppConstant.Hypr,
+                                text2: constants.AppConstant.something_went_wrong_message,
+                                type: "error",
+                                position: "top"
+                            });
+                        });
+
+                    }else{
+                        // logout here
+                    }
+                                    
+
+                })
+            }
+        })
         dispatch({
             type: types.SET_PRODUCT_DETAILS,
             product: product            
         })
         
-        NavigationService.navigate(constants.ScreensName.ProductDetail.name, {product_image:product.variantImage})
+        
 
         
     }
 }
 
+
+
+export const clearShippingAddress = (new_shipping_address) => {
+    
+    return async (dispatch) => {
+        
+        dispatch({
+            type: types.CLEAR_SHIPPING_ADDRESS,
+            new_shipping_address: new_shipping_address            
+        })
+        
+                
+    }
+}
 
 
 
@@ -99,14 +190,14 @@ export const getAllProducts = (currentPage,previousProductPage) => {
                             "userId": id
                         }
                         GET(
-                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}?page=${currentPage}`,
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_PRODUCTS}?pageNum=${currentPage}`,
                            
                         )
                             .then((result) => {
-                                console.warn(result.code);
+                                
                                 if (result.data.result) {
 
-                                    console.warn(result.data.data.list)
+                                    
                                     if(currentPage >= 2){
 
                                         dispatch({
@@ -201,7 +292,7 @@ export const setVariant = (product) => {
                            
                         )
                             .then((result) => {                                    
-                                      
+                                      console.warn('variant',result);
                                 if (result.data.data) {
                                       
                                     
@@ -962,6 +1053,7 @@ export const addToCart = (payload) => {
                     isLoading: true,
                 });
                 store.dispatch(handleLoader(false))
+                console.warn('FREUGHT',payload.freightCalculation);
                 getUserIdFromStorage().then(id => {
                     if (id !== null) {
                         let value = {
@@ -970,7 +1062,8 @@ export const addToCart = (payload) => {
                             "variantName": payload.variantName,
                             "product_price": payload.price,
                             "product_code" : payload.product_code,
-                            "product_image" : payload.product_image
+                            "product_image" : payload.product_image,
+                            "freightCalculation" : payload.freightCalculation
                         }
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.ADD_TO_CART}`,
@@ -978,7 +1071,7 @@ export const addToCart = (payload) => {
                             {},
                         )
                             .then((result) => {
-                                console.warn('result', result);
+                                
                                 if (result.data.status) {
                                     dispatch({
                                         type: types.ADD_CART_SUCCESS,
@@ -2029,6 +2122,166 @@ export const placeOrder = (payload) => {
     }
 }
 
+
+
+export const payOrder = (payload) => {
+    return async (dispatch) => {
+        NetInfo.fetch().then(state => {
+            if (state.isConnected && state.isInternetReachable) {
+                store.dispatch(handleLoader(true))
+                console.warn(payload);
+                getUserIdFromStorage().then(id => {
+                    
+                    if (id !== null) {
+                        const market = store.getState().market
+                        const auth = store.getState().auth
+                        let value = {
+                            "userId": id,
+                            "paymentMode": payload.paymentMode,
+                            "paymentmethod": "Confirm",
+                            "paymentStatus": "Paid",
+                            "billingAddress": auth.address.address,
+                            "billingCity": auth.address.city,
+                            "billingState": auth.address.state,
+                            "billingCountry": auth.address.country,
+                            "billingContactNo": auth.userData.f_phone,
+                            "billingPinCode": auth.address.pincode,
+                            "orderTotalAmount": market.totalPayingAmount,
+                            "description": "",
+                            "currencyFormat": '$'
+                        }
+
+                        
+                        
+                        POST(
+                            `${getConfig().accesspoint}${constants.EndPoint.PLACE_ORDER}`,
+                            value,
+                            {},
+                        )
+                            .then((result) => {
+                            console.warn(result.data)
+                                if (result.data.status) {
+                                    dispatch({
+                                        type: types.PLACE_ORDER_SUCCESS,
+                                        //data: result.data.id,
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: "Great! your order has been placed. You can track it from dashboard.",
+                                        type: "success",
+                                        position: "top"
+                                    });
+                                    NavigationService.navigate("marketPlace", null)
+                                    store.dispatch(handleLoader(false))
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.PLACE_ORDER_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    store.dispatch(handleLoader(false))
+                                }
+                            })
+                            .catch((error) => {
+                                dispatch({
+                                    type: types.PLACE_ORDER_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                console.log("error", error);
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                                store.dispatch(handleLoader(false))
+                            });
+
+
+                        // COMMENTED PAY ORDER FOR MONGO DB
+                        // POST(
+                        //     `${getConfig().accesspoint}${constants.EndPoint.PLACE_ORDER}`,
+                        //     value,
+                        //     {},
+                        // )
+                        //     .then((result) => {
+                        //         console.log('result', result);
+                        //         if (result.data.status) {
+                        //             dispatch({
+                        //                 type: types.PLACE_ORDER_SUCCESS,
+                        //                 //data: result.data.id,
+                        //             });
+                        //             Toast.show({
+                        //                 text1: constants.AppConstant.Hypr,
+                        //                 text2: "Great! your order has been placed. You can track it from dashboard.",
+                        //                 type: "success",
+                        //                 position: "top"
+                        //             });
+                        //             NavigationService.navigate("marketPlace", null)
+                        //             store.dispatch(handleLoader(false))
+                        //         } else {
+                        //             //@failed return from server
+                        //             dispatch({
+                        //                 type: types.PLACE_ORDER_FAIL,
+                        //                 isLoading: false,
+                        //                 errorMessage: result.data.msg
+                        //             });
+                        //             Toast.show({
+                        //                 text1: constants.AppConstant.Hypr,
+                        //                 text2: result.data.msg,
+                        //                 type: "error",
+                        //                 position: "top"
+                        //             });
+                        //             store.dispatch(handleLoader(false))
+                        //         }
+                        //     })
+                        //     .catch((error) => {
+                        //         dispatch({
+                        //             type: types.PLACE_ORDER_FAIL,
+                        //             isLoading: false,
+                        //             errorMessage: JSON.stringify(error)
+                        //         });
+                        //         console.log("error", error);
+                        //         Toast.show({
+                        //             text1: constants.AppConstant.Hypr,
+                        //             text2: constants.AppConstant.something_went_wrong_message,
+                        //             type: "error",
+                        //             position: "top"
+                        //         });
+                        //         store.dispatch(handleLoader(false))
+                        //     });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.PLACE_ORDER_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                    store.dispatch(handleLoader(false))
+                })
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+    }
+}
 export const checkIfPinExist = (payload) => {
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
@@ -2205,6 +2458,7 @@ export const orderSummary = () => {
 export const cancelOrderByUser = (payload) => {
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
+            console.warn(`${getConfig().accesspoint}${constants.EndPoint.CANCEL_ORDER_BY_USER}`)
             if (state.isConnected) {
                 store.dispatch(handleLoader(true))
                 getUserIdFromStorage().then(id => {
@@ -2307,7 +2561,7 @@ export const orderDetails = (payload) => {
 export const filterCountry = (value) => {
     return async (dispatch) => {
         let countryList = store.getState().market.countryList
-        console.warn(store.getState().market.countryList)
+        
         let updatedCountryList = []
         countryList.map((item) => {
             if (item.Name.toLowerCase().includes(value.toLowerCase())) {
@@ -2358,7 +2612,7 @@ export const filterCity = (value) => {
 export const addNewAddress = (payload) => {
     return async (dispatch) => {
         NetInfo.fetch().then(state => {
-            if (state.isConnected) {
+            if (state.isConnected && state.isInternetReachable) {
                 store.dispatch(handleLoader(true))
                 getUserIdFromStorage().then(id => {
                     if (id !== null) {
@@ -2372,8 +2626,17 @@ export const addNewAddress = (payload) => {
                             "city": payload.city,
                             "state": payload.state,
                             "landmark": payload.landmark,
-                            "AlternativePhone": payload.AlternativePhone
+                            "AlternativePhone": payload.AlternativePhone,
+                            "country":payload.country,
+                            "countryCode":payload.countryCode,
+
+                            
                         }
+
+                    
+                        
+
+
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.ADD_NEW_ADDRESS}`,
                             data,
@@ -2446,6 +2709,227 @@ export const addNewAddress = (payload) => {
 
     };
 }
+
+
+
+export const updateAddress = (payload,props) => {    
+    return async (dispatch) => {
+        NetInfo.fetch().then(state => {
+            if (state.isConnected) {
+                
+          
+                store.dispatch(handleLoader(true))
+                
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {
+                        const data = {
+                            "id": id,
+                            "userId": id,
+                            "addressId": payload.selectedAddress.id,
+                            "index": payload.index,
+                            "name": payload.selectedAddress.name,
+                            "mobile": payload.selectedAddress.mobile,
+                            "pincode": payload.selectedAddress.pincode,
+                            "location": payload.selectedAddress.location,
+                            "address": payload.selectedAddress.address,
+                            "city": payload.selectedAddress.city,
+                            "state": payload.selectedAddress.state,
+                            "landmark": payload.selectedAddress.landmark,
+                            "AlternativePhone": payload.selectedAddress.AlternativePhone,
+                            "country":payload.selectedAddress.country,
+                            "country_code":payload.selectedAddress.country_code,
+
+                            
+                        }
+
+                        
+                    
+
+                        POST(
+                            `${getConfig().accesspoint}${constants.EndPoint.UPDATE_ADDRESS}`,
+                            data,
+                            {},
+                        )
+                            .then((result) => {
+                             
+                                if (result.data.status) {
+                                    // update shipping address auth
+                                    dispatch({
+                                        type: types.UPDATE_ADDRESS_SUCCESS,                                        
+                                        shipping_address:[data]
+                                    });
+                               
+                                  
+                                    
+                                    
+
+                                    // CALCULATRE FREIGHT
+                                    let freight_data = {
+                                        eccode: payload.selectedAddress.country_code,
+                                        products:[{
+                                            quantity: 1,
+                                            vid: props.market.productDetails.vid
+                                        }]
+                                    };
+
+                                    POST(
+                                        `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.FREIGHT_CALCULATION}`,
+                                        freight_data,
+                                        {},
+                                    ).then((result) => {
+                                        
+                                        if (result.data.code == 200) {
+                                            //  set selected freight
+                                            let clean_freight = result.data.data;
+                                                clean_freight.map((item,index)=>{
+                                                    index == 0 ? item['isSelected'] = true : item['isSelected'] = false;
+                                                })
+                                            dispatch({
+                                                type: types.GET_FREIGHT_PRODUCT_SUCCESS,
+                                                data: clean_freight,
+                                            });
+
+                                            store.dispatch(handleLoader(false))
+                                            
+                                            props.navigation.goBack();
+                                        } else {
+                                            //@failed return from server
+                                            dispatch({
+                                                type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                                isLoading: false,
+                                                errorMessage: result.data.msg
+                                            });
+                                            Toast.show({
+                                                text1: constants.AppConstant.Hypr,
+                                                text2: result.data.msg,
+                                                type: "error",
+                                                position: "top"
+                                            });
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        dispatch({
+                                            type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                            isLoading: false,
+                                            errorMessage: JSON.stringify(error)
+                                        });
+                                        console.log("error", error);
+                                        Toast.show({
+                                            text1: constants.AppConstant.Hypr,
+                                            text2: constants.AppConstant.something_went_wrong_message,
+                                            type: "error",
+                                            position: "top"
+                                        });
+                                    });
+
+
+                                 
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.UPDATE_ADDRESS_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    store.dispatch(handleLoader(false))
+                                }
+                            })
+                            .catch((error) => {
+                                dispatch({
+                                    type: types.UPDATE_ADDRESS_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                console.log("error", error);
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                                store.dispatch(handleLoader(false))
+                            });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.UPDATE_ADDRESS_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                    store.dispatch(handleLoader(false))
+                })
+
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+    };
+}
+
+
+
+
+// update selected logistic
+export const updateLogistic = (clean_freight,props) => {    
+    return async (dispatch) => {
+        NetInfo.fetch().then(state => {
+            if (state.isConnected) {
+                
+          
+                store.dispatch(handleLoader(true))
+                console.warn(clean_freight);
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {                 
+                        dispatch({
+                            type: types.UPDATE_FREIGHT_SUCCESS,                                        
+                            freightCalculation:clean_freight
+                        });
+                        store.dispatch(handleLoader(false))
+                        props.navigation.goBack();
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.UPDATE_ADDRESS_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                    store.dispatch(handleLoader(false))
+                })
+
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+    };
+}
+
+
 
 export const productDetailsById = (payload) => {
     return async (dispatch) => {
@@ -2528,4 +3012,77 @@ export const productDetailsById = (payload) => {
         })
 
     };
+
+
+}
+
+
+
+    
+export const createOrder = (payload) => {
+    return async (dispatch) => {
+
+        // dispatch({
+        //     type: types.SAVE_ADDRESS,
+        //     data: payload
+        // })
+        
+
+        
+        getUserIdFromStorage().then(id => {
+            if (id !== null) {
+                
+               let address = payload.address;
+               let cart    = payload.cart;
+               
+                
+               let clean_payload = {
+                   products:[]
+               };
+
+               
+               
+                
+                clean_payload.zip = address.pincode;
+                clean_payload.code  = address.country_code;
+                clean_payload.country = address.country;
+                clean_payload.province = address.state;
+                clean_payload.city = address.city;
+                clean_payload.address = address.address;
+                clean_payload.name = address.name;
+                clean_payload.contact = address.mobile == null ? address.AlternativePhone : address.mobile;                
+                clean_payload.remark = 'New Order';
+                clean_payload.ccode = address.country_code;
+                clean_payload.logistic = payload.cart[0].f_freightCalculation[0].logisticName;                
+                
+                cart.map((product=>{
+                    
+                    clean_payload.products.push({
+                        vid:product.f_ProductId,
+                        quantity: product.f_itemQuantity,
+                        shippingName: `${product.f_variantName}`,
+
+                    })
+                }))
+
+                
+                POST(
+                    `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.CREATE_ORDER}`,
+                    clean_payload,
+                    {},
+                )
+                .then((result) => {
+                    console.warn('MY ORDEr', result);
+
+                }).catch((err)=>{
+
+                    console.warn('Error',err);
+                });
+            }
+        });
+
+
+        
+        NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
+    }
 }

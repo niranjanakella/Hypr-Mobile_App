@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import constants from '../../constants';
+import Fonts from '../../constants/Fonts';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -177,18 +178,26 @@ export const styles = StyleSheet.create({
         fontWeight: "400"
     },
     headerTextWalletDetailCard: {
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily:Fonts.GothamLight,
+        color:constants.Colors.white,
         marginVertical: 3
+    },
+    linearGradient:{
+        paddingVertical:constants.height_dim_percent * 5,
+        paddingLeft:constants.width_dim_percent * 5,
+        left:constants.width_dim_percent * 2,
+        width:constants.width_dim_percent * 95,
     },
     dataTextWalletDetailCard: {
         fontSize: 16,
-        fontWeight: "400"
+        fontWeight: "400",
+        fontFamily:Fonts.GothamBold
     },
     detailContainer: {
         flexDirection: "row",
         justifyContent: "flex-start",
-        alignItems: "center"
+        alignItems: "flex-start"
     },
     SearchProductCardContainer: {
         flexDirection: "row",

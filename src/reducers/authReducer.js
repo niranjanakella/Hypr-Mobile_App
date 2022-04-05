@@ -38,6 +38,8 @@ const authReducer = (prevState = initialstate, action) => {
                 isLoading: action.isLoading,
                 isAppLoading: action.isAppLoading,
                 accessToken: action.accessToken,
+                shipping_address: action.shipping_address,
+                userData: action.userData,
                 isVerified: action.isVerified,
             }
 
@@ -131,11 +133,16 @@ const authReducer = (prevState = initialstate, action) => {
                 ...prevState,
                 isLoading: action.isLoading,
             }
+        case types.UPDATE_ADDRESS_SUCCESS:
+                return {
+                    ...prevState,
+                    shipping_address: action.shipping_address
+                }
         case types.GET_USER_SUCCESS:
             return {
                 ...prevState,
                 isLoading: action.isLoading,
-                userData: action.data[0],
+                userData: action.data[0],                
                 usertype: action.data[0].signupType,
                 shipping_address: action.shipping_address
             }

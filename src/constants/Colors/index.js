@@ -15,12 +15,14 @@ const Colors = {
     mute:'#f6f6f6',
     light_green : '#80ED99',
     blue_primary : '#00aeef',
+    blue_tint:'#dbf5ff',
     dark_text:'#050A0D',
     gradient:{
         contrast_1:'#BB22FE',
         contrast_2:'#963DFB',
         contrast_3:'#2787FA',
-    }
+    },
+    primary_bg_color: '#f5f5f5'
 
 };
 export default Colors;

@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../../constants';
 import Spinner from 'react-native-spinkit';
+import Fonts from '../../constants/Fonts';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -35,9 +36,9 @@ export const ProgressView = (props) => {
         return (
             <SafeAreaView style={[styles.overlay, { alignItems: 'center', justifyContent: 'center' }]}>
                 <View style={{ borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 25, paddingVertical: 15 }}>
-                    <Text style={{ fontSize: 20, fontWeight: '200',fontFamily:'GothamBold' }}>{props.title !== undefined ? props.title : 'Loading'}</Text>
-                    
+                    <Text style={{ fontSize: 20, fontWeight: '200',fontFamily:Fonts.GothamBold }}>{props.title !== undefined ? props.title : 'Loading'}</Text>                    
                     <Spinner
+                        style={{alignSelf:'center'}}
                         isVisible={true}
                         size={60}
                         type={'ThreeBounce'}

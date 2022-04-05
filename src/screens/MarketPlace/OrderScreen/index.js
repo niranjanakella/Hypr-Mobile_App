@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import constants from '../../../constants';
 import Components from '../../../components';
@@ -20,15 +22,19 @@ import {
     decreaseCartItem,
     increaseCartItem,
     removeCartItem,
-    placeOrder
+    placeOrder,
+    payOrder
 } from '../../../actions/marketPlace';
 import { calculatePrice } from '../../../utils/CalculatePrice';
+import Fonts from '../../../constants/Fonts';
 
 const HEIGHT = Dimensions.get("window").height
 const imageUri = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
 const OrderScreen = (props) => {
     const [state, setState] = React.useState({
         totalPrice: 0,
+        modeOfPayment:'',
+        cashOnDelivery:true
     })
     useEffect(() => {
         props.dispatch(getCartList())
@@ -43,7 +49,7 @@ const OrderScreen = (props) => {
                     image={item.f_ProductImg1}
                     count={item.f_itemQuantity}
                     originalPrice={`${item.f_itemQuantity} × ${props.auth.currency_symbol} ${calculatePrice(item.f_ProductPrice)}`}
-                    price={`${props.auth.currency_symbol} ${calculatePrice(item.f_totalAmount)}`}
+                    price={`$${calculatePrice(item.f_totalAmount)}`}
                     title={item.f_ServiceName}
                     onPressDecrease={() => { handleDecreaseItemCart(item) }}
                     onPressDelete={() => { handleRemoveItemCart(item) }}
@@ -82,15 +88,20 @@ const OrderScreen = (props) => {
         props.dispatch(removeCartItem(payload))
     }
     const handlePlaceOrder = () => {
-        if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
-            const payload = {
-                paymentMode: "Wallet"
-            }
-            props.dispatch(placeOrder(payload))
-        } else {
-            let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
-            NavigationService.navigate(constants.ScreensName.Payment.name, addAbleAmount)
+
+        let payload = {
+            paymentMode: 'Cash on Delivery'
         }
+        props.dispatch(payOrder(payload));
+        // if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
+        //     const payload = {
+        //         paymentMode: "Wallet"
+        //     }
+        //     props.dispatch(placeOrder(payload))
+        // } else {
+        //     let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
+        //     NavigationService.navigate(constants.ScreensName.Payment.name, addAbleAmount)
+        // }
     }
     const renderEmpty = () => {
         return (
@@ -130,6 +141,66 @@ const OrderScreen = (props) => {
                         ListEmptyComponent={renderEmpty}
                     />
                 </View>
+
+                
+
+                {/* <View style={styles.deliveryDetails}>
+                    <View>
+                        <View style={{flexDirection:'row',bottom:constants.height_dim_percent * 3,width:constants.width_dim_percent * 97}}>                            
+                            <Text style={[styles.deliveryDetailsText, { fontFamily:Fonts.GothamBold,fontSize: 14, textTransform: "capitalize", fontWeight:'600'}]}>Delivery</Text>
+                            <View style={{                                   
+                                    marginLeft:"auto",
+                                   justifyContent:'flex-end'
+                                   }}>
+                                <TouchableOpacity
+                                    // onPress={handleChangeAddress}
+                                    style={{                                        
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'space-between',                                                       
+                                            maxWidth:constants.width_dim_percent * 50,
+                                            flexDirection:'row',
+
+                                    }} >
+                                <Ionicons
+                                        name="location"
+                                        size={20}
+                                        color={constants.Colors.blue_primary}
+                                    />
+                                    <Text style={[{color:constants.Colors.dark_text,fontSize:18,fontFamily:Fonts.GothamLight,flexWrap:'wrap',overflow:'hidden',maxWidth: '80%'}]} numberOfLines={1}  >                                                    
+                                        {props.auth.shipping_address[0].address}                                                                                
+                                    </Text>                              
+                                    <AntDesign
+                                        name="right"
+                                        size={20}
+                                        color={constants.Colors.fade}
+                                    />                                
+                                </TouchableOpacity>
+                            </View>    
+                        </View>                        
+                    </View>
+                </View> */}
+
+
+                <View style={styles.modeOfPayment}>
+                    <View>
+                        <View style={{flexDirection:'row',bottom:constants.height_dim_percent * 3,width:constants.width_dim_percent * 97}}>                            
+                            <Text style={[styles.modeOfPaymentText, { fontFamily:Fonts.GothamBold,fontSize: 14,  fontWeight:'600'}]}>Mode of Payment</Text>                            
+                        </View>                        
+
+                        <Components.ModeOfPaymentCard
+                            showSelect={true}
+                            isSelected={state.cashOnDelivery}
+                            onPress={()=>{
+
+                            }}
+                            title={"Cash on Delivery"}
+                        />
+                    </View>
+                </View>
+
+
+
+
                 {
                     props.market.cartList.length > 0 &&
                     <View style={{ paddingHorizontal: 15 }}>

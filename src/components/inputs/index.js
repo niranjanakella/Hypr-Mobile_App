@@ -22,6 +22,7 @@ export const PrimaryInput = ({
     value,
     onBlur,
     onFocus,
+    isFocus,
     onSubmitEditing,
     placeholder,
     placeholderTextColor,
@@ -32,7 +33,7 @@ export const PrimaryInput = ({
     onIconpress,
     height,
     textAlignVertical,
-    isFocus,
+ 
     title,
     inputTextColor,
     blurOnSubmit,
@@ -60,7 +61,8 @@ export const PrimaryInput = ({
                         height: height,
                         textAlignVertical: textAlignVertical ? textAlignVertical : "center",
                         paddingVertical: paddingVertical ? paddingVertical : constants.vh(16),
-                        borderColor: isFocus || value != '' ? constants.Colors.blue_primary : isError ? constants.Colors.danger : constants.Colors.fade
+                        borderColor: isFocus || value != '' ? constants.Colors.blue_primary : isError ? constants.Colors.danger : constants.Colors.fade,
+                        backgroundColor: isFocus || value != '' ? constants.Colors.blue_tint : isError ? constants.Colors.danger : 'transparent'
                     }]}
 
                     value={value}
@@ -93,7 +95,7 @@ export const PrimaryInput = ({
                     <View style={styles.secureIconContainer}>
                         <Ionicons
                             name={isSecure ? "eye-off-outline" : "eye-outline"}
-                            color={"#BCBCBC"}
+                            color={constants.Colors.blue_primary}
                             size={25}
                             onPress={onIconpress}
                         />
@@ -130,6 +132,9 @@ export const PrimaryInput = ({
 export const PrimaryPhoneInput = ({
     onChangeText,
     placeholder,
+    onBlur,
+    onFocus,
+    isFocus,
     placeholderTextColor,
     callingCode,
     countryName,
@@ -143,7 +148,11 @@ export const PrimaryPhoneInput = ({
 }) => {
     return (
         <>
-            <View style={styles.phoneInputContainer}>
+            <View style={[styles.phoneInputContainer,{ 
+                borderColor: isFocus || value != '' ? constants.Colors.blue_primary : isError ? constants.Colors.danger : constants.Colors.fade,
+                backgroundColor: isFocus || value != '' ? constants.Colors.blue_tint : isError ? constants.Colors.danger : 'transparent'
+                
+                }]}>
                 <CountryPicker
                     countryCode={callingCode ? countryName : "IN"}
                     withCallingCode={true}
@@ -157,9 +166,12 @@ export const PrimaryPhoneInput = ({
                 <View style={styles.codeAndPhoneContainer}>
                     <Text style={styles.text16normal}>{`+${callingCode}`}</Text>
                     <TextInput
+                    
                         style={styles.phoneNumber}
                         placeholder={placeholder}
                         placeholderTextColor={placeholderTextColor}
+                        onFocus={onFocus} 
+                        onBlur={onBlur}  
                         onChangeText={onChangeText}
                         keyboardType={keyboardType}
                         returnKeyType={returnKeyType}

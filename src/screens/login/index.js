@@ -23,6 +23,8 @@ import { login, setSocialMediaData, todayCurrencyRate } from '../../actions/auth
 import FacebookLogin from '../../utils/Facebook/FacebookLogin'
 import GoogleLogin from '../../utils/Google/GoogleLogin';
 
+
+
 const LogIn = (props) => {
     const [state, setState] = React.useState({
         hidePassword: true,
@@ -37,6 +39,8 @@ const LogIn = (props) => {
         focus_email:false,
         focus_password:false
     })
+
+    
     const handlePasswordShow = () => {
         setState({
             ...state,

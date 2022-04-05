@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -29,9 +29,14 @@ const VerifyOtp = (props) => {
         otp: null,
     })
 
+    useEffect(()=>{
+
+        
+    })
     const handleVerifyOtp =  () => {               
         const payload = {
-            "otp": state.otp
+            "otp": state.otp,
+            userData : props.auth.userData
         }
         
         props.dispatch(verifyOtp(payload))
@@ -77,7 +82,7 @@ const VerifyOtp = (props) => {
                             <Text style={styles.otp}>One Time Pin</Text>
                             <Text style={styles.otp_desc}>
                                 Your one time pin has been sent to your email {'\n'}
-                                <Text style={[styles.otp_desc,{color:constants.Colors.blue_primary}]}> {props.auth.userData.f_email} </Text>
+                                <Text style={[styles.otp_desc,{color:constants.Colors.blue_primary}]}> {props.route.params.userData.f_email}</Text>
                             </Text>
                         </View>     
 

@@ -4,6 +4,7 @@ const Endpoints = {
     LOGOUT: `user/logout`,
     RESET_PASSWORD: `user/resetPassword`,
     EDIT_USER: `user/editUser`,
+    
     UPDATE_USER: `user/updateUser`,
     CHANGE_PASSWORD: `user/changePassword`,
     FORGOT_PASSWORD: `user/forgotPassword`,
@@ -25,6 +26,8 @@ const Endpoints = {
     GET_PRODUCT_BY_KEYWORD: "getProductByKeyword/0",
     GET_ALL_PRODUCT: "getProducts",
 
+
+    FREIGHT_CALCULATION: `freight-calculate`,
     ADD_TO_CART: `addToShoppingCart`,
     INCREASE_IN_CART: `CartQuantityIncrease`,
     DECREASE_IN_CART: `CartQuantityDecrease`,
@@ -38,8 +41,10 @@ const Endpoints = {
     GET_STATE: `fetchStateByCountryId`,
     GET_CITY: `fetchCityByStateId`,
     ADD_NEW_ADDRESS: `addNewAddress`,
+    UPDATE_ADDRESS: `updateAddress`,
 
     PLACE_ORDER: `checkoutConfirmation`,
+    PAY_ORDER: `confirm-order`,
 
     CREATE_ORDER: `create-order`,
 

@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import constants from '../../constants';
+import Fonts from '../../constants/Fonts';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -76,7 +77,7 @@ export const styles = StyleSheet.create({
         textAlign: "center", 
         fontSize: 20,
         color:constants.Colors.dark_text ,        
-        fontFamily:'GothamBold'
+        fontFamily:Fonts.GothamBold
     },
     otp_desc: { 
       textAlign: "center", 
