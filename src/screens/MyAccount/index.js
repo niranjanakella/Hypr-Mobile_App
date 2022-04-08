@@ -12,12 +12,15 @@ import {
 import { connect } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import Fontisto from'react-native-vector-icons/Fontisto';
 import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-toast-message';
-import FastImage from 'react-native-fast-image';
+;
 import constants from '../../constants';
 import Components from '../../components';
 import { styles } from './styles';
+import Fonts from '../../constants/Fonts';
 import {
     todayCurrencyRate,
     setCurrencyType,
@@ -70,6 +73,17 @@ const MyAccount = (props) => {
             alert(error.message);
         }
     };
+
+    handleGoToPay = ()=>{
+        props.navigation.navigate(constants.ScreensName.MyOrders.name);
+    }
+
+    handleGoToReceive = ()=>{
+
+    }
+    handleGoToShip = ()=>{
+
+    }
     return (
         <>
             <StatusBar barStyle="dark-content" />
@@ -80,7 +94,8 @@ const MyAccount = (props) => {
             <SafeAreaView style={styles.container}>
                 <Components.HeaderWithDrawer
                     onPressDrawer={() => { props.navigation.toggleDrawer() }}
-                /><FastImage
+                />
+                {/* <FastImage
                 source={Images.fade_bg}
                 style={{
                     width: constants.width_dim_percent * 100,
@@ -90,7 +105,7 @@ const MyAccount = (props) => {
                     
                     
                 }}            
-                resizeMode="cover">
+                resizeMode="cover"> */}
                 <View style={{
                     flex: 1,
                     paddingHorizontal: 15,
@@ -113,8 +128,8 @@ const MyAccount = (props) => {
                             textTransform: "uppercase"
                         }]}>{props.auth.userData.f_name} {props.auth.userData.l_name ? props.auth.userData.l_name.toUpperCase() : ""}</Text>
                     </View>
-
-            
+                        
+                 
                     
                     {/* <View style={{
                         marginTop: constants.vh(20),
@@ -160,7 +175,45 @@ const MyAccount = (props) => {
                     </View> */}
 
                 </View>
-                </FastImage>
+                   {/* MY ORDERS LIST */}
+                   <View  style={styles.myOrderText}>
+                        <Text style={{fontFamily:Fonts.GothamBold,fontSize:18,left:constants.width_dim_percent *5}}>My Orders</Text>
+                   </View>
+                   <View style={{flexDirection:'row',top:constants.height_dim_percent *10,flex:3,justifyContent:'space-evenly'}}>
+                        <View>
+                            <Fontisto                                
+                                name={"wallet"}
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                                style={styles.icon}
+                                onPress={handleGoToPay}
+                            />
+                            <Text>To Pay</Text>
+                        </View>
+
+                        <View>
+                            <Fontisto                                
+                                name={"wallet"}
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                                style={styles.icon}
+                                onPress={handleGoToShip}
+                            />
+                            <Text>To Ship</Text>
+                        </View>
+                        <View>
+                            <MaterialCommunityIcons                                
+                                name={"truck-delivery"}
+                                size={20}
+                                color={constants.Colors.blue_primary}
+                                style={styles.icon}
+                                onPress={handleGoToReceive}
+                            />
+                            <Text>To Receive</Text>
+                        </View>                                                
+                    </View>
+            
+                {/* </FastImage> */}
             </SafeAreaView>
 
         </>

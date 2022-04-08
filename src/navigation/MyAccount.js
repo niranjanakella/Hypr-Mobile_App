@@ -12,7 +12,8 @@ import MyAccount from '../screens/MyAccount';
 import EditProfile from '../screens/EditProfile';
 import ChangePassword from '../screens/ChangePassword';
 import ChangeCurrency from '../screens/ChangeCurrency';
-
+import MyOrders from '../screens/MyOrders';
+import {CardStyleInterpolators} from '@react-navigation/stack';
 const SettingStack = createStackNavigator();
 
 export const SettingStackFunc = () => {
@@ -24,6 +25,11 @@ export const SettingStackFunc = () => {
                 component={MyAccount}
                 name={constants.ScreensName.MyAccount.name}
                 options={{ gestureEnabled: false }}
+            />
+            <SettingStack.Screen
+                component={MyOrders}
+                name={constants.ScreensName.MyOrders.name}
+                options={{ gestureEnabled: false,cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
             />
             <SettingStack.Screen
                 component={EditProfile}

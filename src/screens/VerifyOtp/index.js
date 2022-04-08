@@ -31,7 +31,7 @@ const VerifyOtp = (props) => {
 
     useEffect(()=>{
 
-        
+        console.warn(props.auth)
     })
     const handleVerifyOtp =  () => {               
         const payload = {

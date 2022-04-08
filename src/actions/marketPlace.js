@@ -72,7 +72,7 @@ export const setProductDetails = (product,country_code) => {
                 getUserIdFromStorage().then(id => {
                     if (id !== null) {
                         // freight calculation
-                        console.warn(country_code);
+                        
                         let data = {                            
                             eccode: country_code,
                             products:[{
@@ -3043,7 +3043,7 @@ export const createOrder = (payload) => {
                
                
                 
-                clean_payload.zip = address.pincode;
+                clean_payload.zip = '3023';
                 clean_payload.code  = address.country_code;
                 clean_payload.country = address.country;
                 clean_payload.province = address.state;
@@ -3052,7 +3052,7 @@ export const createOrder = (payload) => {
                 clean_payload.name = address.name;
                 clean_payload.contact = address.mobile == null ? address.AlternativePhone : address.mobile;                
                 clean_payload.remark = 'New Order';
-                clean_payload.ccode = address.country_code;
+                clean_payload.ccode = 'CH';
                 clean_payload.logistic = payload.cart[0].f_freightCalculation[0].logisticName;                
                 
                 cart.map((product=>{

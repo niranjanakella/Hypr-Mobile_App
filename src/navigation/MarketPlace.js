@@ -24,6 +24,7 @@ import Payment from '../screens/Payment/Payment';
 //Products
 import Products from '../screens/Products';
 import Wallet from '../screens/MarketPlace/Wallet';
+import { MyOrdersStackFunc } from './MyOrdersStackFunc';
 // const MarketPlaceStack  = createSharedElementStackNavigator(); 
 const MarketPlaceStack = createStackNavigator();
 
@@ -70,6 +71,7 @@ export const MarketPlaceStackFunc = () => {
                 name={constants.ScreensName.Cart.name}
                 options={{ gestureEnabled: false }}
             />
+            
             <MarketPlaceStack.Screen
                 component={WishList}
                 name={constants.ScreensName.WishList.name}
@@ -115,6 +117,12 @@ export const MarketPlaceStackFunc = () => {
                 options={{ gestureEnabled: false }}
             />
 
+
+            <MarketPlaceStack.Screen
+                component={MyOrdersStackFunc}
+                name={constants.ScreensName.MyOrdersStackFunc.name}
+                options={{ gestureEnabled: false }}
+            />
 
             </MarketPlaceStack.Navigator>
     )

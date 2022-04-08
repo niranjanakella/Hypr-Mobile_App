@@ -226,7 +226,7 @@ const LogIn = (props) => {
                                 />
                             </View>
 
-                            <View style={styles.inputContainer}>
+                            {/* <View style={styles.inputContainer}>
                                 <Text style={{
                                     fontSize: 18,
                                     fontWeight: "500",
@@ -251,7 +251,7 @@ const LogIn = (props) => {
                                     color={"rgb(0,116,172)"}
                                     size={35}
                                 />
-                            </View>
+                            </View> */}
 
                             <View style={styles.signupTextContainer}>
                                 <Text style={{

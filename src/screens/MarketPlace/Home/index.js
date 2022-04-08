@@ -83,7 +83,7 @@ const MarketHome = (props) => {
     }
     const renderAllProducts = ({ item, index }) => {
         
-            console.warn(item)
+            
             return (
                 <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
                     <Components.CategoryCard
@@ -146,12 +146,8 @@ const MarketHome = (props) => {
                 />
                 <TouchableOpacity
                     onPress={() => {
-                        //  NavigationService.navigate(constants.ScreensName.SearchProduct.name, null) 
-                         let sample_item =  {
-                            pid : '00006BC5-E1F5-4C65-BE2B-3FE0956DA21B'
-                        }
-                        props.dispatch(setVariant(sample_item))
-                        
+                         NavigationService.navigate(constants.ScreensName.SearchProduct.name, null) 
+                     
                         }}
                     style={{
                         marginTop: constants.vh(10),

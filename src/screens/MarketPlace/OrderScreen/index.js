@@ -38,6 +38,7 @@ const OrderScreen = (props) => {
     })
     useEffect(() => {
         props.dispatch(getCartList())
+        console.warn(props.market.cartList)
     }, [])
 
     const renderCart = ({ item, index }) => {
@@ -90,9 +91,13 @@ const OrderScreen = (props) => {
     const handlePlaceOrder = () => {
 
         let payload = {
-            paymentMode: 'Cash on Delivery'
+            paymentMode: 'Paypal'
         }
-        props.dispatch(payOrder(payload));
+        let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
+
+        
+        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:addAbleAmount , cart:props.market.cartList})
+        // props.dispatch(payOrder(payload));
         // if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
         //     const payload = {
         //         paymentMode: "Wallet"
@@ -193,7 +198,7 @@ const OrderScreen = (props) => {
                             onPress={()=>{
 
                             }}
-                            title={"Cash on Delivery"}
+                            title={"Paypal"}
                         />
                     </View>
                 </View>

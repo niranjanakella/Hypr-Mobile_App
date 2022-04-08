@@ -16,15 +16,18 @@ import constants from '../../../constants';
 import Components from '../../../components';
 import getConfig from '../../../utils/config';
 import {getUserIdFromStorage} from '../../../utils/asyncstorage';
-import {placeOrder} from '../../../actions/marketPlace';
+import {placeOrder,getCartList} from '../../../actions/marketPlace';
+import base64 from 'react-native-base64';
 
 const Payment = (props) => {
     const [userid,setUserId] = useState("")
     useEffect(()=>{
+     
         getUserIdFromStorage().then(id=>{
             setUserId(id)
         })
-        console.log("props.route.params",props.route.params);
+        console.warn(props.route.params.cart)
+       
     })
     const [visible, setVisiblity] = useState(true);
 
@@ -79,7 +82,7 @@ if(title === "Payment Cancelled | Paypal"){
                 <WebView
                         scalesPageToFit={true}
                         //source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/${props.auth.totalPayingAmount}/${userid}` }}
-                        source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/10/${userid}` }}
+                        source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/10/${userid}/${base64.encode(JSON.stringify(props.route.params.cart))}`}}
                         onNavigationStateChange={handleNavigationStateChange}
                         startInLoadingState={true}
   renderLoading={() => <Components.ProgressView

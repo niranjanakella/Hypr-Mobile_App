@@ -82,7 +82,7 @@ export const switchRoute = (props) => {
         })
 
          getUserDataFromStorage().then((userData)=> {
-            console.warn('User Data',userData);
+            
             getUserAccessTokenFromStorage().then(token => {
                 if (token !== null) {
                     
@@ -314,7 +314,7 @@ export const login = (payload) => {
                     {},
                 )
                     .then((result) => {
-                        console.warn('result', result.data.data);
+                        
                         
                         if (result.data.status) {
                             dispatch({
@@ -891,7 +891,7 @@ export const resendOTP = (value) => {
                     type: types.VERIFY_OTP_LOADING,
                     isLoading: false,
                 });
-                store.dispatch(handleLoader(false))
+                store.dispatch(handleLoader(true))
                 getUserIdFromStorage().then(id => {
                    
                     if (id !== null) {

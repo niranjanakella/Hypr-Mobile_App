@@ -107,6 +107,12 @@ const Screens = {
     MyAccount: {
         name: "MyAccount"
     },
+    MyOrders: {
+        name: "MyOrders"
+    },
+    MyOrdersStackFunc: {
+        name: "MyOrdersStackFunc"
+    },
     ChangeCurrency: {
         name: "ChangeCurrency"
     },
