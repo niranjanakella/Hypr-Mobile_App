@@ -75,7 +75,7 @@ const MyAccount = (props) => {
     };
 
     handleGoToPay = ()=>{
-        props.navigation.navigate(constants.ScreensName.MyOrders.name);
+        props.navigation.navigate(constants.ScreensName.MyOrdersStackFunc.name);
     }
 
     handleGoToReceive = ()=>{

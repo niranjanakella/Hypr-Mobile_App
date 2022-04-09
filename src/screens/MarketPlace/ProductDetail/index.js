@@ -404,7 +404,7 @@ const ProductDetail = (props) => {
                                         color={constants.Colors.blue_primary}
                                     />
                                     <Text style={[{color:constants.Colors.dark_text,fontSize:18,fontFamily:Fonts.GothamLight,flexWrap:'wrap',overflow:'hidden',maxWidth: '80%'}]} numberOfLines={1}  >                                                    
-                                        {props.auth.shipping_address[0].address}                                                                                
+                                        {props.auth.shipping_address.length != 0 ? props.auth.shipping_address[0].address : `No Address`}                                                                                
                                     </Text>                              
                                     <AntDesign
                                         name="right"
@@ -459,7 +459,8 @@ const ProductDetail = (props) => {
                                    justifyContent:'flex-end'
                                    }}>
                                 <Text style={ { fontFamily:Fonts.GothamBold,fontSize: 12, textTransform: "capitalize", fontWeight:'600',color:constants.Colors.fade}}>
-                                    {props.market.freightCalculation[0].logisticAging} Days
+                                    
+                                    ${props.market.freightCalculation.filter((item)=>item.isSelected == true)[0].logisticAging} Days
                                     
                                 </Text>  
                             </View>
@@ -538,7 +539,19 @@ const ProductDetail = (props) => {
                     <View style={{ width: "32%" }}>
                         <Components.SecondryButton
                             onPress={() => {
-                                handleAddToCart(false)
+                                if(props.auth.shipping_address.length == 0){                                    
+
+                                    Toast.show({
+                                        text1: "Hypr",
+                                        text2: "Please set up your address first",
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    
+                                }else{
+                                    handleAddToCart(false)
+                                }
+                                
                             }}
 
                             title="Add to Cart"
@@ -557,7 +570,19 @@ const ProductDetail = (props) => {
                                     
                         <Components.SecondryButton
                             onPress={() => {
-                                handleAddToCart(true)
+                                if(props.auth.shipping_address.length == 0){                                    
+                                    
+                                    Toast.show({
+                                        text1: "Hypr",
+                                        text2: "Please set up your address first",
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    
+                                }else{
+
+                                    handleAddToCart(true)
+                                }
                             }}
                             title={`Buy Now`}
                             //title={`Buy Now (${props.auth.currency_symbol} ${calculatePrice(props.market.productDetails.f_product_offer_price)})`}

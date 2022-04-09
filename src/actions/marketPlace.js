@@ -81,13 +81,13 @@ export const setProductDetails = (product,country_code) => {
                             }]
                         }   
                         
-                        
+                        console.warn(data);
                         POST(
                             `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.FREIGHT_CALCULATION}`,
                             data,
                             {},
                         ).then((result) => {
-                            console.warn('result', result.data.data);
+                            console.warn('result', result);
                             if (result.data.code == 200) {
                                 let clean_freight = result.data.data;
 
@@ -292,7 +292,7 @@ export const setVariant = (product) => {
                            
                         )
                             .then((result) => {                                    
-                                      console.warn('variant',result);
+                                      console.warn('variant',result.data.data);
                                 if (result.data.data) {
                                       
                                     
@@ -2753,6 +2753,8 @@ export const updateAddress = (payload,props) => {
                             .then((result) => {
                              
                                 if (result.data.status) {
+
+                                    
                                     // update shipping address auth
                                     dispatch({
                                         type: types.UPDATE_ADDRESS_SUCCESS,                                        
@@ -2784,6 +2786,7 @@ export const updateAddress = (payload,props) => {
                                                 clean_freight.map((item,index)=>{
                                                     index == 0 ? item['isSelected'] = true : item['isSelected'] = false;
                                                 })
+                                            
                                             dispatch({
                                                 type: types.GET_FREIGHT_PRODUCT_SUCCESS,
                                                 data: clean_freight,
@@ -3041,7 +3044,7 @@ export const createOrder = (payload) => {
                };
 
                
-               
+               console.warn('Clean payload', payload)
                 
                 clean_payload.zip = '3023';
                 clean_payload.code  = address.country_code;

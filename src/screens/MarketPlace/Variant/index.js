@@ -58,7 +58,7 @@ const Variant = (props) => {
 
     const renderItem =   (data) =>{
         
-        let getCountryCode =  props.auth.shipping_address[0].country_code;
+        let getCountryCode =  props.auth.shipping_address.length == 0  ? props.auth.countryCode : props.auth.shipping_address[0].country_code ;
      
         return (<Components.VariantList
                     currencySymbol = {props.auth.currency_symbol}

@@ -24,7 +24,7 @@ import Payment from '../screens/Payment/Payment';
 //Products
 import Products from '../screens/Products';
 import Wallet from '../screens/MarketPlace/Wallet';
-import { MyOrdersStackFunc } from './MyOrdersStackFunc';
+import MyOrdersStackFunc from './MyOrdersStackFunc';
 // const MarketPlaceStack  = createSharedElementStackNavigator(); 
 const MarketPlaceStack = createStackNavigator();
 

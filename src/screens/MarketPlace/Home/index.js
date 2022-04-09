@@ -50,7 +50,7 @@ const MarketHome = (props) => {
         props.dispatch(getAllProducts(state.currentPage))
         props.dispatch(getCartList())
         
-    
+        
         const subscribe = props.navigation.addListener('focus', () => {
             props.dispatch(setTabType("market"))
         })

@@ -15,10 +15,11 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Toast from 'react-native-toast-message'
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import constants from '../../../constants';
 import Components from '../../../components';
 import { styles } from './styles';
+import Spinner from 'react-native-spinkit';
 import {
     getCountryList,
     getStateList,
@@ -35,29 +36,8 @@ import * as NavigationService from '../../../navigation/NavigationService';
 
 const Address = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    useEffect(() => {
-        props.dispatch(getCountryList())
-        props.dispatch(getUser())
-        
-        const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            () => {
-                setKeyboardVisible(true); // or some other action
-            }
-        );
-        const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                setKeyboardVisible(false); // or some other action
-            }
-        );
-
-        return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
-        };
-    }, [])
     const [state, setState] = React.useState({
+        addressRefreshing:true,
         address: "",
         addressErr: false,
         addressErrMsg: "",
@@ -97,6 +77,33 @@ const Address = (props) => {
         selectedAddressIndex: null,
         selectedAddress: ""
     })
+
+    useEffect(() => {
+        props.dispatch(getCountryList())
+        props.dispatch(getUser())
+
+
+        setState({...state,addressRefreshing:false});
+        
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, [])
+   
 
     const handleShowCountry = (value) => {
         Keyboard.dismiss()
@@ -417,6 +424,8 @@ const Address = (props) => {
             ...state
         })
     }
+
+
     const clearAllState = () => {
         setState({
             ...state,
@@ -465,6 +474,32 @@ const Address = (props) => {
             alternatePhone: "",
             isAddingAddress: false,
         })
+    }
+
+    const addressEmptyComponent = () => {
+
+        return (
+        <>            
+             <View style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: constants.height_dim_percent * 50
+            }}>
+                <MaterialCommunityIcons
+                    name="truck-delivery"
+                    size={200}
+                    color="#EAE9E9"
+                />
+                <Text style={{
+                    fontSize: 18,
+                    color: "#EAE9E9"
+                }}>Your address is empty.</Text>
+            </View>
+        </>
+    )
+
     }
 
     // CREATE ORDER BUTTON
@@ -776,9 +811,12 @@ const Address = (props) => {
                                 </View> 
                                 <FlatList
                                     data={props.auth.shipping_address}
+                                    refreshing={state.addressRefreshing}
+                                    onRefresh={()=>setState({...state,addressRefreshing:false})}
                                     renderItem={renderAddressList}
                                     keyExtractor={(item, index) => index.toString()}
                                     showsVerticalScrollIndicator={false}
+                                    ListEmptyComponent={addressEmptyComponent}
                                 />
 
                             </View>
@@ -905,7 +943,7 @@ const Address = (props) => {
                             data={state.searchState ? props.market.searchStateList : props.market.stateList}
                             renderItem={renderState}
                             keyExtractor={(item, index) => index.toString()}
-                            showsVerticalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}                    
                         />
                     </View>
                 </View>

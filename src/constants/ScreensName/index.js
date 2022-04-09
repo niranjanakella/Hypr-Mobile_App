@@ -107,8 +107,8 @@ const Screens = {
     MyAccount: {
         name: "MyAccount"
     },
-    MyOrders: {
-        name: "MyOrders"
+    ToPay: {
+        name: "ToPay"
     },
     MyOrdersStackFunc: {
         name: "MyOrdersStackFunc"

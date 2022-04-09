@@ -1,41 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     StatusBar,
     SafeAreaView,
     View,
+    FlatList,
     Text,
     TouchableOpacity,
-    FlatList,
-    Dimensions
+    ScrollView,
+    Image,
+    Share
 } from 'react-native';
 import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import Fontisto from'react-native-vector-icons/Fontisto';
+import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-toast-message';
-
-import constants from '../../../constants';
-import Components from '../../../components';
-import * as NavigationService from '../../../navigation/NavigationService';
-import { styles } from './styles';
+;
+import constants from '../../constants';
+import Components from '../../components';
+import {styles} from './styles';
+import Fonts from '../../constants/Fonts';
 import {
     getCartList,
     decreaseCartItem,
     increaseCartItem,
     removeCartItem,
     createOrder
-} from '../../../actions/marketPlace';
-import { getUser } from '../../../actions/auth';
-import { calculatePrice } from '../../../utils/CalculatePrice';
+} from '../../actions/marketPlace'
+import { getUser } from '../../actions/auth';
+import { calculatePrice } from '../../utils/CalculatePrice';
 
-const HEIGHT = Dimensions.get("window").height
-const imageUri = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
-const Cart = (props) => {
-    const [state, setState] = React.useState({
-        totalPrice: 0,
-    })
+const ToPay = (props) => {
+    const [state, setState] = useState({        
+    });
+  
     useEffect(() => {
         props.dispatch(getCartList()),
         props.dispatch(getUser())
     }, [])
+
 
     const renderCart = ({ item, index }) => {
         return (
@@ -57,6 +62,7 @@ const Cart = (props) => {
             </View>
         )
     }
+
     const handleDecreaseItemCart = (item) => {
         if (item.f_itemQuantity === 1) {
             Toast.show({
@@ -72,6 +78,7 @@ const Cart = (props) => {
         }
         props.dispatch(decreaseCartItem(payload))
     }
+
     const handleIncreaseItemCart = (item) => {
         const payload = {
             id: item._id
@@ -107,60 +114,33 @@ const Cart = (props) => {
         )
     }
 
-
-    const handleCreateOrder = () => {
-        console.warn('address',props.auth.shipping_address);
-        let payload= {
-                address:props.auth.shipping_address.filter((item)=>item.isSelected == true)[0],
-                cart:props.market.cartList
-        }
-        
-        
-        props.dispatch(createOrder(payload))
-    }
-
-
     return (
         <>
-            <StatusBar barStyle="dark-content" backgroundColor={constants.Colors.primary} />
-            <SafeAreaView style={styles.container}>
-                <Components.PrimaryHeader
-                    onPress={() => props.navigation.goBack()}
-                    title="Cart"
-                    
-                />
-                <View style={{ flex: 1, paddingHorizontal: 15 }}>
+            <StatusBar barStyle="dark-content" />
+            
+            <SafeAreaView style={styles.container}>                
+            <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
                         data={props.market.cartList}
                         renderItem={renderCart}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
                         ListEmptyComponent={renderEmpty}
-                    />
-                </View>
-                {
-                    props.market.cartList.length > 0 &&
-                    <View style={{ paddingHorizontal: 15 }}>
-                        <Components.PrimaryButton
-                            
-                            title={`Checkout  $${calculatePrice(props.market.totalPayingAmount)}`}
-                            onPress={() => {                                
-                                handleCreateOrder()
-                            }}
-                        />
-                    </View>
-                }
-                <Components.ProgressView
+                    />           
+            </View>
+            <Components.ProgressView
                     isProgress={props.auth.isLoading}
                     title="Hypr"
-                />
+            />
+
             </SafeAreaView>
+
         </>
     )
 }
 
 function mapStateToProps(state) {
-    let { auth, market } = state;
+    let { auth,market } = state;
     return {
         auth,
         market
@@ -173,4 +153,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default connect(mapStateToProps, mapDispatchToProps)(ToPay);

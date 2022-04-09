@@ -218,7 +218,8 @@ const SignUp = (props) => {
                 "countryCode": state.callingCode,
                 "password": state.password,
                 "confirmPassword": state.confirmPassword,
-                "refCode": state.refCode
+                "refCode": state.refCode,
+                "countryName": state.countryName,
             }
            
             props.dispatch(signup(payload))
@@ -387,6 +388,7 @@ const SignUp = (props) => {
                                     })
                                 }}
                                 onSelect={(country) => {
+                                    
                                     setState({
                                         ...state,
                                         callingCode: country.callingCode[0],
@@ -528,11 +530,12 @@ const SignUp = (props) => {
                             />
                         </View>
                     </View>
-                    <Components.ProgressView
-                        isProgress={props.auth.isLoading}
-                        title="Hypr"
-                    />
+                 
                 </KeyboardAwareScrollView>
+                <Components.ProgressView
+                        isProgress={props.auth.isLoading}
+                        title="Loading..."
+                    />
             </SafeAreaView>
         </>
     )

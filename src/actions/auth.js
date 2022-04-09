@@ -93,6 +93,7 @@ export const switchRoute = (props) => {
                         isAppLoading: false,
                         accessToken: token,
                         userData:userData,
+                        countryCode:userData.f_countryName,
                         shipping_address:userData.f_shipping_Address.filter((item)=> item.isSelected == true),
                         isVerified: true
                     })
@@ -228,38 +229,49 @@ export const signup = (payload) => {
                     {},
                 )
                     .then((result) => {
-                        
+                        console.warn(result.data.status);
                         if (result.data.status) {
+
+
+                            
                             dispatch({
                                 type: types.SIGNUP_SUCCESS,
-                                isLoading: true,
-                                data: result,
-                                errorMessage: null
+                                isLoading: false,                                                                                                                
                             });
-                            store.dispatch(handleLoader(false))
                             
-                            setSignUpUserIdToStorage(result.data.id)
+                            Toast.show({
+                                text1: "Hypr",
+                                text2: "Successfuly Registered. Please check your email to verify your account.",
+                                type: "success",
+                                position: "top"
+                            });     
+
+                            store.dispatch(handleLoader(false))
+                                                        
                             NavigationService.goback();
                         } else {
-                            
+                            store.dispatch(handleLoader(false))
                             console.log(JSON.stringify(result.data))
                             //@failed return from server
-                            store.dispatch(handleLoader(false))
+                            store.dispatch(handleLoader(fakl))
                             dispatch({
                                 type: types.SIGNUP_FAIL,
                                 isLoading: false,
                                 errorMessage: result.msg
                             });
-                            // Toast.show({
-                            //     text1: constants.AppConstant.Hypr,
-                            //     text2: result.msg,
-                            //     type: "error",
-                            //     position: "top"
-                            // });
+
+                        
+
+                            Toast.show({
+                                text1: constants.AppConstant.Hypr,
+                                text2: result.msg,
+                                type: "error",
+                                position: "top"
+                            });
                         }
                     })
                     .catch((error) => {
-                        
+                        store.dispatch(handleLoader(false))
                         // alert( JSON.stringify(error))
                         // alert(`${getConfig().accesspoint}${constants.EndPoint.SIGNUP}`)
                         // store.dispatch(handleLoader(false))
@@ -278,6 +290,7 @@ export const signup = (payload) => {
                     });
             }
             else {
+                store.dispatch(handleLoader(false))
                 Toast.show({
                     text1: constants.AppConstant.Hypr,
                     text2: constants.AppConstant.network_error,
@@ -315,7 +328,7 @@ export const login = (payload) => {
                 )
                     .then((result) => {
                         
-                        
+                        console.warn('my data',result);
                         if (result.data.status) {
                             dispatch({
                                 type: types.LOGIN_SUCCESS,
@@ -810,7 +823,7 @@ export const verifyOtp = (value) => {
                                     });
                                     Toast.show({
                                         text1: "Hypr",
-                                        text2: "OTP verified successfully! Please login.",
+                                        text2: "OTP verified successfully!",
                                         type: "success",
                                         position: "top"
                                     });
