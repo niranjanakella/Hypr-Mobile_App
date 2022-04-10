@@ -70,12 +70,15 @@ export const styles = StyleSheet.create({
     CartCardContainer: {
         flexDirection: "row",
         justifyContent: "flex-start",
+    
         //alignItems: "center",
         //borderWidth: 1,
+        
         paddingHorizontal: constants.vw(10),
         marginHorizontal: 1,
-        paddingVertical: constants.vh(10),
+        paddingVertical: constants.vh(20),
         borderRadius: 10,
+        left:15,
         backgroundColor: "#fff",
         shadowColor: "#000",
         shadowOffset: {
@@ -85,7 +88,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
 
-        elevation: 5,
+        elevation: 2,
     },
     cartTitleAndCountContainer: {
         flexDirection: "column",
@@ -95,10 +98,10 @@ export const styles = StyleSheet.create({
         marginHorizontal: constants.vw(10),
     },
     hitSlop: {
-        top: 5,
-        left: 5,
-        bottom: 5,
-        right: 5
+        top: 10,
+        left: 10,
+        bottom: 10,
+        right: 10
     },
     productListContainer: {
         flexDirection: "row",

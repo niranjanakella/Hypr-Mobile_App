@@ -4,7 +4,8 @@ import {
     Image,
     TouchableOpacity,
     Text,
-    Pressable
+    Pressable,
+    FlatList
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -289,10 +290,28 @@ export const CartCard = ({
     onPressDecrease,
     originalPrice,
     textDecorationLine,
-    onPressChangeVariant
+    onPressChangeVariant,
+    onPressSelect,
+    onPress,
+    isSelected,
+    isShowSelect
 }) => {
     return (
-        <View style={styles.CartCardContainer}>
+
+        <View style={{flexDirection: "row",alignItems: "center",paddingBottom:constants.height_dim_percent * 5,justifyContent:'space-between',right:10,    }}>
+
+
+        {isShowSelect &&
+            <FontAwesome
+            onPress={onPressSelect}
+            name={isSelected ? "check-circle" : "circle-o"}
+            size={15}            
+            color={constants.Colors.blue_primary}
+            />
+        }
+      
+                    
+        <TouchableOpacity style={[styles.CartCardContainer,{borderColor: isSelected ? constants.Colors.blue_primary : 'transparent',borderWidth:1,width: constants.width_dim_percent *  ( isShowSelect ? 80 : 90)}]} onPress={isShowSelect ? onPress : ()=>{return true}}>
             <Image
                 source={{ uri: image }}
                 style={{
@@ -304,16 +323,20 @@ export const CartCard = ({
             />
             <View style={styles.cartTitleAndCountContainer}>
                 <View style={{
+                    
                 }}>
                     <Text style={{
                         fontSize: 16,
                         textTransform: "capitalize",
-                        fontWeight: "600"
+                        fontWeight: "600",
+                        
                     }}>{title}</Text>
                     <View style={{
                         flexDirection: "row",
                         alignItems: "center"
                     }}>
+                    
+            
                         {/* <Text style={{
                             fontSize: 16,
                             fontWeight: "400",
@@ -352,10 +375,11 @@ export const CartCard = ({
                 </View> */}
                 <View style={{
                     flexDirection: "row",
-                    justifyContent: "space-between"
+                    justifyContent: "space-between",
                 }}>
                     <View style={{
                         flexDirection: "row",
+                        top:10
                     }}>
                         <TouchableOpacity
                             onPress={onPressDecrease}
@@ -404,24 +428,36 @@ export const CartCard = ({
                                 color={constants.Colors.fade}
                             />
                         </TouchableOpacity>
+
+                        
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={onPressDelete}
+                            hitSlop={styles.hitSlop}
+                            style={{left:constants.width_dim_percent * 20}}
+                            
+                        >
+                            <AntDesign
+                                name="delete"
+                                onPress={onPressDelete}
+                                color="red"
+                                size={30}
+                            />
+                        </TouchableOpacity>
+
+
                     </View>
 
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={onPressDelete}
-                        hitSlop={styles.hitSlop}
-                    >
-                        <AntDesign
-                            name="delete"
-                            color="red"
-                            size={30}
-                        />
-                    </TouchableOpacity>
+         
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
+    </View>
     )
 }
+
+
+
 
 export const WishListCard = ({
     onPress,
@@ -1083,6 +1119,64 @@ export const LogisticCard = ({
         </TouchableOpacity>
     )
 }
+
+
+
+
+export const CountryCartCard = ({
+    onPress,
+    countryName,
+    cartList,
+    showSelect,
+    isSelected,
+    onPressSelect,
+    renderCart
+}) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={1}
+            style={[styles.addressCardContainer,{borderColor: isSelected ? constants.Colors.blue_primary : 'transparent',borderWidth:1}]}>
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical:constants.height_dim_percent * 2
+            }}> 
+
+                    {
+                        showSelect &&
+                        <FontAwesome
+                            onPress={onPressSelect}
+                            name={isSelected ? "check-circle" : "circle-o"}
+                            size={30}
+                            color={constants.Colors.blue_primary}
+                        />
+                    }
+            
+                    <Text numberOfLines={1} style={{ marginHorizontal:20,fontFamily:Fonts.GothamBold,fontSize:18 }}>{countryName}</Text>
+              
+              
+         
+
+            </View>
+
+            <View style={{
+                    width: "85%",
+
+                }}>         
+                    
+                <FlatList
+                    data={cartList}
+                    renderItem={renderCart}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}                        
+                />                    
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+
 //SOCIAL
 
 export const PostCard = ({

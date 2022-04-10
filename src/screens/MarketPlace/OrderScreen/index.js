@@ -51,7 +51,7 @@ const OrderScreen = (props) => {
                     count={item.f_itemQuantity}
                     originalPrice={`${item.f_itemQuantity} × ${props.auth.currency_symbol} ${calculatePrice(item.f_ProductPrice)}`}
                     price={`$${calculatePrice(item.f_totalAmount)}`}
-                    title={item.f_ServiceName}
+                    title={item.f_variantName}
                     onPressDecrease={() => { handleDecreaseItemCart(item) }}
                     onPressDelete={() => { handleRemoveItemCart(item) }}
                     onPressIncrease={() => { handleIncreaseItemCart(item) }}
@@ -96,7 +96,7 @@ const OrderScreen = (props) => {
         let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
 
         
-        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:addAbleAmount , cart:props.market.cartList})
+        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:addAbleAmount , cart:props.route.params.cart})
         // props.dispatch(payOrder(payload));
         // if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
         //     const payload = {
@@ -139,7 +139,7 @@ const OrderScreen = (props) => {
                 />
                 <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
-                        data={props.market.cartList}
+                        data={props.route.params.cart}
                         renderItem={renderCart}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}

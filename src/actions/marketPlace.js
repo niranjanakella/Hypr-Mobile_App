@@ -1063,7 +1063,8 @@ export const addToCart = (payload) => {
                             "product_price": payload.price,
                             "product_code" : payload.product_code,
                             "product_image" : payload.product_image,
-                            "freightCalculation" : payload.freightCalculation
+                            "freightCalculation" : payload.freightCalculation,
+                            "shippingAddress" : payload.shipping_address,
                         }
                         POST(
                             `${getConfig().accesspoint}${constants.EndPoint.ADD_TO_CART}`,
@@ -1174,7 +1175,8 @@ export const getCartList = (payload) => {
                                 if (result.data.status) {
                                     let totalAmount = 0;
                                     result.data.id.map(item => {
-                                        totalAmount = totalAmount + parseInt(item.f_totalAmount)
+                                        totalAmount = totalAmount + parseInt(item.f_totalAmount)                                        
+                                        item['isSelected'] = false;
                                     })
                                     dispatch({
                                         type: types.GET_CART_LIST_SUCCESS,
@@ -3030,13 +3032,13 @@ export const createOrder = (payload) => {
         //     data: payload
         // })
         
-
+        let address = payload.address;
+        let cart    = payload.cart;
         
         getUserIdFromStorage().then(id => {
             if (id !== null) {
                 
-               let address = payload.address;
-               let cart    = payload.cart;
+   
                
                 
                let clean_payload = {
@@ -3086,6 +3088,6 @@ export const createOrder = (payload) => {
 
 
         
-        NavigationService.navigate(constants.ScreensName.OrderScreen.name, null)
+        NavigationService.navigate(constants.ScreensName.OrderScreen.name, {cart:cart});
     }
 }

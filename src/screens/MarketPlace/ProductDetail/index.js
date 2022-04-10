@@ -286,7 +286,8 @@ const ProductDetail = (props) => {
             price: state.variantPrice,
             product_code : props.market.productDetails.variantSku,
             product_image : props.market.productDetails.variantImage,
-            freightCalculation: props.market.freightCalculation.filter((item)=>item.isSelected == true)
+            freightCalculation: props.market.freightCalculation.filter((item)=>item.isSelected == true),
+            shipping_address:props.auth.shipping_address[0]
         }
         
         props.dispatch(addToCart(payload))
@@ -404,7 +405,7 @@ const ProductDetail = (props) => {
                                         color={constants.Colors.blue_primary}
                                     />
                                     <Text style={[{color:constants.Colors.dark_text,fontSize:18,fontFamily:Fonts.GothamLight,flexWrap:'wrap',overflow:'hidden',maxWidth: '80%'}]} numberOfLines={1}  >                                                    
-                                        {props.auth.shipping_address.length != 0 ? props.auth.shipping_address[0].address : `No Address`}                                                                                
+                                        {props.auth.shipping_address.length != 0 ? props.auth.shipping_address[0].address : `No Address`}
                                     </Text>                              
                                     <AntDesign
                                         name="right"

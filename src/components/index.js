@@ -54,7 +54,8 @@ import {
     FriendSuggestionCard,
     VariantList,
     LogisticCard,
-    ModeOfPaymentCard
+    ModeOfPaymentCard,
+    CountryCartCard
 } from './cards';
 
 import OTPTextView from './OTP';
@@ -108,6 +109,8 @@ export default {
 
     
     LogisticCard,
+
+    CountryCartCard,
 
     VariantList,
 
