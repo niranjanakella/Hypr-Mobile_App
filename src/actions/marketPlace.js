@@ -302,7 +302,7 @@ export const setVariant = (product) => {
                                     })
 
                                     store.dispatch(handleLoader(false))
-                                    NavigationService.navigate(constants.ScreensName.Variant.name, null)
+                                    NavigationService.navigate(constants.ScreensName.Variant.name, {previousScreen:'MarketHome'})
 
                                 } else {
                                     //@failed return from server
@@ -359,6 +359,273 @@ export const setVariant = (product) => {
 
     };
 };
+
+
+
+
+export const changeVariant = (product) => {
+    return async (dispatch) => {
+            
+        NetInfo.fetch().then(state => {
+            console.warn(product)            
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.GET_FLASH_PRODUCT_LOADING,
+                    isLoading: true,
+                });
+                store.dispatch(handleLoader(true))
+                getUserIdFromStorage().then(id => {
+                    
+                    if (id !== null) {
+                        let data = {
+                            "userId": id
+                        }
+                        GET(
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_ALL_VARIANTS}?pid=${product.f_ProductId}`,
+                           
+                        )
+                            .then((result) => {                                    
+                                      console.warn('variant',result.data.data);
+                                if (result.data.data) {
+                                      
+                                    
+                                   dispatch({
+                                        type: types.GET_ALL_VARIANTS_SUCCESS,
+                                        data: result.data.data,                                        
+                                    })
+
+                                    store.dispatch(handleLoader(false))
+                                    NavigationService.navigate(constants.ScreensName.Variant.name, {previousScreen:'CartScreen',variantId:product.f_VariantId,f_shippingAddress:product.f_shippingAddress[0]})
+
+                                } else {
+                                    //@failed return from server
+                                    dispatch({
+                                        type: types.GET_ALL_VARIANTS_FAIL,
+                                        isLoading: false,
+                                        errorMessage: result.data.msg
+                                    });
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: result.data.msg,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                }
+                            })
+                            .catch((error) => {
+                                console.warn(error)
+                                dispatch({
+                                    type: types.GET_ALL_VARIANTS_FAIL,
+                                    isLoading: false,
+                                    errorMessage: JSON.stringify(error)
+                                });
+                                console.log("error", error);
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: constants.AppConstant.something_went_wrong_message,
+                                    type: "error",
+                                    position: "top"
+                                });
+                            });
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.GET_FLASH_PRODUCT_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                })
+
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+
+    };
+};
+
+
+
+
+export const updateCart = (product,productIdToBeDeleted,f_shippingAddress,navigation) => {
+    
+    return async (dispatch) => {
+
+        NetInfo.fetch().then(state => {
+            
+            if (state.isConnected && state.isInternetReachable) {
+                dispatch({
+                    type: types.GET_FREIGHT_PRODUCT_LOADING,
+                    isLoading: true,
+                });
+                
+                store.dispatch(handleLoader(true))                
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {
+                        // freight calculation
+                        console.warn('freight',f_shippingAddress)
+                        let data = {                            
+                            eccode: f_shippingAddress.country_code,
+                            products:[{
+                                quantity: 1,
+			                    vid: product.vid
+                            }]
+                        }   
+                        
+                        console.warn(data);
+                        POST(
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.FREIGHT_CALCULATION}`,
+                            data,
+                            {},
+                        ).then((result) => {
+                            console.warn('result', result);
+                            if (result.data.code == 200) {
+                                let clean_freight = result.data.data;
+
+                                clean_freight.map((item,index)=>{
+                                    index == 0 ? item['isSelected'] = true : item['isSelected'] = false;
+                                })
+
+                                store.dispatch(handleLoader(false))                                 
+     
+
+                                
+                                // ADD NEW UPDATED CART
+                                console.warn('productIdToBeDeleted',productIdToBeDeleted)
+                                let value = {
+                                    "userId": id,
+                                    "ProductId": product.pid,
+                                    "VariantId": product.vid,
+                                    "variantName": product.variantNameEn,
+                                    "product_price": product.variantSellPrice,
+                                    "product_code" : product.variantSku,
+                                    "product_image" : product.variantImage,
+                                    "freightCalculation" : clean_freight.filter((item)=>item.isSelected == true),
+                                    "shippingAddress" : [f_shippingAddress],
+                                    "productIdToBeDeleted":productIdToBeDeleted
+                                }
+
+                                POST(
+                                    `${getConfig().accesspoint}${constants.EndPoint.UPDATE_CART}`,
+                                    value,
+                                    {},
+                                )
+                                    .then((updateCartResult) => {
+                                        console.warn('UDPATEDE CART',updateCartResult);
+                                        if (updateCartResult.data.status) {
+                                            dispatch({
+                                                type: types.UPDATE_CART_SUCCESS,
+                                            });
+                                            Toast.show({
+                                                text1: constants.AppConstant.Hypr,
+                                                text2: updateCartResult.data.msg,
+                                                type: "success",
+                                                position: "top"
+                                            });
+                                            store.dispatch(getCartList())
+                                          
+                                            navigation.goBack();
+                                           
+                                        } else {
+                                            //@failed return from server
+                                            dispatch({
+                                                type: types.UPDATE_CART_FAIL,
+                                                isLoading: false,
+                                                errorMessage: updateCartResult.data.msg
+                                            });
+                                            Toast.show({
+                                                text1: constants.AppConstant.Hypr,
+                                                text2: updateCartResult.data.msg,
+                                                type: "error",
+                                                position: "top"
+                                            });
+                                            
+                                            
+                                            
+                                            store.dispatch(handleLoader(false))
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        console.warn(error)
+                                        store.dispatch(handleLoader(false))    
+                                        
+                                        dispatch({
+                                            type: types.UPDATE_CART_FAIL,
+                                            isLoading: false,
+                                            errorMessage: JSON.stringify(error)
+                                        });
+                                        console.log("error", error);
+                                        Toast.show({
+                                            text1: constants.AppConstant.Hypr,
+                                            text2: constants.AppConstant.something_went_wrong_message,
+                                            type: "error",
+                                            position: "top"
+                                        });
+                                        store.dispatch(handleLoader(false))
+                                    });
+
+                                
+                            } else {
+                                //@failed return from server
+                                dispatch({
+                                    type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                    isLoading: false,
+                                    errorMessage: result.data.msg
+                                });
+                                Toast.show({
+                                    text1: constants.AppConstant.Hypr,
+                                    text2: result.data.msg,
+                                    type: "error",
+                                    position: "top"
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            dispatch({
+                                type: types.GET_FREIGHT_PRODUCT_FAIL,
+                                isLoading: false,
+                                errorMessage: JSON.stringify(error)
+                            });
+                            console.log("error", error);
+                            Toast.show({
+                                text1: constants.AppConstant.Hypr,
+                                text2: constants.AppConstant.something_went_wrong_message,
+                                type: "error",
+                                position: "top"
+                            });
+                        });
+
+                    }else{
+                        // logout here
+                    }
+                                    
+
+                })
+            }
+        })
+        dispatch({
+            type: types.SET_PRODUCT_DETAILS,
+            product: product            
+        })
+        
+        
+
+        
+    }
+}
+
+
+
+
 
 export const getFlashProduct = () => {
     return async (dispatch) => {
@@ -1058,7 +1325,8 @@ export const addToCart = (payload) => {
                     if (id !== null) {
                         let value = {
                             "userId": id,
-                            "ProductId": payload.id,
+                            "ProductId": payload.productId,
+                            "VariantId": payload.variantId,
                             "variantName": payload.variantName,
                             "product_price": payload.price,
                             "product_code" : payload.product_code,
@@ -2023,6 +2291,108 @@ export const getCityList = (payload) => {
 
     };
 }
+
+
+
+export const payment = (payload) => {
+    return async (dispatch) => {
+        NetInfo.fetch().then(state => {
+            if (state.isConnected && state.isInternetReachable) {
+                store.dispatch(handleLoader(true))
+                getUserIdFromStorage().then(id => {
+                    if (id !== null) {
+                        const market = store.getState().market
+                        const auth = store.getState().auth
+                        
+                        if(payload.modeOfPayment == 'Paypal'){
+
+                            NavigationService.navigate(constants.ScreensName.Payment.name, {amount:payload.amount , cart:payload.cart, modeOfPayment:payload.modeOfPayment})                                    
+
+                        }else if (payload.modeOfPayment == 'Stripe'){
+
+                            POST(
+                                `${getConfig().accesspoint}${constants.EndPoint.STRIPE_CHECKOUT}`,
+                                {},
+                                {},
+                            )
+                                .then((result) => {
+                                    
+                                    if (result.data.status) {
+                                        dispatch({
+                                            type: types.CHECKOUT_SUCCESS,
+                                            //data: result.data.id,
+                                        });
+                                        // Toast.show({
+                                        //     text1: constants.AppConstant.Hypr,
+                                        //     text2: "Great! your order has been placed. You can track it from dashboard.",
+                                        //     type: "success",
+                                        //     position: "top"
+                                        // });
+                                        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:payload.amount , cart:payload.cart, modeOfPayment:payload.modeOfPayment,checkoutSessionId:result.data.checkoutSessionId})                                    
+    
+                                        store.dispatch(handleLoader(false))
+                                    } else {
+                                        //@failed return from server
+                                        dispatch({
+                                            type: types.CHECKOUT_FAIL,
+                                            isLoading: false,
+                                            errorMessage: result.data.msg
+                                        });
+                                        Toast.show({
+                                            text1: constants.AppConstant.Hypr,
+                                            text2: result.data.msg,
+                                            type: "error",
+                                            position: "top"
+                                        });
+                                        store.dispatch(handleLoader(false))
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.warn(error);
+                                    dispatch({
+                                        type: types.PLACE_ORDER_FAIL,
+                                        isLoading: false,
+                                        errorMessage: JSON.stringify(error)
+                                    });
+                                    console.log("error", error);
+                                    Toast.show({
+                                        text1: constants.AppConstant.Hypr,
+                                        text2: constants.AppConstant.something_went_wrong_message,
+                                        type: "error",
+                                        position: "top"
+                                    });
+                                    store.dispatch(handleLoader(false))
+                                });
+                        }
+
+                       
+                    } else {
+                        //logout here
+                    }
+                }).catch((error) => {
+                    dispatch({
+                        type: types.PLACE_ORDER_FAIL,
+                        isLoading: false,
+                        errorMessage: JSON.stringify(error)
+                    });
+                    console.log("error", error);
+                    store.dispatch(handleLoader(false))
+                })
+            }
+            else {
+                Toast.show({
+                    text1: constants.AppConstant.Hypr,
+                    text2: constants.AppConstant.network_error,
+                    type: "error",
+                    position: "top"
+                });
+            }
+        })
+    }
+}
+
+
+
 
 export const placeOrder = (payload) => {
     return async (dispatch) => {
@@ -3063,7 +3433,7 @@ export const createOrder = (payload) => {
                 cart.map((product=>{
                     
                     clean_payload.products.push({
-                        vid:product.f_ProductId,
+                        vid:product.f_VariantId,
                         quantity: product.f_itemQuantity,
                         shippingName: `${product.f_variantName}`,
 

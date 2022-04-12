@@ -23,6 +23,7 @@ import {
     increaseCartItem,
     removeCartItem,
     placeOrder,
+    payment,
     payOrder
 } from '../../../actions/marketPlace';
 import { calculatePrice } from '../../../utils/CalculatePrice';
@@ -34,7 +35,7 @@ const OrderScreen = (props) => {
     const [state, setState] = React.useState({
         totalPrice: 0,
         modeOfPayment:'',
-        cashOnDelivery:true
+        cashOnDelivery:false
     })
     useEffect(() => {
         props.dispatch(getCartList())
@@ -42,6 +43,7 @@ const OrderScreen = (props) => {
     }, [])
 
     const renderCart = ({ item, index }) => {
+        
         return (
             <View style={{
                 marginVertical: 5
@@ -55,6 +57,7 @@ const OrderScreen = (props) => {
                     onPressDecrease={() => { handleDecreaseItemCart(item) }}
                     onPressDelete={() => { handleRemoveItemCart(item) }}
                     onPressIncrease={() => { handleIncreaseItemCart(item) }}
+                    
                     textDecorationLine="none"
                     variant={item.f_variantName}
                 />
@@ -91,18 +94,24 @@ const OrderScreen = (props) => {
     const handlePlaceOrder = () => {
 
         let payload = {
-            paymentMode: 'Paypal'
+         
+            amount:addAbleAmount , 
+            cart:props.route.params.cart,
+            modeOfPayment:state.modeOfPayment
         }
+        
         let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
 
         
-        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:addAbleAmount , cart:props.route.params.cart})
+        props.dispatch(payment(payload));
+        
+
         // props.dispatch(payOrder(payload));
         // if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
         //     const payload = {
         //         paymentMode: "Wallet"
         //     }
-        //     props.dispatch(placeOrder(payload))
+            // props.dispatch(placeOrder(payload))
         // } else {
         //     let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
         //     NavigationService.navigate(constants.ScreensName.Payment.name, addAbleAmount)
@@ -187,19 +196,35 @@ const OrderScreen = (props) => {
 
 
                 <View style={styles.modeOfPayment}>
-                    <View>
+                    <View >
                         <View style={{flexDirection:'row',bottom:constants.height_dim_percent * 3,width:constants.width_dim_percent * 97}}>                            
                             <Text style={[styles.modeOfPaymentText, { fontFamily:Fonts.GothamBold,fontSize: 14,  fontWeight:'600'}]}>Mode of Payment</Text>                            
                         </View>                        
 
-                        <Components.ModeOfPaymentCard
-                            showSelect={true}
-                            isSelected={state.cashOnDelivery}
-                            onPress={()=>{
+                        <View style={{flexDirection:'column', justifyContent:'space-around'}}>
 
-                            }}
-                            title={"Paypal"}
-                        />
+                            <View style={{padding:10}}>                                                    
+                                <Components.ModeOfPaymentCard
+                                    showSelect={true}
+                                    isSelected={state.modeOfPayment == 'Paypal' ? true : false}
+                                    onPress={()=>{
+                                            setState({...state,modeOfPayment:'Paypal'})
+                                    }}
+                                    title={"Paypal"}
+                                />
+                            </View>
+
+                            <View style={{padding:10}}>
+                                <Components.ModeOfPaymentCard
+                                    showSelect={true}
+                                    isSelected={state.modeOfPayment == 'Stripe' ? true : false}
+                                    onPress={()=>{
+                                            setState({...state,modeOfPayment:'Stripe'})
+                                    }}
+                                    title={"Stripe"}
+                                />
+                            </View>
+                        </View>
                     </View>
                 </View>
 

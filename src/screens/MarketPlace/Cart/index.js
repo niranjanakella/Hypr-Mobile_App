@@ -22,7 +22,8 @@ import {
     decreaseCartItem,
     increaseCartItem,
     removeCartItem,
-    createOrder
+    createOrder,
+    changeVariant
 } from '../../../actions/marketPlace';
 import { getUser } from '../../../actions/auth';
 import { calculatePrice } from '../../../utils/CalculatePrice';
@@ -150,6 +151,7 @@ const Cart = (props) => {
                     originalPrice={`${item.f_itemQuantity} × ${props.auth.currency_symbol} ${calculatePrice(item.f_ProductPrice)}`}
                     price={`${props.auth.currency_symbol} ${calculatePrice(item.f_totalAmount)}`}
                     title={item.f_variantName}
+                    onPressChangeVariant = {()=>props.dispatch(changeVariant(item))}
                     onPressDecrease={() => { handleDecreaseItemCart(item) }}
                     onPressDelete={() => { 
                         

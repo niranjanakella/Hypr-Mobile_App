@@ -280,7 +280,8 @@ const ProductDetail = (props) => {
 
    
         const payload = {
-            id: props.market.productDetails.vid,
+            productId: props.market.productDetails.pid,
+            variantId: props.market.productDetails.vid,
             buyNow: value,       
             variantName:props.market.productDetails.variantNameEn ?  props.market.productDetails.variantNameEn : props.market.productDetails.variantKey,
             price: state.variantPrice,

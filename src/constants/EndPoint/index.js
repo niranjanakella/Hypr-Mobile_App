@@ -29,6 +29,7 @@ const Endpoints = {
 
     FREIGHT_CALCULATION: `freight-calculate`,
     ADD_TO_CART: `addToShoppingCart`,
+    UPDATE_CART: `updateShoppingCart`,
     INCREASE_IN_CART: `CartQuantityIncrease`,
     DECREASE_IN_CART: `CartQuantityDecrease`,
     REMOVE_FROM_CART: `removeItemFromCart`,
@@ -42,6 +43,9 @@ const Endpoints = {
     GET_CITY: `fetchCityByStateId`,
     ADD_NEW_ADDRESS: `addNewAddress`,
     UPDATE_ADDRESS: `updateAddress`,
+
+    STRIPE_CHECKOUT: `stripeCheckout`,
+
 
     PLACE_ORDER: `checkoutConfirmation`,
     PAY_ORDER: `confirm-order`,

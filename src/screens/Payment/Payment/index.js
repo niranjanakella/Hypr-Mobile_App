@@ -18,6 +18,11 @@ import getConfig from '../../../utils/config';
 import {getUserIdFromStorage} from '../../../utils/asyncstorage';
 import {placeOrder,getCartList} from '../../../actions/marketPlace';
 import base64 from 'react-native-base64';
+import StripeCheckout from 'react-native-stripe-checkout-webview';
+
+let   stripeAPI =  { STRIPE_PUBLIC_KEY: 'pk_test_51KnhTJGAX1ovFy7T69BpTV76q40QV7DyAf5tByH9atqDmS5beGItM2pghqHLagZ0KF5NpU5nlP0WjAKGZnq9m8Gs00Q39c6UTV'  };
+
+
 
 const Payment = (props) => {
     const [userid,setUserId] = useState("")
@@ -26,7 +31,7 @@ const Payment = (props) => {
         getUserIdFromStorage().then(id=>{
             setUserId(id)
         })
-        console.warn(props.route.params.cart)
+        
        
     })
     const [visible, setVisiblity] = useState(true);
@@ -73,25 +78,49 @@ if(title === "Payment Cancelled | Paypal"){
                 />
                    */}
                 </View>
-                <View style={{ 
-                    height: Dimensions.get('window').height, 
-                    width: Dimensions.get('window').width,
-                    overflow:'hidden',
-                    flex:1
-                    }}>
-                <WebView
-                        scalesPageToFit={true}
-                        //source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/${props.auth.totalPayingAmount}/${userid}` }}
-                        source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/10/${userid}/${base64.encode(JSON.stringify(props.route.params.cart))}`}}
-                        onNavigationStateChange={handleNavigationStateChange}
-                        startInLoadingState={true}
-  renderLoading={() => <Components.ProgressView
-    isProgress={true}
-    title={constants.AppConstant.Bando}
-/>}
+                
+                
+                {props.route.params.modeOfPayment == 'Paypal' ?(
+                    // PAYPAL PAYMENT
+                    <View style={{ 
+                        height: Dimensions.get('window').height, 
+                        width: Dimensions.get('window').width,
+                        overflow:'hidden',
+                        flex:1
+                        }}>
+                        <WebView
+                            scalesPageToFit={true}
+                            //source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/${props.auth.totalPayingAmount}/${userid}` }}
+                            source={{ uri: `${getConfig().accesspoint}${constants.EndPoint.PAYMENT_CHECKOUT}/10/${userid}/${base64.encode(JSON.stringify(props.route.params.cart))}`}}
+                            onNavigationStateChange={handleNavigationStateChange}
+                            startInLoadingState={true}
+                            renderLoading={() => <Components.ProgressView 
+                                                        isProgress={true}
+                                                        title={constants.AppConstant.Bando}
+                                                />}
 
-                    />
-                </View>
+                        />
+                    </View>
+                    )
+                    :
+                    // STRIPE 
+                        (
+                        <StripeCheckout
+                                stripePublicKey={stripeAPI.STRIPE_PUBLIC_KEY}
+                                checkoutSessionInput={{
+                                sessionId: props.route.params.checkoutSessionId,
+                                }}
+                                onSuccess={({ checkoutSessionId }) => {
+                                console.log(`Stripe checkout session succeeded. session id: ${checkoutSessionId}.`);
+                                }}
+                                onCancel={() => {
+                                console.log(`Stripe checkout session cancelled.`);
+                            }}
+                        />
+                        )
+
+                }
+           
             </SafeAreaView>
         </>
     )

@@ -23,7 +23,7 @@ import constants from '../../../constants';
 import Components from '../../../components';
 import { BackgroundCarousel } from '../../../components/Slider';
 import { styles } from './styles';
-import { unsetPinCodeData, addToCart, addToWishlist, checkIfPinExist, setProductDetails } from '../../../actions/marketPlace';
+import { unsetPinCodeData,updateCart, addToCart, addToWishlist, checkIfPinExist, setProductDetails } from '../../../actions/marketPlace';
 import { calculatePrice } from '../../../utils/CalculatePrice';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -65,7 +65,20 @@ const Variant = (props) => {
                     variantPrice   = {data.item.variantSellPrice}    
                     itemName       = {data.item.variantNameEn ?data.item.variantNameEn : data.item.variantKey }
                     imageID        = {data.item.variantImage}                    
-                    onPress        = {()=>props.dispatch(setProductDetails(data.item,getCountryCode))}
+                    onPress        = {()=>
+                                        {    console.warn(data.item)
+                                            if(props.route.params.previousScreen != 'CartScreen'){
+                                                props.dispatch(setProductDetails(data.item,getCountryCode))
+                                            }else{
+                                                // ggo back to cart when the customer updates the variant of product
+                                                let productIdToBeDeleted = props.route.params.variantId;
+                                                let f_shippingAddress = props.route.params.f_shippingAddress;
+                                                let navigation = props.navigation;
+                                                props.dispatch(updateCart(data.item,productIdToBeDeleted,f_shippingAddress,navigation))
+                                            }
+                                            
+
+                                        }}
                 
 
                 />
