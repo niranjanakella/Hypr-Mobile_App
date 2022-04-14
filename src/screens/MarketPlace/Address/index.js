@@ -340,11 +340,11 @@ const Address = (props) => {
             })
             return 1;
         }
-        if (state.pinCode.length < 6) {
+        if (state.pinCode.length  < 4) {
             setState({
                 ...state,
                 pinCodeErr: true,
-                pinCodeErrMsg: "Please enter a valid pincode. Maximum length of pincode is 6."
+                pinCodeErrMsg: "Please enter a valid pincode. Minimum length of pincode is 4."
             })
             return 1;
         }

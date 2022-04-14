@@ -108,14 +108,21 @@ if(title === "Payment Cancelled | Paypal"){
                         <StripeCheckout
                                 stripePublicKey={stripeAPI.STRIPE_PUBLIC_KEY}
                                 checkoutSessionInput={{
-                                sessionId: props.route.params.checkoutSessionId,
+                                sessionId: props.route.params.checkoutSessionId,                                
                                 }}
-                                onSuccess={({ checkoutSessionId }) => {
-                                console.log(`Stripe checkout session succeeded. session id: ${checkoutSessionId}.`);
+                                onSuccess={({ checkoutSessionId }) => {                               
+                                    
+                                        
                                 }}
+                                
                                 onCancel={() => {
-                                console.log(`Stripe checkout session cancelled.`);
-                            }}
+                                    props.navigation.goBack()
+                                }}
+
+                                // webViewProps={{ test: "test" }}
+                                // renderOnComplete={(props) => {
+                                //     return <></>;
+                                //   }}
                         />
                         )
 

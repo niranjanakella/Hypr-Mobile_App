@@ -77,7 +77,8 @@ export const setProductDetails = (product,country_code) => {
                             eccode: country_code,
                             products:[{
                                 quantity: 1,
-			                    vid: product.vid
+			                    sku: product.variantSku,
+                                
                             }]
                         }   
                         
@@ -292,7 +293,7 @@ export const setVariant = (product) => {
                            
                         )
                             .then((result) => {                                    
-                                      console.warn('variant',result.data.data);
+                                      
                                 if (result.data.data) {
                                       
                                     
@@ -300,7 +301,7 @@ export const setVariant = (product) => {
                                         type: types.GET_ALL_VARIANTS_SUCCESS,
                                         data: result.data.data,                                        
                                     })
-
+                                    console.warn('variant success',result.data.data);
                                     store.dispatch(handleLoader(false))
                                     NavigationService.navigate(constants.ScreensName.Variant.name, {previousScreen:'MarketHome'})
 
@@ -477,7 +478,7 @@ export const updateCart = (product,productIdToBeDeleted,f_shippingAddress,naviga
                             eccode: f_shippingAddress.country_code,
                             products:[{
                                 quantity: 1,
-			                    vid: product.vid
+			                    sku: product.variantSku
                             }]
                         }   
                         
@@ -1234,21 +1235,23 @@ export const getProductByKeyword = (keyword) => {
                     if (id !== null) {
                         let value = {
                             "userId": id,
-                            "keyword": keyword
+                            "searchValue": keyword
                         }
                         POST(
-                            `${getConfig().accesspoint}${constants.EndPoint.GET_PRODUCT_BY_KEYWORD}`,
+                            `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.GET_PRODUCT_BY_KEYWORD}`,
                             value,
                             {},
                         )
                             .then((result) => {
-                                console.log('result', result);
-                                if (result.data.status) {
+                                    
+                                if (result.data.result) {
+                                    console.warn('result', result.data.result);
                                     dispatch({
                                         type: types.GET_PRODUCT_BY_KEYWORD_SUCCESS,
-                                        data: result.data.msg,
+                                        data: result.data.data.list,
                                         productType: keyword
                                     });
+                                    
                                     store.dispatch(handleLoader(false))
                                 } else {
                                     //@failed return from server
@@ -1267,6 +1270,7 @@ export const getProductByKeyword = (keyword) => {
                                 }
                             })
                             .catch((error) => {
+                                console.warn(error);
                                 dispatch({
                                     type: types.GET_PRODUCT_BY_KEYWORD_FAIL,
                                     isLoading: false,
@@ -2303,16 +2307,40 @@ export const payment = (payload) => {
                     if (id !== null) {
                         const market = store.getState().market
                         const auth = store.getState().auth
-                        
+                      
                         if(payload.modeOfPayment == 'Paypal'){
-
-                            NavigationService.navigate(constants.ScreensName.Payment.name, {amount:payload.amount , cart:payload.cart, modeOfPayment:payload.modeOfPayment})                                    
-
+                            store.dispatch(handleLoader(false))
+                            NavigationService.navigate(constants.ScreensName.Payment.name, { cart:payload.cart, modeOfPayment:payload.modeOfPayment,orderId:payload.orderId})                                    
+                            
                         }else if (payload.modeOfPayment == 'Stripe'){
+                            console.warn('payload',payload.modeOfPayment);
+                            let stripePayload = {
+                                lineItemsPayload: [],
+                                orderId:payload.orderId
+                            };
 
+                            
+                            // add cart to line of items for stripe
+                            payload.cart.map((item)=>{
+                                
+                                stripePayload.lineItemsPayload.push({                                    
+                                        price_data: {
+                                          currency: 'USD',
+                                          product_data: {
+                                            name: item.f_variantName,
+                                          },
+                                          unit_amount: parseInt((parseFloat(item.f_ProductPrice) * 100) * item.f_itemQuantity),
+                                        },
+                                        quantity: item.f_itemQuantity,
+                                      
+                                })
+                            });
+
+                            console.warn(`${getConfig().accesspoint}${constants.EndPoint.STRIPE_CHECKOUT}`)
+                            
                             POST(
                                 `${getConfig().accesspoint}${constants.EndPoint.STRIPE_CHECKOUT}`,
-                                {},
+                                stripePayload,
                                 {},
                             )
                                 .then((result) => {
@@ -2322,13 +2350,8 @@ export const payment = (payload) => {
                                             type: types.CHECKOUT_SUCCESS,
                                             //data: result.data.id,
                                         });
-                                        // Toast.show({
-                                        //     text1: constants.AppConstant.Hypr,
-                                        //     text2: "Great! your order has been placed. You can track it from dashboard.",
-                                        //     type: "success",
-                                        //     position: "top"
-                                        // });
-                                        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:payload.amount , cart:payload.cart, modeOfPayment:payload.modeOfPayment,checkoutSessionId:result.data.checkoutSessionId})                                    
+                                        console.warn('TApos');
+                                        NavigationService.navigate(constants.ScreensName.Payment.name, {amount:payload.amount , cart:payload.cart, modeOfPayment:payload.modeOfPayment,checkoutSessionId:result.data.checkoutSessionId,orderId:payload.orderId})                                    
     
                                         store.dispatch(handleLoader(false))
                                     } else {
@@ -2348,7 +2371,7 @@ export const payment = (payload) => {
                                     }
                                 })
                                 .catch((error) => {
-                                    console.warn(error);
+                                    console.warn('errpr',error);
                                     dispatch({
                                         type: types.PLACE_ORDER_FAIL,
                                         isLoading: false,
@@ -2370,6 +2393,7 @@ export const payment = (payload) => {
                         //logout here
                     }
                 }).catch((error) => {
+                    console.wanr(error);
                     dispatch({
                         type: types.PLACE_ORDER_FAIL,
                         isLoading: false,
@@ -3041,6 +3065,7 @@ export const addNewAddress = (payload) => {
                                 }
                             })
                             .catch((error) => {
+                                store.dispatch(handleLoader(false))
                                 dispatch({
                                     type: types.ADD_NEW_ADDRESS_FAIL,
                                     isLoading: false,
@@ -3053,7 +3078,7 @@ export const addNewAddress = (payload) => {
                                     type: "error",
                                     position: "top"
                                 });
-                                store.dispatch(handleLoader(false))
+                                
                             });
                     } else {
                         //logout here
@@ -3136,13 +3161,14 @@ export const updateAddress = (payload,props) => {
                                   
                                     
                                     
-
+                                    console.warn('props.market.productDetails.variantSku')
                                     // CALCULATRE FREIGHT
                                     let freight_data = {
                                         eccode: payload.selectedAddress.country_code,
                                         products:[{
                                             quantity: 1,
-                                            vid: props.market.productDetails.vid
+                                            sku: props.market.productDetails.variantSku,
+
                                         }]
                                     };
 
@@ -3404,7 +3430,7 @@ export const createOrder = (payload) => {
         
         let address = payload.address;
         let cart    = payload.cart;
-        
+        store.dispatch(handleLoader(true));
         getUserIdFromStorage().then(id => {
             if (id !== null) {
                 
@@ -3418,16 +3444,17 @@ export const createOrder = (payload) => {
                
                console.warn('Clean payload', payload)
                 
-                clean_payload.zip = '3023';
-                clean_payload.code  = address.country_code;
-                clean_payload.country = address.country;
+                clean_payload.zip = address.pincode;
+                // clean_payload.sccode  = address.country_code;
+                // clean_payload.country = address.country;
+                clean_payload.sccode  = 'PH';
+                clean_payload.country = 'Philippines';
                 clean_payload.province = address.state;
                 clean_payload.city = address.city;
                 clean_payload.address = address.address;
                 clean_payload.name = address.name;
-                clean_payload.contact = address.mobile == null ? address.AlternativePhone : address.mobile;                
-                clean_payload.remark = 'New Order';
-                clean_payload.ccode = 'CH';
+                clean_payload.phone = address.mobile == null ? address.AlternativePhone : address.mobile;                                
+                clean_payload.fccode = 'CN';
                 clean_payload.logistic = payload.cart[0].f_freightCalculation[0].logisticName;                
                 
                 cart.map((product=>{
@@ -3436,10 +3463,12 @@ export const createOrder = (payload) => {
                         vid:product.f_VariantId,
                         quantity: product.f_itemQuantity,
                         shippingName: `${product.f_variantName}`,
+                        sellPrice: product.f_ProductPrice,
 
                     })
                 }))
 
+             
                 
                 POST(
                     `${getConfig().CJ_ACCESS_POINT}${constants.EndPoint.CREATE_ORDER}`,
@@ -3447,17 +3476,21 @@ export const createOrder = (payload) => {
                     {},
                 )
                 .then((result) => {
-                    console.warn('MY ORDEr', result);
+                    let orderId = result.data;  
 
+                    if(result.status){
+                        NavigationService.navigate(constants.ScreensName.OrderScreen.name, {cart:cart,orderId:orderId});
+                    }
                 }).catch((err)=>{
 
                     console.warn('Error',err);
+                    store.dispatch(handleLoader(false));
                 });
             }
         });
 
 
         
-        NavigationService.navigate(constants.ScreensName.OrderScreen.name, {cart:cart});
+        
     }
 }

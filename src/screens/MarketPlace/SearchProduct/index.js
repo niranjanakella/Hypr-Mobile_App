@@ -14,17 +14,23 @@ import Components from '../../../components';
 import { styles } from './styles';
 import {
     getProductByKeyword,
-    setProductDetails,
+    setVariant,
     clearSearchList
 } from '../../../actions/marketPlace'
 
 const SearchProduct = (props) => {
+
+    useEffect(()=>{
+        console.warn(props.market.searchProductList)
+    },[])
     const [state, setState] = useState({
         searchValue: "",
         isFocus:false
     })
     const handleGetProduct = () => {
+
         props.dispatch(getProductByKeyword(state.searchValue))
+        
     }
     const renderSearchProductList = ({ item, index }) => {
         return (
@@ -33,9 +39,9 @@ const SearchProduct = (props) => {
                 paddingVertical: constants.vh(5)
             }}>
                 <Components.SearchProductCard
-                    title={item.f_productname}
-                    image={{ uri: item.f_img1 }}
-                    onPress={() => props.dispatch(setProductDetails(item))}
+                    title={item.productNameEn}
+                    image={{ uri: item.productImage }}
+                    onPress={() => props.dispatch(setVariant(item))}
                 />
             </View>
         )

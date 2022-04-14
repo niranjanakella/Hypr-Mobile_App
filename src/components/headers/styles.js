@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
         paddingVertical: constants.vh(5),
         borderWidth: 1,        
         borderRadius: 10,
-        color: constants.Colors.fade,
+        color: constants.Colors.blue_primary,
         paddingHorizontal: constants.vw(10)
     },
     text12500: {

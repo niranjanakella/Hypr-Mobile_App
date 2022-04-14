@@ -22,8 +22,9 @@ const Endpoints = {
     GET_CATEGORY: `getCategoryList`,
     GET_CATEGORY_TYPE: `getCategoryType`,
     GET_TOP_PICK_ON_PRODUCT: `gettopPickOnProduct`,
-    GET_PRODUCT_BY_CATEGORYID: "getProductByCategory/0",
-    GET_PRODUCT_BY_KEYWORD: "getProductByKeyword/0",
+    GET_PRODUCT_BY_CATEGORYID: "search-products",
+    // GET_PRODUCT_BY_KEYWORD: "getProductByKeyword/0",
+    GET_PRODUCT_BY_KEYWORD: "search-products",
     GET_ALL_PRODUCT: "getProducts",
 
 

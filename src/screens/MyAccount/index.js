@@ -180,7 +180,7 @@ const MyAccount = (props) => {
                         <Text style={{fontFamily:Fonts.GothamBold,fontSize:18,left:constants.width_dim_percent *5}}>My Orders</Text>
                    </View>
                    <View style={{flexDirection:'row',top:constants.height_dim_percent *10,flex:3,justifyContent:'space-evenly'}}>
-                        <View>
+                        <TouchableOpacity onPress={handleGoToPay}  >
                             <Fontisto                                
                                 name={"wallet"}
                                 size={20}
@@ -189,7 +189,7 @@ const MyAccount = (props) => {
                                 onPress={handleGoToPay}
                             />
                             <Text>To Pay</Text>
-                        </View>
+                        </TouchableOpacity>
 
                         <View>
                             <Fontisto                                

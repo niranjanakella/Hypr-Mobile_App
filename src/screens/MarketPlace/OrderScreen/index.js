@@ -17,6 +17,7 @@ import constants from '../../../constants';
 import Components from '../../../components';
 import * as NavigationService from '../../../navigation/NavigationService';
 import { styles } from './styles';
+import Toast from 'react-native-toast-message';
 import {
     getCartList,
     decreaseCartItem,
@@ -39,7 +40,7 @@ const OrderScreen = (props) => {
     })
     useEffect(() => {
         props.dispatch(getCartList())
-        console.warn(props.market.cartList)
+ 
     }, [])
 
     const renderCart = ({ item, index }) => {
@@ -92,21 +93,23 @@ const OrderScreen = (props) => {
         props.dispatch(removeCartItem(payload))
     }
     const handlePlaceOrder = () => {
-
+        console.warn('cart',props.route.params.cart)
+        // let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
         let payload = {
-         
-            amount:addAbleAmount , 
+                     
             cart:props.route.params.cart,
-            modeOfPayment:state.modeOfPayment
+            modeOfPayment:state.modeOfPayment,
+            orderId:props.route.params.orderId
         }
         
-        let addAbleAmount = props.market.totalPayingAmount - props.auth.userData.f_wallet
+        
+        
 
         
         props.dispatch(payment(payload));
         
 
-        // props.dispatch(payOrder(payload));
+        
         // if (props.auth.userData.f_wallet > props.market.totalPayingAmount) {
         //     const payload = {
         //         paymentMode: "Wallet"
@@ -148,7 +151,8 @@ const OrderScreen = (props) => {
                 />
                 <View style={{ flex: 1, paddingHorizontal: 15 }}>
                     <FlatList
-                        data={props.route.params.cart}
+                        data={props.market.cartList.filter((item_prop)=>    props.route.params.cart.some((item_params)=> item_params.f_VariantId == item_prop.f_VariantId ) && item_prop)}                         
+                        
                         renderItem={renderCart}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
